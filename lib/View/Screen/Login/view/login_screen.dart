@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../../../Utils/AppIcons/app_icons.dart';
 import '../Controller/login_controller.dart';
 
 class LoginScreen extends GetView<LoginController> {
@@ -89,7 +90,7 @@ class LoginScreen extends GetView<LoginController> {
                             ),
                           ),
                           SvgPicture.asset(
-                            'assets/icons/Component 5.svg',
+                            AppIcons.appLogo,
                             width: 170,
                             placeholderBuilder: (BuildContext context) => const Text(
                               'bondi',
