@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
+import '../../CreateAccount/view/create_account_screen.dart';
 import '../Controller/login_controller.dart';
 
 class LoginScreen extends GetView<LoginController> {
@@ -13,12 +14,13 @@ class LoginScreen extends GetView<LoginController> {
     final controller = Get.put(LoginController());
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/img.png'),
+            image: AssetImage('assets/images/img_1.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -46,25 +48,25 @@ class LoginScreen extends GetView<LoginController> {
                     ),
                   ),
                   
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   
                   // Welcome Back Text
                   const Text(
                     'Welcome Back',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 30),
                   
                   // Login Card
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.08),
+                      color: const Color(0xFF2558A8).withOpacity(0.4),
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: Column(
@@ -102,7 +104,7 @@ class LoginScreen extends GetView<LoginController> {
                             ),
                             contentPadding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10.0),
                             filled: true,
-                            fillColor: Colors.white.withOpacity(0.08),
+                            fillColor: const Color(0xFF1F4FB0).withOpacity(0.6),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
                               borderSide: BorderSide.none,
@@ -117,7 +119,7 @@ class LoginScreen extends GetView<LoginController> {
                           ),
                         ),
                         
-                        const SizedBox(height: 25),
+                        const SizedBox(height: 20),
                         
                         // Password Row (Label + Forgot Password)
                         Row(
@@ -200,7 +202,7 @@ class LoginScreen extends GetView<LoginController> {
                           ),
                         ),
                         
-                        const SizedBox(height: 35),
+                        const SizedBox(height: 30),
                         
                         // Login Button
                         Obx(
@@ -279,14 +281,14 @@ class LoginScreen extends GetView<LoginController> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // Handle register navigation
+                          Get.to(() => const CreateAccountScreen());
                         },
                         child: const Text(
                           'Create Account',
                           style: TextStyle(
                             color: Color(0xFF00E5FF),
                             fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -302,4 +304,3 @@ class LoginScreen extends GetView<LoginController> {
     );
   }
 }
-
