@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../OtpVerification/view/otp_verification_screen.dart';
 
 class CreateAccountController extends GetxController {
   final fullNameController = TextEditingController();
@@ -41,13 +42,14 @@ class CreateAccountController extends GetxController {
       isLoading.value = false;
       Get.snackbar(
         'Account Created!',
-        'Welcome to Bondi!',
+        'Please verify your email',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green.withOpacity(0.9),
         colorText: Colors.white,
         margin: const EdgeInsets.all(16),
         borderRadius: 8,
       );
+      Get.to(() => const OtpVerificationScreen());
     });
   }
 

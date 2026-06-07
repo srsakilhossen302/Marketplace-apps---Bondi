@@ -10,7 +10,8 @@
         "cupertino_icons",
         "flutter",
         "flutter_svg",
-        "get"
+        "get",
+        "pinput"
       ],
       "devDependencies": [
         "flutter_lints",
@@ -40,6 +41,14 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "pinput",
+      "version": "5.0.2",
+      "dependencies": [
+        "flutter",
+        "universal_platform"
       ]
     },
     {
@@ -166,6 +175,11 @@
         "string_scanner",
         "term_glyph"
       ]
+    },
+    {
+      "name": "universal_platform",
+      "version": "1.1.0",
+      "dependencies": []
     },
     {
       "name": "vector_graphics_compiler",

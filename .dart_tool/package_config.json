@@ -152,6 +152,12 @@
       "languageVersion": "3.8"
     },
     {
+      "name": "pinput",
+      "rootUri": "file:///Users/sakilhossen/.pub-cache/hosted/pub.dev/pinput-5.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///Users/sakilhossen/Downloads/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -198,6 +204,12 @@
       "rootUri": "file:///Users/sakilhossen/.pub-cache/hosted/pub.dev/typed_data-1.4.0",
       "packageUri": "lib/",
       "languageVersion": "3.5"
+    },
+    {
+      "name": "universal_platform",
+      "rootUri": "file:///Users/sakilhossen/.pub-cache/hosted/pub.dev/universal_platform-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "vector_graphics",
