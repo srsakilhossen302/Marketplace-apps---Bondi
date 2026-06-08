@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:bondi/View/Screen/CreateGroup/view/create_group_screen.dart';
 import 'package:bondi/View/Widgegt/CustomCard/custom_listing_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -421,7 +422,7 @@ class HomeScreen extends GetView<HomeController> {
                   width: double.infinity,
                   height: 54.h,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () => Get.to(() => const CreateGroupScreen()),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       elevation: 0,
