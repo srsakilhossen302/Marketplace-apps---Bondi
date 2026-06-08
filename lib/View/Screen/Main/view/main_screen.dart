@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../Discover/view/discover_screen.dart';
 import '../../Home/view/home_screen.dart';
+import '../../Sell/view/sell_screen.dart';
 import '../Controller/main_controller.dart';
 
 class MainScreen extends GetView<MainController> {
@@ -17,12 +18,7 @@ class MainScreen extends GetView<MainController> {
     final List<Widget> screens = [
       const HomeScreen(),
       const DiscoverScreen(),
-      Center(
-        child: Text(
-          'Sell',
-          style: TextStyle(color: Colors.white, fontSize: 18.sp),
-        ),
-      ),
+      const SellScreen(),
       Center(
         child: Text(
           'Community',
