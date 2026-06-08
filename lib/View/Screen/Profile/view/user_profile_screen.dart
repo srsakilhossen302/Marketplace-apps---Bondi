@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../Controller/user_profile_controller.dart';
+import 'edit_listing_screen.dart';
 import 'edit_profile_screen.dart';
 import 'friends_screen.dart';
 
@@ -321,7 +322,10 @@ class UserProfileScreen extends GetView<UserProfileController> {
       itemBuilder: (context, index) {
         if (index < controller.myListings.length) {
           final item = controller.myListings[index];
-          return _buildListingCard(item);
+          return GestureDetector(
+            onTap: () => Get.to(() => const EditListingScreen()),
+            child: _buildListingCard(item),
+          );
         } else {
           return _buildAddListingCard();
         }
