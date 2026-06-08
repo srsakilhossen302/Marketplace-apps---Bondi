@@ -6,6 +6,7 @@ import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../Community/view/community_screen.dart';
 import '../../Discover/view/discover_screen.dart';
 import '../../Home/view/home_screen.dart';
+import '../../Profile/view/profile_screen.dart';
 import '../../Sell/view/sell_screen.dart';
 import '../Controller/main_controller.dart';
 
@@ -21,12 +22,7 @@ class MainScreen extends GetView<MainController> {
       const DiscoverScreen(),
       const SellScreen(),
       const CommunityScreen(),
-      Center(
-        child: Text(
-          'Profile',
-          style: TextStyle(color: Colors.white, fontSize: 18.sp),
-        ),
-      ),
+      const ProfileScreen(),
     ];
 
     return Scaffold(
