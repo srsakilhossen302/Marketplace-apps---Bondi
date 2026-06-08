@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../../Login/view/login_screen.dart';
+import '../../ConnectDiscover/view/connect_discover_screen.dart';
 
 class SuccessController extends GetxController {
   final progressValue = 0.0.obs;
@@ -23,14 +23,14 @@ class SuccessController extends GetxController {
       progressValue.value = currentStep / steps;
 
       if (currentStep >= steps) {
-        navigateToLogin();
+        navigateToNext();
         return false;
       }
       return true;
     });
   }
 
-  void navigateToLogin() {
-    Get.offAll(() => const LoginScreen());
+  void navigateToNext() {
+    Get.offAll(() => const ConnectDiscoverScreen());
   }
 }

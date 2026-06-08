@@ -36,7 +36,7 @@ class SuccessScreen extends GetView<SuccessController> {
                   ),
                 ),
               ),
-              
+
               Expanded(
                 child: Center(
                   child: Container(
@@ -54,9 +54,9 @@ class SuccessScreen extends GetView<SuccessController> {
                           'assets/icons/Group 25.svg',
                           height: 180,
                         ),
-                        
+
                         const SizedBox(height: 30),
-                        
+
                         // Success Message
                         const Text(
                           "You're all set!",
@@ -67,9 +67,9 @@ class SuccessScreen extends GetView<SuccessController> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 15),
-                        
+
                         Text(
                           "Your account is ready. Welcome to the Bond community.",
                           textAlign: TextAlign.center,
@@ -78,9 +78,9 @@ class SuccessScreen extends GetView<SuccessController> {
                             fontSize: 15,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 40),
-                        
+
                         // Continue Button
                         SizedBox(
                           width: double.infinity,
@@ -88,15 +88,12 @@ class SuccessScreen extends GetView<SuccessController> {
                           child: Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFF003399),
-                                  Color(0xFF0044CC),
-                                ],
+                                colors: [Color(0xFF003399), Color(0xFF0044CC)],
                               ),
                               borderRadius: BorderRadius.circular(25.0),
                             ),
                             child: ElevatedButton(
-                              onPressed: () => controller.navigateToLogin(),
+                              onPressed: () => controller.navigateToNext(),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
@@ -115,9 +112,9 @@ class SuccessScreen extends GetView<SuccessController> {
                             ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 30),
-                        
+
                         // Redirection Progress
                         Obx(
                           () => Column(
@@ -137,10 +134,13 @@ class SuccessScreen extends GetView<SuccessController> {
                                   height: 4,
                                   child: LinearProgressIndicator(
                                     value: controller.progressValue.value,
-                                    backgroundColor: Colors.white.withOpacity(0.2),
-                                    valueColor: const AlwaysStoppedAnimation<Color>(
-                                      Color(0xFF00E5FF),
+                                    backgroundColor: Colors.white.withOpacity(
+                                      0.2,
                                     ),
+                                    valueColor:
+                                        const AlwaysStoppedAnimation<Color>(
+                                          Color(0xFF00E5FF),
+                                        ),
                                   ),
                                 ),
                               ),
