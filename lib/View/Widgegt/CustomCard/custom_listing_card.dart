@@ -1,6 +1,8 @@
+import 'package:bondi/View/Screen/ProductDetails/view/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import '../../../Model/home_models.dart';
 
 class CustomListingCard extends StatelessWidget {
@@ -18,7 +20,7 @@ class CustomListingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap ?? () => Get.to(() => const ProductDetailsScreen(), arguments: item),
       child: Container(
         width: width ?? 115.81876373291016.w, // Exact width from user
         decoration: BoxDecoration(
