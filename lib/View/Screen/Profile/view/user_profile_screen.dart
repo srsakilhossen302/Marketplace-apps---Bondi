@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../Controller/user_profile_controller.dart';
+import 'edit_profile_screen.dart';
 
 class UserProfileScreen extends GetView<UserProfileController> {
   const UserProfileScreen({super.key});
@@ -140,11 +141,18 @@ class UserProfileScreen extends GetView<UserProfileController> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.workspace_premium, color: const Color(0xFF00E5FF), size: 14.sp),
+              Icon(
+                Icons.workspace_premium,
+                color: const Color(0xFF00E5FF),
+                size: 14.sp,
+              ),
               SizedBox(width: 6.w),
               Text(
                 "Top Trader",
-                style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12.sp),
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.6),
+                  fontSize: 12.sp,
+                ),
               ),
             ],
           ),
@@ -170,12 +178,17 @@ class UserProfileScreen extends GetView<UserProfileController> {
               child: SizedBox(
                 height: 50.h,
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () => Get.to(() => const EditProfileScreen()),
                   icon: Icon(Icons.edit, size: 18.sp),
-                  label: Text("Edit Profile", style: TextStyle(fontSize: 15.sp)),
+                  label: Text(
+                    "Edit Profile",
+                    style: TextStyle(fontSize: 15.sp),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF003399),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.r),
+                    ),
                   ),
                 ),
               ),
@@ -188,7 +201,11 @@ class UserProfileScreen extends GetView<UserProfileController> {
                 color: Colors.white.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.share_outlined, color: Colors.white, size: 20.sp),
+              child: Icon(
+                Icons.share_outlined,
+                color: Colors.white,
+                size: 20.sp,
+              ),
             ),
           ],
         ),
@@ -228,7 +245,11 @@ class UserProfileScreen extends GetView<UserProfileController> {
             children: [
               Text(
                 value,
-                style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 18.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: const Color(0xFF00E5FF),
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               if (isRating) ...[
                 SizedBox(width: 4.w),
@@ -239,7 +260,11 @@ class UserProfileScreen extends GetView<UserProfileController> {
           SizedBox(height: 4.h),
           Text(
             label,
-            style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 11.sp, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.6),
+              fontSize: 11.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
@@ -252,11 +277,18 @@ class UserProfileScreen extends GetView<UserProfileController> {
       children: [
         Text(
           "My Listings",
-          style: TextStyle(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 22.sp,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         Text(
           "Manage All",
-          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14.sp),
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontSize: 14.sp,
+          ),
         ),
       ],
     );
@@ -298,21 +330,36 @@ class UserProfileScreen extends GetView<UserProfileController> {
             child: Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-                  child: Image.network(item['image'], width: double.infinity, fit: BoxFit.cover),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(20.r),
+                  ),
+                  child: Image.network(
+                    item['image'],
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Positioned(
                   top: 10.h,
                   left: 10.w,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: item['status'] == 'ACTIVE' ? const Color(0xFF00E5FF) : Colors.cyan.shade700,
+                      color: item['status'] == 'ACTIVE'
+                          ? const Color(0xFF00E5FF)
+                          : Colors.cyan.shade700,
                       borderRadius: BorderRadius.circular(5.r),
                     ),
                     child: Text(
                       item['status'],
-                      style: TextStyle(color: Colors.white, fontSize: 9.sp, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 9.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -326,14 +373,22 @@ class UserProfileScreen extends GetView<UserProfileController> {
               children: [
                 Text(
                   item['title'],
-                  style: TextStyle(color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 4.h),
                 Text(
                   item['price'],
-                  style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -363,11 +418,18 @@ class UserProfileScreen extends GetView<UserProfileController> {
           SizedBox(height: 12.h),
           Text(
             "Add New Listing",
-            style: TextStyle(color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Text(
             "Start trading",
-            style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11.sp),
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: 11.sp,
+            ),
           ),
         ],
       ),
