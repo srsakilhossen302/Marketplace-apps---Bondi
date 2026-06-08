@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../Controller/user_profile_controller.dart';
 import 'edit_profile_screen.dart';
+import 'friends_screen.dart';
 
 class UserProfileScreen extends GetView<UserProfileController> {
   const UserProfileScreen({super.key});
@@ -222,7 +223,11 @@ class UserProfileScreen extends GetView<UserProfileController> {
       crossAxisSpacing: 15.w,
       childAspectRatio: 2.0,
       children: [
-        _buildStatCard(controller.friendsCount.value, "FRIENDS"),
+        _buildStatCard(
+          controller.friendsCount.value,
+          "FRIENDS",
+          onTap: () => Get.to(() => const FriendsScreen()),
+        ),
         _buildStatCard(controller.groupsCount.value, "GROUPS"),
         _buildStatCard(controller.tradesCount.value, "TRADES"),
         _buildStatCard(controller.rating.value, "RATING", isRating: true),
@@ -230,43 +235,51 @@ class UserProfileScreen extends GetView<UserProfileController> {
     );
   }
 
-  Widget _buildStatCard(String value, String label, {bool isRating = false}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
-        borderRadius: BorderRadius.circular(25.r),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                value,
-                style: TextStyle(
-                  color: const Color(0xFF00E5FF),
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
+  Widget _buildStatCard(
+    String value,
+    String label, {
+    bool isRating = false,
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF2558A8).withOpacity(0.4),
+          borderRadius: BorderRadius.circular(25.r),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    color: const Color(0xFF00E5FF),
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              if (isRating) ...[
-                SizedBox(width: 4.w),
-                Icon(Icons.star, color: const Color(0xFF00E5FF), size: 16.sp),
+                if (isRating) ...[
+                  SizedBox(width: 4.w),
+                  Icon(Icons.star, color: const Color(0xFF00E5FF), size: 16.sp),
+                ],
               ],
-            ],
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.6),
-              fontSize: 11.sp,
-              fontWeight: FontWeight.bold,
             ),
-          ),
-        ],
+            SizedBox(height: 4.h),
+            Text(
+              label,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.6),
+                fontSize: 11.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
