@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../Success/view/success_screen.dart';
 
 class OtpVerificationController extends GetxController {
   final otpController = TextEditingController();
   final focusNode = FocusNode();
-  
+
   final isLoading = false.obs;
   final timerSeconds = 30.obs;
 
@@ -42,15 +43,7 @@ class OtpVerificationController extends GetxController {
     // Simulate API request
     Future.delayed(const Duration(seconds: 2), () {
       isLoading.value = false;
-      Get.snackbar(
-        'Success!',
-        'Your account has been verified!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withOpacity(0.9),
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
+      Get.to(() => const SuccessScreen());
     });
   }
 
