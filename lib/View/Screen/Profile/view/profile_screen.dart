@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../Controller/profile_controller.dart';
+import 'user_profile_screen.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
   const ProfileScreen({super.key});
@@ -38,6 +39,7 @@ class ProfileScreen extends GetView<ProfileController> {
                         _buildSettingsTile(
                           Icons.person_outline,
                           "Account Settings",
+                          onTap: () => Get.to(() => const UserProfileScreen()),
                         ),
                         _buildSettingsTile(Icons.sync, "Contact Sync"),
                       ]),
@@ -230,9 +232,10 @@ class ProfileScreen extends GetView<ProfileController> {
     String title, {
     String? subtitle,
     String? badge,
+    VoidCallback? onTap,
   }) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap ?? () {},
       borderRadius: BorderRadius.circular(25.r),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
