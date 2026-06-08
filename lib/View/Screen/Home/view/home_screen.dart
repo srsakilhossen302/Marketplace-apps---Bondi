@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Model/home_models.dart';
@@ -27,41 +28,41 @@ class HomeScreen extends GetView<HomeController> {
               _buildHeader(),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                       _buildSearchBar(),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                       _buildCategories(),
-                      const SizedBox(height: 30),
+                      SizedBox(height: 30.h),
                       _buildSectionHeader("New Listings", onAction: () {}),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       Text(
                         "Fresh arrivals from your network",
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.6),
-                          fontSize: 13,
+                          fontSize: 13.sp,
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      SizedBox(height: 15.h),
                       _buildNewListings(),
-                      const SizedBox(height: 30),
+                      SizedBox(height: 30.h),
                       _buildSectionHeader("Suggested Sellers"),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                       _buildSuggestedSellers(),
-                      const SizedBox(height: 30),
+                      SizedBox(height: 30.h),
                       _buildSectionHeader("Trending Groups"),
-                      const SizedBox(height: 15),
+                      SizedBox(height: 15.h),
                       _buildTrendingGroups(),
-                      const SizedBox(height: 30),
+                      SizedBox(height: 30.h),
                       _buildSectionHeader("Recommended For You"),
-                      const SizedBox(height: 15),
+                      SizedBox(height: 15.h),
                       _buildRecommendedList(),
-                      const SizedBox(height: 30),
+                      SizedBox(height: 30.h),
                       _buildCreateGroupCard(),
-                      const SizedBox(height: 40),
+                      SizedBox(height: 40.h),
                     ],
                   ),
                 ),
@@ -75,16 +76,16 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SvgPicture.asset('assets/icons/Component 5.svg', width: 120),
+          SvgPicture.asset('assets/icons/Component 5.svg', width: 120.w),
           Stack(
             children: [
               SvgPicture.asset(
                 'assets/icons/Notification-Icons.svg',
-                width: 24,
+                width: 24.w,
                 colorFilter: const ColorFilter.mode(
                   Color(0xFF00E5FF),
                   BlendMode.srcIn,
@@ -94,8 +95,8 @@ class HomeScreen extends GetView<HomeController> {
                 right: 0,
                 top: 0,
                 child: Container(
-                  width: 8,
-                  height: 8,
+                  width: 8.w,
+                  height: 8.h,
                   decoration: const BoxDecoration(
                     color: Colors.red,
                     shape: BoxShape.circle,
@@ -111,30 +112,36 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildSearchBar() {
     return Container(
-      height: 50,
+      height: 50.h,
       decoration: BoxDecoration(
         color: const Color(0xFF2558A8).withOpacity(0.3),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(25.r),
       ),
       child: TextField(
         controller: controller.searchController,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.white, fontSize: 15.sp),
         decoration: InputDecoration(
           hintText: 'Search Trade & more',
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+          hintStyle: TextStyle(
+            color: Colors.white.withOpacity(0.5),
+            fontSize: 15.sp,
+          ),
           prefixIcon: Padding(
-            padding: const EdgeInsets.all(14.0),
-            child: SvgPicture.asset('assets/icons/Search-icons.svg', width: 18),
+            padding: EdgeInsets.all(14.r),
+            child: SvgPicture.asset(
+              'assets/icons/Search-icons.svg',
+              width: 18.w,
+            ),
           ),
           suffixIcon: Padding(
-            padding: const EdgeInsets.all(14.0),
+            padding: EdgeInsets.all(14.r),
             child: SvgPicture.asset(
               'assets/icons/Filtering-icons.svg',
-              width: 18,
+              width: 18.w,
             ),
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 15),
+          contentPadding: EdgeInsets.symmetric(vertical: 12.h),
         ),
       ),
     );
@@ -150,16 +157,13 @@ class HomeScreen extends GetView<HomeController> {
             return GestureDetector(
               onTap: () => controller.onCategorySelected(cat),
               child: Container(
-                margin: const EdgeInsets.only(right: 10),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
-                ),
+                margin: EdgeInsets.only(right: 10.w),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? const Color(0xFF0044CC)
                       : const Color(0xFF2558A8).withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20.r),
                   border: Border.all(
                     color: isSelected
                         ? Colors.transparent
@@ -169,33 +173,26 @@ class HomeScreen extends GetView<HomeController> {
                 child: Row(
                   children: [
                     if (cat == 'All') ...[
-                      const Icon(
+                      Icon(
                         Icons.grid_view_rounded,
-                        color: Color(0xFF00E5FF),
-                        size: 16,
+                        color: const Color(0xFF00E5FF),
+                        size: 16.sp,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8.w),
                     ],
                     if (cat == 'Electronics') ...[
-                      const Icon(
-                        Icons.laptop_mac,
-                        color: Colors.white,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
+                      Icon(Icons.laptop_mac, color: Colors.white, size: 16.sp),
+                      SizedBox(width: 8.w),
                     ],
                     if (cat == 'Fashion') ...[
-                      const Icon(
-                        Icons.checkroom,
-                        color: Colors.white,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
+                      Icon(Icons.checkroom, color: Colors.white, size: 16.sp),
+                      SizedBox(width: 8.w),
                     ],
                     Text(
                       cat,
                       style: TextStyle(
                         color: Colors.white,
+                        fontSize: 14.sp,
                         fontWeight: isSelected
                             ? FontWeight.bold
                             : FontWeight.normal,
@@ -217,18 +214,18 @@ class HomeScreen extends GetView<HomeController> {
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: 20.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
         if (onAction != null)
           GestureDetector(
             onTap: onAction,
-            child: const Text(
+            child: Text(
               "View All",
-              style: TextStyle(color: Color(0xFF00E5FF), fontSize: 13),
+              style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 13.sp),
             ),
           ),
       ],
@@ -242,7 +239,8 @@ class HomeScreen extends GetView<HomeController> {
         child: Row(
           children: controller.newListings
               .map(
-                (item) => SizedBox(width: 150, child: _buildListingCard(item)),
+                (item) =>
+                    SizedBox(width: 150.w, child: _buildListingCard(item)),
               )
               .toList(),
         ),
@@ -252,10 +250,10 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildListingCard(ListingModel item) {
     return Container(
-      margin: const EdgeInsets.only(right: 10),
+      margin: EdgeInsets.only(right: 10.w),
       decoration: BoxDecoration(
         color: const Color(0xFF2558A8).withOpacity(0.3),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(15.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,42 +262,41 @@ class HomeScreen extends GetView<HomeController> {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(15),
-                ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
                 child: Image.network(
                   item.image,
-                  height: 90,
+                  height: 90.h,
                   width: double.infinity,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
-                    height: 90,
+                    height: 90.h,
                     color: Colors.grey.withOpacity(0.2),
-                    child: const Icon(
+                    child: Icon(
                       Icons.image_not_supported,
                       color: Colors.white,
+                      size: 20.sp,
                     ),
                   ),
                 ),
               ),
               if (item.isNew)
                 Positioned(
-                  top: 8,
-                  right: 8,
+                  top: 8.h,
+                  right: 8.w,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6.w,
+                      vertical: 2.h,
                     ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF00E5FF),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(4.r),
                     ),
-                    child: const Text(
+                    child: Text(
                       "NEW",
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 8,
+                        fontSize: 8.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -307,24 +304,24 @@ class HomeScreen extends GetView<HomeController> {
                 ),
               if (item.isTrade)
                 Positioned(
-                  bottom: 8,
-                  left: 8,
+                  bottom: 8.h,
+                  left: 8.w,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6.w,
+                      vertical: 2.h,
                     ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF0044CC),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(4.r),
                     ),
                     child: Row(
-                      children: const [
-                        Icon(Icons.sync, color: Colors.white, size: 8),
-                        SizedBox(width: 2),
+                      children: [
+                        Icon(Icons.sync, color: Colors.white, size: 8.sp),
+                        SizedBox(width: 2.w),
                         Text(
                           "Trade",
-                          style: TextStyle(color: Colors.white, fontSize: 8),
+                          style: TextStyle(color: Colors.white, fontSize: 8.sp),
                         ),
                       ],
                     ),
@@ -333,46 +330,46 @@ class HomeScreen extends GetView<HomeController> {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(10.r),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   item.title,
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                  style: TextStyle(color: Colors.white, fontSize: 12.sp),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4.h),
                 Text(
                   item.price,
-                  style: const TextStyle(
-                    color: Color(0xFF00E5FF),
+                  style: TextStyle(
+                    color: const Color(0xFF00E5FF),
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        const CircleAvatar(
-                          radius: 8,
-                          backgroundColor: Colors.grey,
-                        ),
-                        const SizedBox(width: 4),
+                        CircleAvatar(radius: 8.r, backgroundColor: Colors.grey),
+                        SizedBox(width: 4.w),
                         Text(
                           item.seller.split(' ')[0],
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.6),
-                            fontSize: 9,
+                            fontSize: 9.sp,
                           ),
                         ),
                       ],
                     ),
-                    SvgPicture.asset('assets/icons/Love-icons.svg', width: 12),
+                    SvgPicture.asset(
+                      'assets/icons/Love-icons.svg',
+                      width: 12.w,
+                    ),
                   ],
                 ),
               ],
@@ -394,40 +391,40 @@ class HomeScreen extends GetView<HomeController> {
                 alignment: Alignment.bottomRight,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(2),
+                    padding: EdgeInsets.all(2.r),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: const Color(0xFF00E5FF),
-                        width: 2,
+                        width: 2.w,
                       ),
                     ),
                     child: CircleAvatar(
-                      radius: 35,
+                      radius: 35.r,
                       backgroundImage: NetworkImage(seller.image),
                     ),
                   ),
                   if (seller.isVerified)
                     SvgPicture.asset(
                       'assets/icons/Verify-icons.svg',
-                      width: 20,
+                      width: 20.w,
                     ),
                 ],
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10.h),
               Text(
                 seller.name,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                 ),
               ),
               Text(
                 seller.role,
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.5),
-                  fontSize: 10,
+                  fontSize: 10.sp,
                 ),
               ),
             ],
@@ -442,47 +439,47 @@ class HomeScreen extends GetView<HomeController> {
       () => Column(
         children: controller.trendingGroups.map((group) {
           return Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(15),
+            margin: EdgeInsets.only(bottom: 12.h),
+            padding: EdgeInsets.all(15.r),
             decoration: BoxDecoration(
               color: const Color(0xFF2558A8).withOpacity(0.3),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
                   child: SvgPicture.asset(
                     group.icon,
-                    width: 20,
+                    width: 20.w,
                     colorFilter: const ColorFilter.mode(
                       Color(0xFF00E5FF),
                       BlendMode.srcIn,
                     ),
                   ),
                 ),
-                const SizedBox(width: 15),
+                SizedBox(width: 15.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         group.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 15,
+                          fontSize: 15.sp,
                         ),
                       ),
                       Text(
                         "${group.members} • ${group.posts}",
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
-                          fontSize: 12,
+                          fontSize: 12.sp,
                         ),
                       ),
                     ],
@@ -491,6 +488,7 @@ class HomeScreen extends GetView<HomeController> {
                 Icon(
                   Icons.add_circle_outline,
                   color: Colors.white.withOpacity(0.3),
+                  size: 20.sp,
                 ),
               ],
             ),
@@ -505,13 +503,13 @@ class HomeScreen extends GetView<HomeController> {
       () => GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 15,
+          crossAxisSpacing: 10.w,
+          mainAxisSpacing: 15.h,
           childAspectRatio: 0.52,
         ),
-        itemCount: controller.newListings.length * 2, // Mocking more items
+        itemCount: controller.newListings.length * 2,
         itemBuilder: (context, index) {
           final item =
               controller.newListings[index % controller.newListings.length];
@@ -524,48 +522,49 @@ class HomeScreen extends GetView<HomeController> {
   Widget _buildCreateGroupCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(30),
+      padding: EdgeInsets.all(30.r),
       decoration: BoxDecoration(
         color: const Color(0xFF2558A8).withOpacity(0.4),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(25.r),
       ),
       child: Column(
         children: [
-          SvgPicture.asset('assets/icons/FDAdd-icons.svg', width: 48),
-          const SizedBox(height: 20),
-          const Text(
+          SvgPicture.asset('assets/icons/FDAdd-icons.svg', width: 48.w),
+          SizedBox(height: 20.h),
+          Text(
             "Can't find your niche?",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 18.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
           Text(
             "Start your own community and connect with like-minded traders.",
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white.withOpacity(0.7),
-              fontSize: 14,
+              fontSize: 14.sp,
             ),
           ),
-          const SizedBox(height: 30),
+          SizedBox(height: 30.h),
           SizedBox(
-            width: 200,
-            height: 48,
+            width: 200.w,
+            height: 48.h,
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(24.r),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Create New Group',
                 style: TextStyle(
-                  color: Color(0xFF003399),
+                  color: const Color(0xFF003399),
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
