@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../Controller/friends_controller.dart';
+import 'seller_profile_screen.dart';
 
 class FriendsScreen extends GetView<FriendsController> {
   const FriendsScreen({super.key});
@@ -220,7 +221,84 @@ class FriendsScreen extends GetView<FriendsController> {
         children: currentList.map((item) {
           if (controller.selectedTab.value == 2) {
             // Requests view (based on Image 1)
-            return Container(
+            return GestureDetector(
+              onTap: () => Get.to(() => const SellerProfileScreen()),
+              child: Container(
+                margin: EdgeInsets.only(bottom: 15.h),
+                padding: EdgeInsets.all(15.r),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2558A8).withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(25.r),
+                  border: Border.all(color: Colors.white.withOpacity(0.1)),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 25.r,
+                          backgroundImage: NetworkImage(item['image']!),
+                        ),
+                        SizedBox(width: 15.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item['name']!,
+                                style: TextStyle(color: Colors.white, fontSize: 15.sp, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                item['mutual']!,
+                                style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.sp),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 15.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 40.h,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF003399),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+                              ),
+                              child: Text("Accept", style: TextStyle(fontSize: 14.sp)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        Expanded(
+                          child: SizedBox(
+                            height: 40.h,
+                            child: OutlinedButton(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: Colors.white.withOpacity(0.3)),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+                              ),
+                              child: Text("Decline", style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14.sp)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          // Other views (Friends, Following, Suggested)
+          return GestureDetector(
+            onTap: () => Get.to(() => const SellerProfileScreen()),
+            child: Container(
               margin: EdgeInsets.only(bottom: 15.h),
               padding: EdgeInsets.all(15.r),
               decoration: BoxDecoration(
@@ -228,102 +306,31 @@ class FriendsScreen extends GetView<FriendsController> {
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(color: Colors.white.withOpacity(0.1)),
               ),
-              child: Column(
+              child: Row(
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 25.r,
-                        backgroundImage: NetworkImage(item['image']!),
-                      ),
-                      SizedBox(width: 15.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item['name']!,
-                              style: TextStyle(color: Colors.white, fontSize: 15.sp, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              item['mutual']!,
-                              style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.sp),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  CircleAvatar(
+                    radius: 25.r,
+                    backgroundImage: NetworkImage(item['image']!),
                   ),
-                  SizedBox(height: 15.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 40.h,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF003399),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-                            ),
-                            child: Text("Accept", style: TextStyle(fontSize: 14.sp)),
-                          ),
+                  SizedBox(width: 15.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item['name']!,
+                          style: TextStyle(color: Colors.white, fontSize: 15.sp, fontWeight: FontWeight.bold),
                         ),
-                      ),
-                      SizedBox(width: 10.w),
-                      Expanded(
-                        child: SizedBox(
-                          height: 40.h,
-                          child: OutlinedButton(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: Colors.white.withOpacity(0.3)),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-                            ),
-                            child: Text("Decline", style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14.sp)),
-                          ),
+                        Text(
+                          item['mutual']!,
+                          style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.sp),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  _buildActionWidget(),
                 ],
               ),
-            );
-          }
-
-          // Other views (Friends, Following, Suggested)
-          return Container(
-            margin: EdgeInsets.only(bottom: 15.h),
-            padding: EdgeInsets.all(15.r),
-            decoration: BoxDecoration(
-              color: const Color(0xFF2558A8).withOpacity(0.4),
-              borderRadius: BorderRadius.circular(25.r),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 25.r,
-                  backgroundImage: NetworkImage(item['image']!),
-                ),
-                SizedBox(width: 15.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item['name']!,
-                        style: TextStyle(color: Colors.white, fontSize: 15.sp, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        item['mutual']!,
-                        style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.sp),
-                      ),
-                    ],
-                  ),
-                ),
-                _buildActionWidget(),
-              ],
             ),
           );
         }).toList(),
@@ -382,56 +389,59 @@ class FriendsScreen extends GetView<FriendsController> {
     return Row(
       children: controller.recommended.map((item) {
         return Expanded(
-          child: Container(
-            margin: EdgeInsets.only(right: 15.w),
-            padding: EdgeInsets.all(15.r),
-            decoration: BoxDecoration(
-              color: const Color(0xFF2558A8).withOpacity(0.4),
-              borderRadius: BorderRadius.circular(25.r),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
-            ),
-            child: Column(
-              children: [
-                Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 35.r,
-                      backgroundImage: NetworkImage(item['image']!),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        padding: EdgeInsets.all(4.r),
-                        decoration: const BoxDecoration(color: Color(0xFF00E5FF), shape: BoxShape.circle),
-                        child: Icon(Icons.bolt, color: Colors.white, size: 10.sp),
+          child: GestureDetector(
+            onTap: () => Get.to(() => const SellerProfileScreen()),
+            child: Container(
+              margin: EdgeInsets.only(right: 15.w),
+              padding: EdgeInsets.all(15.r),
+              decoration: BoxDecoration(
+                color: const Color(0xFF2558A8).withOpacity(0.4),
+                borderRadius: BorderRadius.circular(25.r),
+                border: Border.all(color: Colors.white.withOpacity(0.1)),
+              ),
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 35.r,
+                        backgroundImage: NetworkImage(item['image']!),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  item['name']!,
-                  style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  item['mutual']!,
-                  style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11.sp),
-                ),
-                SizedBox(height: 15.h),
-                SizedBox(
-                  width: double.infinity,
-                  height: 35.h,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF003399),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
-                    ),
-                    child: Text("Add Friend", style: TextStyle(fontSize: 12.sp)),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: EdgeInsets.all(4.r),
+                          decoration: const BoxDecoration(color: Color(0xFF00E5FF), shape: BoxShape.circle),
+                          child: Icon(Icons.bolt, color: Colors.white, size: 10.sp),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  SizedBox(height: 12.h),
+                  Text(
+                    item['name']!,
+                    style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    item['mutual']!,
+                    style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11.sp),
+                  ),
+                  SizedBox(height: 15.h),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 35.h,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF003399),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+                      ),
+                      child: Text("Add Friend", style: TextStyle(fontSize: 12.sp)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -439,3 +449,4 @@ class FriendsScreen extends GetView<FriendsController> {
     );
   }
 }
+
