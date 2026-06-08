@@ -1,0 +1,72 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+.vscode/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .packages file is deprecated.
+# https://github.com/flutter/flutter/issues/48918
+.packages
+
+# Flutter/Dart-specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Android-specific
+android/**/gradle-wrapper.properties
+android/.gradle
+android/captures/
+android/gradlew
+android/gradlew.bat
+android/local.properties
+android/key.properties
+android/bundle
+android/app/src/main/res/values/strings.xml
+android/app/src/main/res/values/google-services.json
+
+# iOS-specific
+ios/.generated/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.h
+ios/Runner/GeneratedPluginRegistrant.m
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/ephemeral/
+ios/DerivedData/
+*.moved-aside
+*.xcuserstate
+*.xcworkspace
+!ios/Runner/Base.lproj/LaunchScreen.storyboard
+!ios/Runner/Base.lproj/Main.storyboard
+!ios/Runner/Info.plist
+
+# Web-specific
+lib/generated_plugin_registrant.dart
+
+# Symbolication related
+app.*.symbols
+app.*.map.json
+
+# Exceptions to above rules
+!android/app/src/main/res/values/strings.xml
+!android/app/src/main/res/values/google-services.json

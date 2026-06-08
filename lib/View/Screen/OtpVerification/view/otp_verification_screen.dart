@@ -70,27 +70,28 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 10),
-                        
+
                         // App Logo
                         SvgPicture.asset(
                           AppIcons.appLogo,
                           width: 160,
-                          placeholderBuilder: (BuildContext context) => const Text(
-                            'bondi',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          placeholderBuilder: (BuildContext context) =>
+                              const Text(
+                                'bondi',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                         ),
-                        
+
                         const SizedBox(height: 20),
-                        
+
                         // Check Your Inbox Text
                         const Text(
                           'Check Your Inbox',
@@ -100,24 +101,27 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 8),
-                        
+
                         // Subtitle
                         Text(
                           "We've sent a 6-digit verification code to your email. Please enter it below to activate your account.",
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.start,
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.8),
                             fontSize: 15,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 30),
-                        
+
                         // OTP Card
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                            vertical: 25.0,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFF2558A8).withOpacity(0.4),
                             borderRadius: BorderRadius.circular(20.0),
@@ -133,13 +137,14 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                                 defaultPinTheme: defaultPinTheme,
                                 focusedPinTheme: focusedPinTheme,
                                 submittedPinTheme: submittedPinTheme,
-                                pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                                pinputAutovalidateMode:
+                                    PinputAutovalidateMode.onSubmit,
                                 showCursor: true,
                                 onCompleted: (pin) => controller.verifyOtp(pin),
                               ),
-                              
+
                               const SizedBox(height: 25),
-                              
+
                               // Resend Code Text
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -166,9 +171,9 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                                   ),
                                 ],
                               ),
-                              
+
                               const SizedBox(height: 30),
-                              
+
                               // Verify Button
                               Obx(
                                 () => SizedBox(
@@ -196,12 +201,16 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                                     child: ElevatedButton(
                                       onPressed: controller.isLoading.value
                                           ? null
-                                          : () => controller.verifyOtp(controller.otpController.text),
+                                          : () => controller.verifyOtp(
+                                              controller.otpController.text,
+                                            ),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.transparent,
                                         shadowColor: Colors.transparent,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(25.0),
+                                          borderRadius: BorderRadius.circular(
+                                            25.0,
+                                          ),
                                         ),
                                       ),
                                       child: controller.isLoading.value
@@ -209,9 +218,10 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                                               width: 24,
                                               height: 24,
                                               child: CircularProgressIndicator(
-                                                valueColor: AlwaysStoppedAnimation<Color>(
-                                                  Colors.white,
-                                                ),
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                      Color
+                                                    >(Colors.white),
                                                 strokeWidth: 2.5,
                                               ),
                                             )
@@ -230,7 +240,7 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                             ],
                           ),
                         ),
-                        
+
                         const SizedBox(height: 30),
                       ],
                     ),
