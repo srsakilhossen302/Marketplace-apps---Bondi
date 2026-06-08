@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../Notification/view/notification_screen.dart';
 import '../Controller/home_controller.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -83,29 +84,32 @@ class HomeScreen extends GetView<HomeController> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SvgPicture.asset('assets/icons/Component 5.svg', width: 120.w),
-          Stack(
-            children: [
-              SvgPicture.asset(
-                'assets/icons/Notification-Icons.svg',
-                width: 24.w,
-                colorFilter: const ColorFilter.mode(
-                  Color(0xFF00E5FF),
-                  BlendMode.srcIn,
-                ),
-              ),
-              Positioned(
-                right: 0,
-                top: 0,
-                child: Container(
-                  width: 8.w,
-                  height: 8.h,
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
+          GestureDetector(
+            onTap: () => Get.to(() => const NotificationScreen()),
+            child: Stack(
+              children: [
+                SvgPicture.asset(
+                  'assets/icons/Notification-Icons.svg',
+                  width: 24.w,
+                  colorFilter: const ColorFilter.mode(
+                    Color(0xFF00E5FF),
+                    BlendMode.srcIn,
                   ),
                 ),
-              ),
-            ],
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    width: 8.w,
+                    height: 8.h,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
