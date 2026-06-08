@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../Controller/user_profile_controller.dart';
+import 'add_listing_screen.dart';
 import 'edit_listing_screen.dart';
 import 'edit_profile_screen.dart';
 import 'friends_screen.dart';
@@ -327,7 +328,10 @@ class UserProfileScreen extends GetView<UserProfileController> {
             child: _buildListingCard(item),
           );
         } else {
-          return _buildAddListingCard();
+          return GestureDetector(
+            onTap: () => Get.to(() => const AddListingScreen()),
+            child: _buildAddListingCard(),
+          );
         }
       },
     );
@@ -359,25 +363,58 @@ class UserProfileScreen extends GetView<UserProfileController> {
                 Positioned(
                   top: 10.h,
                   left: 10.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 4.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: item['status'] == 'ACTIVE'
-                          ? const Color(0xFF00E5FF)
-                          : Colors.cyan.shade700,
-                      borderRadius: BorderRadius.circular(5.r),
-                    ),
-                    child: Text(
-                      item['status'],
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 9.sp,
-                        fontWeight: FontWeight.bold,
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: item['status'] == 'ACTIVE'
+                              ? const Color(0xFF00E5FF)
+                              : Colors.cyan.shade700,
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: Text(
+                          item['status'],
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 9.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(width: 5.w),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.w,
+                          vertical: 4.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.auto_awesome,
+                              color: const Color(0xFF00E5FF),
+                              size: 10.sp,
+                            ),
+                            SizedBox(width: 2.w),
+                            Text(
+                              "AI",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 9.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
