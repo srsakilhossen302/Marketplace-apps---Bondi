@@ -1,8 +1,9 @@
+import 'dart:ui';
+import 'package:bondi/View/Widgegt/CustomCard/custom_listing_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import '../../../../Model/home_models.dart';
 import '../Controller/home_controller.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -239,143 +240,13 @@ class HomeScreen extends GetView<HomeController> {
         child: Row(
           children: controller.newListings
               .map(
-                (item) =>
-                    SizedBox(width: 150.w, child: _buildListingCard(item)),
+                (item) => Padding(
+                  padding: EdgeInsets.only(right: 15.w),
+                  child: CustomListingCard(item: item),
+                ),
               )
               .toList(),
         ),
-      ),
-    );
-  }
-
-  Widget _buildListingCard(ListingModel item) {
-    return Container(
-      margin: EdgeInsets.only(right: 10.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
-        borderRadius: BorderRadius.circular(15.r),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
-                child: Image.network(
-                  item.image,
-                  height: 90.h,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 90.h,
-                    color: Colors.grey.withOpacity(0.2),
-                    child: Icon(
-                      Icons.image_not_supported,
-                      color: Colors.white,
-                      size: 20.sp,
-                    ),
-                  ),
-                ),
-              ),
-              if (item.isNew)
-                Positioned(
-                  top: 8.h,
-                  right: 8.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6.w,
-                      vertical: 2.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF00E5FF),
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
-                    child: Text(
-                      "NEW",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 8.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              if (item.isTrade)
-                Positioned(
-                  bottom: 8.h,
-                  left: 8.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6.w,
-                      vertical: 2.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0044CC),
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.sync, color: Colors.white, size: 8.sp),
-                        SizedBox(width: 2.w),
-                        Text(
-                          "Trade",
-                          style: TextStyle(color: Colors.white, fontSize: 8.sp),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.all(10.r),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.title,
-                  style: TextStyle(color: Colors.white, fontSize: 12.sp),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  item.price,
-                  style: TextStyle(
-                    color: const Color(0xFF00E5FF),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.sp,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(radius: 8.r, backgroundColor: Colors.grey),
-                        SizedBox(width: 4.w),
-                        Text(
-                          item.seller.split(' ')[0],
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
-                            fontSize: 9.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SvgPicture.asset(
-                      'assets/icons/Love-icons.svg',
-                      width: 12.w,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -500,21 +371,12 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildRecommendedList() {
     return Obx(
-      () => GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 10.w,
-          mainAxisSpacing: 15.h,
-          childAspectRatio: 0.52,
-        ),
-        itemCount: controller.newListings.length * 2,
-        itemBuilder: (context, index) {
-          final item =
-              controller.newListings[index % controller.newListings.length];
-          return _buildListingCard(item);
-        },
+      () => Wrap(
+        spacing: 15.w,
+        runSpacing: 15.h,
+        children: controller.recommendedListings
+            .map((item) => CustomListingCard(item: item))
+            .toList(),
       ),
     );
   }
@@ -522,55 +384,65 @@ class HomeScreen extends GetView<HomeController> {
   Widget _buildCreateGroupCard() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(30.r),
       decoration: BoxDecoration(
         color: const Color(0xFF2558A8).withOpacity(0.4),
-        borderRadius: BorderRadius.circular(25.r),
+        borderRadius: BorderRadius.circular(30.r),
       ),
-      child: Column(
-        children: [
-          SvgPicture.asset('assets/icons/FDAdd-icons.svg', width: 48.w),
-          SizedBox(height: 20.h),
-          Text(
-            "Can't find your niche?",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10.h),
-          Text(
-            "Start your own community and connect with like-minded traders.",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontSize: 14.sp,
-            ),
-          ),
-          SizedBox(height: 30.h),
-          SizedBox(
-            width: 200.w,
-            height: 48.h,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.r),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30.r),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 30.w),
+            child: Column(
+              children: [
+                SvgPicture.asset('assets/icons/FDAdd-icons.svg', width: 48.w),
+                SizedBox(height: 25.h),
+                Text(
+                  "Can't find your niche?",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              child: Text(
-                'Create New Group',
-                style: TextStyle(
-                  color: const Color(0xFF003399),
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.bold,
+                SizedBox(height: 12.h),
+                Text(
+                  "Start your own community and connect with like-minded traders.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 15.sp,
+                    height: 1.4,
+                  ),
                 ),
-              ),
+                SizedBox(height: 35.h),
+                SizedBox(
+                  width: double.infinity,
+                  height: 54.h,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(27.r),
+                      ),
+                    ),
+                    child: Text(
+                      'Create New Group',
+                      style: TextStyle(
+                        color: const Color(0xFF003399),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
