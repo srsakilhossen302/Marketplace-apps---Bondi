@@ -267,11 +267,19 @@ class HomeScreen extends GetView<HomeController> {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(15),
                 ),
-                child: Image.asset(
+                child: Image.network(
                   item.image,
                   height: 90,
                   width: double.infinity,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    height: 90,
+                    color: Colors.grey.withOpacity(0.2),
+                    child: const Icon(
+                      Icons.image_not_supported,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
               if (item.isNew)

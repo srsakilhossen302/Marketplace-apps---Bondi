@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../Home/view/home_screen.dart';
 
 class LoginController extends GetxController {
   final emailController = TextEditingController();
@@ -30,19 +31,11 @@ class LoginController extends GetxController {
     }
 
     isLoading.value = true;
-    
+
     // Simulate API request
     Future.delayed(const Duration(seconds: 2), () {
       isLoading.value = false;
-      Get.snackbar(
-        'Login Success',
-        'Welcome back to Bondi!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withOpacity(0.9),
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
+      Get.offAll(() => const HomeScreen());
     });
   }
 
