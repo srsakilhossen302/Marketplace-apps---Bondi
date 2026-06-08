@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
+import '../../Community/view/community_screen.dart';
 import '../../Discover/view/discover_screen.dart';
 import '../../Home/view/home_screen.dart';
 import '../../Sell/view/sell_screen.dart';
@@ -19,12 +20,7 @@ class MainScreen extends GetView<MainController> {
       const HomeScreen(),
       const DiscoverScreen(),
       const SellScreen(),
-      Center(
-        child: Text(
-          'Community',
-          style: TextStyle(color: Colors.white, fontSize: 18.sp),
-        ),
-      ),
+      const CommunityScreen(),
       Center(
         child: Text(
           'Profile',
