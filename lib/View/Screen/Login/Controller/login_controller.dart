@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../Home/view/home_screen.dart';
+import '../../Main/view/main_screen.dart';
 
 class LoginController extends GetxController {
   final emailController = TextEditingController();
@@ -35,7 +35,7 @@ class LoginController extends GetxController {
     // Simulate API request
     Future.delayed(const Duration(seconds: 2), () {
       isLoading.value = false;
-      Get.offAll(() => const HomeScreen());
+      Get.offAll(() => const MainScreen());
     });
   }
 

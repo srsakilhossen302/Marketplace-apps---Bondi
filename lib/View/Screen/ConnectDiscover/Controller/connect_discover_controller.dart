@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../Home/view/home_screen.dart';
+import '../../Main/view/main_screen.dart';
 
 class ConnectDiscoverController extends GetxController {
   final searchController = TextEditingController();
@@ -48,7 +48,7 @@ class ConnectDiscoverController extends GetxController {
   }
 
   void continueToFeed() {
-    Get.offAll(() => const HomeScreen());
+    Get.offAll(() => const MainScreen());
   }
 
   @override
