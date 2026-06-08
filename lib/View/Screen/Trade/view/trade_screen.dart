@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../Controller/trade_controller.dart';
+import 'select_project_screen.dart';
 
 class TradeScreen extends GetView<TradeController> {
   const TradeScreen({super.key});
@@ -112,15 +113,17 @@ class TradeScreen extends GetView<TradeController> {
     );
   }
 
-  Widget _buildProductCard(String tag, String title, String price, String img) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
-        borderRadius: BorderRadius.circular(30.r),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
-      ),
-      child: Column(
+  Widget _buildProductCard(String tag, String title, String price, String img, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: const Color(0xFF2558A8).withOpacity(0.4),
+          borderRadius: BorderRadius.circular(30.r),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
+        ),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
@@ -252,6 +255,7 @@ class TradeScreen extends GetView<TradeController> {
           ),
         ],
       ),
+      )
     );
   }
 
@@ -273,52 +277,67 @@ class TradeScreen extends GetView<TradeController> {
   }
 
   Widget _buildSelectProductCard() {
-    return CustomPaint(
-      painter: DashedRectPainter(
-        color: Colors.white.withOpacity(0.3),
-        strokeWidth: 1,
-        gap: 5,
-        borderRadius: 30.r,
-      ),
-      child: Container(
-        width: double.infinity,
-        height: 250.h,
-        decoration: BoxDecoration(
-          color: const Color(0xFF2558A8).withOpacity(0.4),
-          borderRadius: BorderRadius.circular(30.r),
+    return Obx(() {
+      final selectedProduct = controller.selectedProduct.value;
+      if (selectedProduct != null) {
+        return _buildProductCard(
+          "Your Item",
+          selectedProduct.title,
+          selectedProduct.price,
+          selectedProduct.image,
+          onTap: () => Get.to(() => const SelectProjectScreen()),
+        );
+      }
+      return GestureDetector(
+        onTap: () => Get.to(() => const SelectProjectScreen()),
+        child: CustomPaint(
+          painter: DashedRectPainter(
+            color: Colors.white.withOpacity(0.3),
+            strokeWidth: 1,
+            gap: 5,
+            borderRadius: 30.r,
+          ),
+          child: Container(
+            width: double.infinity,
+            height: 250.h,
+            decoration: BoxDecoration(
+              color: const Color(0xFF2558A8).withOpacity(0.4),
+              borderRadius: BorderRadius.circular(30.r),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(12.r),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.add, color: Colors.white, size: 28.sp),
+                ),
+                SizedBox(height: 15.h),
+                Text(
+                  "Select Your Product",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  "Choose from your active listings",
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.5),
+                    fontSize: 12.sp,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(12.r),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.add, color: Colors.white, size: 28.sp),
-            ),
-            SizedBox(height: 15.h),
-            Text(
-              "Select Your Product",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              "Choose from your active listings",
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.5),
-                fontSize: 12.sp,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildCashInput() {
