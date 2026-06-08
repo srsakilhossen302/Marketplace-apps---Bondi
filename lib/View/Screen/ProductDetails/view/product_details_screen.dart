@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../Widgegt/CustomCard/custom_listing_card.dart';
+import '../../Trade/view/trade_screen.dart';
 import '../Controller/product_details_controller.dart';
 
 class ProductDetailsScreen extends GetView<ProductDetailsController> {
@@ -496,7 +497,10 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
           child: SizedBox(
             height: 55.h,
             child: OutlinedButton(
-              onPressed: () {},
+              onPressed: () => Get.to(
+                () => const TradeScreen(),
+                arguments: controller.product,
+              ),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Color(0xFF0044CC)),
                 shape: RoundedRectangleBorder(
