@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../Controller/profile_controller.dart';
+import 'edit_profile_screen.dart';
+import 'friends_screen.dart';
+import 'subscription_screen.dart';
 import 'user_profile_screen.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
@@ -75,6 +78,7 @@ class ProfileScreen extends GetView<ProfileController> {
                           Icons.star_outline,
                           "Subscription",
                           subtitle: "Bond Plus",
+                          onTap: () => Get.to(() => const SubscriptionScreen()),
                         ),
                       ]),
                       SizedBox(height: 25.h),
