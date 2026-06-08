@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
+import '../../Discover/view/discover_screen.dart';
 import '../../Home/view/home_screen.dart';
 import '../Controller/main_controller.dart';
 
@@ -15,12 +16,7 @@ class MainScreen extends GetView<MainController> {
 
     final List<Widget> screens = [
       const HomeScreen(),
-      Center(
-        child: Text(
-          'Discover',
-          style: TextStyle(color: Colors.white, fontSize: 18.sp),
-        ),
-      ),
+      const DiscoverScreen(),
       Center(
         child: Text(
           'Sell',
