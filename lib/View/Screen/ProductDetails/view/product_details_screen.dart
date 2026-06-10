@@ -231,7 +231,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: Row(
@@ -284,7 +284,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
       width: double.infinity,
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -342,7 +342,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: Column(
@@ -498,7 +498,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                 arguments: controller.product,
               ),
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFF0044CC)),
+                side: const BorderSide(color: Color(0xFF0052D4)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.r),
                 ),
@@ -520,7 +520,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0044CC),
+                backgroundColor: const Color(0xFF0052D4),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.r),
                 ),

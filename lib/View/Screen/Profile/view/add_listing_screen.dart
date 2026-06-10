@@ -199,7 +199,7 @@ class AddListingScreen extends GetView<AddListingController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -269,7 +269,7 @@ class AddListingScreen extends GetView<AddListingController> {
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
           decoration: BoxDecoration(
             color: isSelected
-                ? const Color(0xFF003399)
+                ? const Color(0xFF0052D4)
                 : Colors.white.withOpacity(0.05),
             borderRadius: BorderRadius.circular(20.r),
             border: Border.all(
@@ -294,7 +294,7 @@ class AddListingScreen extends GetView<AddListingController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -343,7 +343,7 @@ class AddListingScreen extends GetView<AddListingController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -427,7 +427,7 @@ class AddListingScreen extends GetView<AddListingController> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 15.w),
           decoration: BoxDecoration(
-            color: const Color(0xFF2558A8).withOpacity(0.3),
+            color: const Color(0xFF002FA7).withOpacity(0.3),
             borderRadius: BorderRadius.circular(25.r),
             border: Border.all(color: const Color(0xFF00E5FF).withOpacity(0.5)),
           ),
@@ -453,7 +453,7 @@ class AddListingScreen extends GetView<AddListingController> {
         Container(
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF2558A8).withOpacity(0.3),
+            color: const Color(0xFF002FA7).withOpacity(0.3),
             borderRadius: BorderRadius.circular(30.r),
           ),
           child: Column(
@@ -567,7 +567,7 @@ class AddListingScreen extends GetView<AddListingController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F4FB0).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: TextField(
@@ -589,7 +589,7 @@ class AddListingScreen extends GetView<AddListingController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F4FB0).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(

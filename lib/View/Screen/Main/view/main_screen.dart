@@ -35,7 +35,7 @@ class MainScreen extends GetView<MainController> {
     return Container(
       height: 90.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF1F4FB0).withOpacity(0.95),
+        color: const Color(0xFF002FA7).withOpacity(0.95),
         border: Border(
           top: BorderSide(color: Colors.white.withOpacity(0.1), width: 0.5.w),
         ),

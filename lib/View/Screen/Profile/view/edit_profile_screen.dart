@@ -124,7 +124,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [const Color(0xFF0044CC).withOpacity(0.4), const Color(0xFF00E5FF).withOpacity(0.2)],
+          colors: [const Color(0xFF0052D4).withOpacity(0.4), const Color(0xFF00E5FF).withOpacity(0.2)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -146,7 +146,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
                 child: Container(
                   padding: EdgeInsets.all(6.r),
                   decoration: const BoxDecoration(
-                    color: Color(0xFF003399),
+                    color: Color(0xFF0052D4),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(Icons.camera_alt, color: Colors.white, size: 16.sp),
@@ -160,7 +160,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: const Color(0xFF003399),
+                color: const Color(0xFF0052D4),
                 borderRadius: BorderRadius.circular(15.r),
               ),
               child: Text(
@@ -178,7 +178,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -254,7 +254,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
           decoration: InputDecoration(
             prefixIcon: icon != null ? Icon(icon, color: const Color(0xFF00E5FF), size: 20.sp) : null,
             filled: true,
-            fillColor: const Color(0xFF2558A8).withOpacity(0.3),
+            fillColor: const Color(0xFF002FA7).withOpacity(0.3),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.r), borderSide: BorderSide.none),
             contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
           ),
@@ -275,7 +275,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
         Container(
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF2558A8).withOpacity(0.4),
+            color: const Color(0xFF002FA7).withOpacity(0.4),
             borderRadius: BorderRadius.circular(25.r),
           ),
           child: Column(
@@ -302,7 +302,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -333,7 +333,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
                   value: controller.publicVisibility.value,
                   onChanged: (v) => controller.publicVisibility.value = v,
                   activeColor: const Color(0xFF00E5FF),
-                  activeTrackColor: const Color(0xFF003399),
+                  activeTrackColor: const Color(0xFF0052D4),
                 )),
               ],
             ),
@@ -368,7 +368,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
                   ],
                 ),
                 filled: true,
-                fillColor: const Color(0xFF2558A8).withOpacity(0.3),
+                fillColor: const Color(0xFF002FA7).withOpacity(0.3),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.r), borderSide: BorderSide.none),
                 contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
               ),
@@ -395,7 +395,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
             icon: Icon(Icons.check_circle_outline, size: 20.sp),
             label: Text("Save Changes", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF003399),
+              backgroundColor: const Color(0xFF0052D4),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
             ),
           ),
@@ -407,7 +407,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
           child: OutlinedButton(
             onPressed: () => Get.back(),
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: Color(0xFF003399)),
+              side: const BorderSide(color: Color(0xFF0052D4)),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
             ),
             child: Text("Discard Changes", style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 16.sp)),

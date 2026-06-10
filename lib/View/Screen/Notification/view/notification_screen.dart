@@ -94,7 +94,7 @@ class NotificationScreen extends GetView<NotificationController> {
       margin: EdgeInsets.only(bottom: 15.h),
       padding: EdgeInsets.all(15.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -248,7 +248,7 @@ class NotificationScreen extends GetView<NotificationController> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: const Color(0xFF2558A8),
+                          color: const Color(0xFF002FA7),
                           width: 2,
                         ),
                       ),
@@ -265,10 +265,10 @@ class NotificationScreen extends GetView<NotificationController> {
                     child: Container(
                       padding: EdgeInsets.all(4.r),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0044CC),
+                        color: const Color(0xFF0052D4),
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: const Color(0xFF2558A8),
+                          color: const Color(0xFF002FA7),
                           width: 2,
                         ),
                       ),
@@ -318,7 +318,7 @@ class NotificationScreen extends GetView<NotificationController> {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0044CC),
+                        backgroundColor: const Color(0xFF0052D4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25.r),
                         ),
@@ -394,7 +394,7 @@ class NotificationScreen extends GetView<NotificationController> {
             child: Container(
               padding: EdgeInsets.all(4.r),
               decoration: const BoxDecoration(
-                color: Color(0xFF0044CC),
+                color: Color(0xFF0052D4),
                 shape: BoxShape.circle,
               ),
               child: Icon(

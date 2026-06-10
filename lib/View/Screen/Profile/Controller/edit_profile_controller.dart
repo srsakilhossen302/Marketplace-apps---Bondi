@@ -18,7 +18,7 @@ class EditProfileController extends GetxController {
   final pixKeyType = 'Phone Number'.obs;
 
   final themeColors = [
-    const Color(0xFF0044CC),
+    const Color(0xFF0052D4),
     const Color(0xFF006699),
     const Color(0xFF334455),
     const Color(0xFF00E5FF),

@@ -84,7 +84,7 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
       width: double.infinity,
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -171,7 +171,7 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
       width: double.infinity,
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -261,7 +261,7 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.add, color: const Color(0xFF003399), size: 24.sp),
+            child: Icon(Icons.add, color: const Color(0xFF0052D4), size: 24.sp),
           ),
         ),
         SizedBox(height: 8.h),

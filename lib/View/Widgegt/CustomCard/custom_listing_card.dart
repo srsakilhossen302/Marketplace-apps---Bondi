@@ -24,7 +24,7 @@ class CustomListingCard extends StatelessWidget {
       child: Container(
         width: width ?? 115.81876373291016.w, // Exact width from user
         decoration: BoxDecoration(
-          color: const Color(0xFF2558A8).withOpacity(0.3),
+          color: const Color(0xFF002FA7).withOpacity(0.3),
           borderRadius: BorderRadius.circular(20.r),
         ),
         child: Column(

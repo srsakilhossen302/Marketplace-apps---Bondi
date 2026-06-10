@@ -115,7 +115,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
               child: Container(
                 padding: EdgeInsets.all(4.r),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF1F4FB0),
+                  color: Color(0xFF002FA7),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.verified, color: Colors.white, size: 18.sp),
@@ -195,7 +195,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
     return Container(
       height: 50.h,
       decoration: BoxDecoration(
-        color: isPrimary ? const Color(0xFF003399) : Colors.white.withOpacity(0.1),
+        color: isPrimary ? const Color(0xFF0052D4) : Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(25.r),
         border: isPrimary ? null : Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -215,7 +215,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -255,7 +255,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
         Container(
           padding: EdgeInsets.all(25.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF2558A8).withOpacity(0.3),
+            color: const Color(0xFF002FA7).withOpacity(0.3),
             borderRadius: BorderRadius.circular(30.r),
           ),
           child: Column(
@@ -300,7 +300,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
               child: Container(
                 margin: EdgeInsets.only(right: 10.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2558A8).withOpacity(0.3),
+                  color: const Color(0xFF002FA7).withOpacity(0.3),
                   borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Column(
@@ -340,7 +340,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
         Container(
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF2558A8).withOpacity(0.3),
+            color: const Color(0xFF002FA7).withOpacity(0.3),
             borderRadius: BorderRadius.circular(30.r),
           ),
           child: Row(
@@ -353,7 +353,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
                     return Positioned(
                       left: index * 20.w,
                       child: Container(
-                        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: const Color(0xFF2558A8), width: 2.w)),
+                        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: const Color(0xFF002FA7), width: 2.w)),
                         child: CircleAvatar(radius: 18.r, backgroundImage: NetworkImage(controller.mutualFriends[index])),
                       ),
                     );
@@ -384,7 +384,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
           width: double.infinity,
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF2558A8).withOpacity(0.3),
+            color: const Color(0xFF002FA7).withOpacity(0.3),
             borderRadius: BorderRadius.circular(30.r),
           ),
           child: Column(

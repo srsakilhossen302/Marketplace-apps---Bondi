@@ -125,7 +125,7 @@ class CommunityScreen extends GetView<CommunityController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: TextField(
@@ -182,7 +182,7 @@ class CommunityScreen extends GetView<CommunityController> {
             width: 260.w,
             margin: EdgeInsets.only(right: 15.w),
             decoration: BoxDecoration(
-              color: const Color(0xFF2558A8).withOpacity(0.4),
+              color: const Color(0xFF002FA7).withOpacity(0.4),
               borderRadius: BorderRadius.circular(30.r),
               border: Border.all(color: Colors.white.withOpacity(0.1)),
             ),
@@ -211,7 +211,7 @@ class CommunityScreen extends GetView<CommunityController> {
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0044CC),
+                          color: const Color(0xFF0052D4),
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
@@ -279,7 +279,7 @@ class CommunityScreen extends GetView<CommunityController> {
                           ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF003399),
+                              backgroundColor: const Color(0xFF0052D4),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
                               padding: EdgeInsets.symmetric(horizontal: 15.w),
                             ),
@@ -305,7 +305,7 @@ class CommunityScreen extends GetView<CommunityController> {
           margin: EdgeInsets.only(bottom: 12.h),
           padding: EdgeInsets.all(12.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF2558A8).withOpacity(0.4),
+            color: const Color(0xFF002FA7).withOpacity(0.4),
             borderRadius: BorderRadius.circular(25.r),
             border: Border.all(color: Colors.white.withOpacity(0.1)),
           ),
@@ -348,7 +348,7 @@ class CommunityScreen extends GetView<CommunityController> {
         return Container(
           margin: EdgeInsets.only(bottom: 20.h),
           decoration: BoxDecoration(
-            color: const Color(0xFF2558A8).withOpacity(0.4),
+            color: const Color(0xFF002FA7).withOpacity(0.4),
             borderRadius: BorderRadius.circular(30.r),
             border: Border.all(color: Colors.white.withOpacity(0.1)),
           ),
@@ -435,7 +435,7 @@ class CommunityScreen extends GetView<CommunityController> {
       child: ElevatedButton(
         onPressed: () {},
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0044CC),
+          backgroundColor: const Color(0xFF0052D4),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
         ),
         child: Text(

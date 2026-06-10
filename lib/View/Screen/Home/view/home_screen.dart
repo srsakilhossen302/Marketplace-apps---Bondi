@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../Notification/view/notification_screen.dart';
+import '../../Messages/view/messages_screen.dart';
 import '../Controller/home_controller.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -80,32 +81,51 @@ class HomeScreen extends GetView<HomeController> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SvgPicture.asset('assets/icons/Component 5.svg', width: 120.w),
-          GestureDetector(
-            onTap: () => Get.to(() => const NotificationScreen()),
-            child: Stack(
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/Notification-Icons.svg',
-                  width: 24.w,
-                  colorFilter: const ColorFilter.mode(
-                    Color(0xFF00E5FF),
-                    BlendMode.srcIn,
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  child: Container(
-                    width: 8.w,
-                    height: 8.h,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () => Get.to(() => const NotificationScreen()),
+                child: Stack(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/Notification-Icons.svg',
+                      width: 24.w,
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFF00E5FF),
+                        BlendMode.srcIn,
+                      ),
                     ),
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Container(
+                        width: 8.w,
+                        height: 8.h,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 15.w),
+              GestureDetector(
+                onTap: () => Get.to(() => const MessagesScreen()),
+                child: Container(
+                  padding: EdgeInsets.all(10.r),
+                  decoration: const BoxDecoration(
+                    color: AppColors.inputFillColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: SvgPicture.asset(
+                    'assets/icons/message.svg',
+                    width: 20.w,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -116,7 +136,7 @@ class HomeScreen extends GetView<HomeController> {
     return Container(
       height: 50.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: TextField(
@@ -163,8 +183,8 @@ class HomeScreen extends GetView<HomeController> {
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? const Color(0xFF0044CC)
-                      : const Color(0xFF2558A8).withOpacity(0.2),
+                      ? const Color(0xFF0052D4)
+                      : const Color(0xFF002FA7).withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20.r),
                   border: Border.all(
                     color: isSelected
@@ -314,7 +334,7 @@ class HomeScreen extends GetView<HomeController> {
             margin: EdgeInsets.only(bottom: 12.h),
             padding: EdgeInsets.all(15.r),
             decoration: BoxDecoration(
-              color: const Color(0xFF2558A8).withOpacity(0.3),
+              color: const Color(0xFF002FA7).withOpacity(0.3),
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Row(
@@ -386,7 +406,7 @@ class HomeScreen extends GetView<HomeController> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: ClipRRect(
@@ -433,7 +453,7 @@ class HomeScreen extends GetView<HomeController> {
                     child: Text(
                       'Create New Group',
                       style: TextStyle(
-                        color: const Color(0xFF003399),
+                        color: const Color(0xFF0052D4),
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                       ),

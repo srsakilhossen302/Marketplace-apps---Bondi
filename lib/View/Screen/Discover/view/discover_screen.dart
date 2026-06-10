@@ -85,7 +85,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
     return Container(
       height: 50.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: TextField(
@@ -132,8 +132,8 @@ class DiscoverScreen extends GetView<DiscoverController> {
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? const Color(0xFF0044CC)
-                      : const Color(0xFF2558A8).withOpacity(0.2),
+                      ? const Color(0xFF0052D4)
+                      : const Color(0xFF002FA7).withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20.r),
                   border: Border.all(
                     color: isSelected
@@ -229,7 +229,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
                     vertical: 6.h,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0044CC),
+                    color: const Color(0xFF0052D4),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(

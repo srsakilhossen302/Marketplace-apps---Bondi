@@ -140,7 +140,7 @@ class ProfileScreen extends GetView<ProfileController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -208,7 +208,7 @@ class ProfileScreen extends GetView<ProfileController> {
   Widget _buildSettingsGroup(List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -273,7 +273,7 @@ class ProfileScreen extends GetView<ProfileController> {
               Container(
                 padding: EdgeInsets.all(6.r),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF003399),
+                  color: Color(0xFF0052D4),
                   shape: BoxShape.circle,
                 ),
                 child: Text(
@@ -301,7 +301,7 @@ class ProfileScreen extends GetView<ProfileController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -329,7 +329,7 @@ class ProfileScreen extends GetView<ProfileController> {
           Container(
             padding: EdgeInsets.all(20.r),
             decoration: BoxDecoration(
-              color: const Color(0xFF1F4FB0).withOpacity(0.3),
+              color: const Color(0xFF002FA7).withOpacity(0.3),
               borderRadius: BorderRadius.circular(25.r),
               border: Border.all(color: Colors.white.withOpacity(0.1)),
             ),
@@ -390,7 +390,7 @@ class ProfileScreen extends GetView<ProfileController> {
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF003399),
+                backgroundColor: const Color(0xFF0052D4),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25.r),
                 ),

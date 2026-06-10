@@ -106,7 +106,7 @@ class SellScreen extends GetView<SellController> {
     return Container(
       height: 140.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
         border: Border.all(
           color: Colors.white.withOpacity(0.2),
@@ -195,7 +195,7 @@ class SellScreen extends GetView<SellController> {
           fontSize: 15.sp,
         ),
         filled: true,
-        fillColor: const Color(0xFF2558A8).withOpacity(0.3),
+        fillColor: const Color(0xFF002FA7).withOpacity(0.3),
         prefixIcon: prefixIcon != null
             ? Icon(prefixIcon, color: const Color(0xFF00E5FF), size: 20.sp)
             : null,
@@ -213,7 +213,7 @@ class SellScreen extends GetView<SellController> {
       () => Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         decoration: BoxDecoration(
-          color: const Color(0xFF2558A8).withOpacity(0.3),
+          color: const Color(0xFF002FA7).withOpacity(0.3),
           borderRadius: BorderRadius.circular(25.r),
         ),
         child: DropdownButtonHideUnderline(
@@ -260,7 +260,7 @@ class SellScreen extends GetView<SellController> {
         hintText: "0.00",
         hintStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
         filled: true,
-        fillColor: const Color(0xFF2558A8).withOpacity(0.3),
+        fillColor: const Color(0xFF002FA7).withOpacity(0.3),
         prefixIcon: Icon(
           Icons.payments_outlined,
           color: const Color(0xFF00E5FF),
@@ -284,7 +284,7 @@ class SellScreen extends GetView<SellController> {
     return Container(
       padding: EdgeInsets.all(4.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Obx(
@@ -298,7 +298,7 @@ class SellScreen extends GetView<SellController> {
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? const Color(0xFF0044CC)
+                        ? const Color(0xFF0052D4)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(25.r),
                   ),
@@ -328,7 +328,7 @@ class SellScreen extends GetView<SellController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: Column(
@@ -414,7 +414,7 @@ class SellScreen extends GetView<SellController> {
         Container(
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF2558A8).withOpacity(0.4),
+            color: const Color(0xFF002FA7).withOpacity(0.4),
             borderRadius: BorderRadius.circular(25.r),
             border: Border.all(color: const Color(0xFF00E5FF).withOpacity(0.3)),
           ),
@@ -450,7 +450,7 @@ class SellScreen extends GetView<SellController> {
               ),
               Icon(
                 Icons.check_circle,
-                color: const Color(0xFF0044CC),
+                color: const Color(0xFF0052D4),
                 size: 20.sp,
               ),
             ],
@@ -546,7 +546,7 @@ class SellScreen extends GetView<SellController> {
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0044CC),
+              backgroundColor: const Color(0xFF0052D4),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(28.r),
               ),

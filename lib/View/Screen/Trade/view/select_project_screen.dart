@@ -140,7 +140,7 @@ class SelectProjectScreen extends GetView<TradeController> {
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? const Color(0xFF003399)
+                      ? const Color(0xFF0052D4)
                       : Colors.white.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20.r),
                 ),
@@ -324,7 +324,7 @@ class SelectProjectScreen extends GetView<TradeController> {
       child: ElevatedButton(
         onPressed: () => Get.back(),
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF003399),
+          backgroundColor: const Color(0xFF0052D4),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.r),
           ),

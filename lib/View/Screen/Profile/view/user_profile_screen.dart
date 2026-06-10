@@ -113,7 +113,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
               child: Container(
                 padding: EdgeInsets.all(4.r),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF1F4FB0),
+                  color: Color(0xFF002FA7),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.verified, color: Colors.white, size: 18.sp),
@@ -184,7 +184,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                     style: TextStyle(fontSize: 15.sp),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF003399),
+                    backgroundColor: const Color(0xFF0052D4),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25.r),
                     ),
@@ -243,7 +243,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF2558A8).withOpacity(0.4),
+          color: const Color(0xFF002FA7).withOpacity(0.4),
           borderRadius: BorderRadius.circular(25.r),
           border: Border.all(color: Colors.white.withOpacity(0.1)),
         ),
@@ -336,7 +336,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
   Widget _buildListingCard(Map<String, dynamic> item) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.4),
+        color: const Color(0xFF002FA7).withOpacity(0.4),
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),

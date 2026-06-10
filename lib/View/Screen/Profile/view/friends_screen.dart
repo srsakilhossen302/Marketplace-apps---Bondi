@@ -106,7 +106,7 @@ class FriendsScreen extends GetView<FriendsController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(25.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -128,7 +128,7 @@ class FriendsScreen extends GetView<FriendsController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: TextField(
@@ -223,7 +223,7 @@ class FriendsScreen extends GetView<FriendsController> {
                 margin: EdgeInsets.only(bottom: 15.h),
                 padding: EdgeInsets.all(15.r),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2558A8).withOpacity(0.4),
+                  color: const Color(0xFF002FA7).withOpacity(0.4),
                   borderRadius: BorderRadius.circular(25.r),
                   border: Border.all(color: Colors.white.withOpacity(0.1)),
                 ),
@@ -262,7 +262,7 @@ class FriendsScreen extends GetView<FriendsController> {
                             child: ElevatedButton(
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF003399),
+                                backgroundColor: const Color(0xFF0052D4),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
                               ),
                               child: Text("Accept", style: TextStyle(fontSize: 14.sp)),
@@ -298,7 +298,7 @@ class FriendsScreen extends GetView<FriendsController> {
               margin: EdgeInsets.only(bottom: 15.h),
               padding: EdgeInsets.all(15.r),
               decoration: BoxDecoration(
-                color: const Color(0xFF2558A8).withOpacity(0.4),
+                color: const Color(0xFF002FA7).withOpacity(0.4),
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(color: Colors.white.withOpacity(0.1)),
               ),
@@ -345,7 +345,7 @@ class FriendsScreen extends GetView<FriendsController> {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
           decoration: BoxDecoration(
-            color: const Color(0xFF003399),
+            color: const Color(0xFF0052D4),
             borderRadius: BorderRadius.circular(15.r),
           ),
           child: Text(
@@ -391,7 +391,7 @@ class FriendsScreen extends GetView<FriendsController> {
               margin: EdgeInsets.only(right: 15.w),
               padding: EdgeInsets.all(15.r),
               decoration: BoxDecoration(
-                color: const Color(0xFF2558A8).withOpacity(0.4),
+                color: const Color(0xFF002FA7).withOpacity(0.4),
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(color: Colors.white.withOpacity(0.1)),
               ),
@@ -430,7 +430,7 @@ class FriendsScreen extends GetView<FriendsController> {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF003399),
+                        backgroundColor: const Color(0xFF0052D4),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
                       ),
                       child: Text("Add Friend", style: TextStyle(fontSize: 12.sp)),

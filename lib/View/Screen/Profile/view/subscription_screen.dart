@@ -113,7 +113,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
             width: double.infinity,
             padding: EdgeInsets.all(25.r),
             decoration: BoxDecoration(
-              color: const Color(0xFF2558A8).withOpacity(0.4),
+              color: const Color(0xFF002FA7).withOpacity(0.4),
               borderRadius: BorderRadius.circular(30.r),
               border: Border.all(
                 color: isCurrent ? const Color(0xFF00E5FF).withOpacity(0.5) : Colors.white.withOpacity(0.1),
@@ -127,7 +127,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1F4FB0).withOpacity(0.5),
+                    color: const Color(0xFF002FA7).withOpacity(0.5),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Text(
@@ -175,8 +175,8 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: plan['name'] == 'Silver Plan' ? const Color(0xFF003399) : Colors.transparent,
-                        side: plan['name'] == 'Silver Plan' ? null : const BorderSide(color: Color(0xFF003399)),
+                        backgroundColor: plan['name'] == 'Silver Plan' ? const Color(0xFF0052D4) : Colors.transparent,
+                        side: plan['name'] == 'Silver Plan' ? null : const BorderSide(color: Color(0xFF0052D4)),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
                         elevation: 0,
                       ),

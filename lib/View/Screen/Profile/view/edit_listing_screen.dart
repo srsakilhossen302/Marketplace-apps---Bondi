@@ -203,7 +203,7 @@ class EditListingScreen extends GetView<EditListingController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -235,7 +235,7 @@ class EditListingScreen extends GetView<EditListingController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -277,7 +277,7 @@ class EditListingScreen extends GetView<EditListingController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -315,7 +315,7 @@ class EditListingScreen extends GetView<EditListingController> {
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: isSelected
-            ? const Color(0xFF1F4FB0).withOpacity(0.5)
+            ? const Color(0xFF002FA7).withOpacity(0.5)
             : Colors.white.withOpacity(0.05),
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
@@ -354,7 +354,7 @@ class EditListingScreen extends GetView<EditListingController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF2558A8).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -463,7 +463,7 @@ class EditListingScreen extends GetView<EditListingController> {
           child: ElevatedButton(
             onPressed: controller.saveChanges,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF003399),
+              backgroundColor: const Color(0xFF0052D4),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25.r),
               ),
@@ -523,7 +523,7 @@ class EditListingScreen extends GetView<EditListingController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F4FB0).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: TextField(
@@ -538,7 +538,7 @@ class EditListingScreen extends GetView<EditListingController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F4FB0).withOpacity(0.3),
+        color: const Color(0xFF002FA7).withOpacity(0.3),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
