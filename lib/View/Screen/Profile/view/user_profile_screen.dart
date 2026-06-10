@@ -7,6 +7,7 @@ import 'add_listing_screen.dart';
 import 'edit_listing_screen.dart';
 import 'edit_profile_screen.dart';
 import 'friends_screen.dart';
+import '../../MyOrders/view/my_orders_screen.dart';
 
 class UserProfileScreen extends GetView<UserProfileController> {
   const UserProfileScreen({super.key});
@@ -33,6 +34,8 @@ class UserProfileScreen extends GetView<UserProfileController> {
                       _buildProfileHeader(),
                       SizedBox(height: 30.h),
                       _buildStatsGrid(),
+                      SizedBox(height: 25.h),
+                      _buildMyOrdersButton(),
                       SizedBox(height: 40.h),
                       _buildMyListingsHeader(),
                       SizedBox(height: 20.h),
@@ -181,7 +184,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                   icon: Icon(Icons.edit, size: 18.sp),
                   label: Text(
                     "Edit Profile",
-                    style: TextStyle(fontSize: 15.sp),
+                    style: TextStyle(fontSize: 15.sp, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF0052D4),
@@ -277,6 +280,31 @@ class UserProfileScreen extends GetView<UserProfileController> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMyOrdersButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 52.h,
+      child: ElevatedButton(
+        onPressed: () => Get.to(() => const MyOrdersScreen()),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.buttonColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25.r),
+          ),
+          elevation: 0,
+        ),
+        child: Text(
+          "My Orders",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
