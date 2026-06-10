@@ -67,7 +67,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SvgPicture.asset('assets/icons/Component 5.svg', width: 120.w),
+          SvgPicture.asset('assets/icons/horizontal logo light bg 1.svg', width: 120.w),
           SvgPicture.asset(
             'assets/icons/Notification-Icons.svg',
             width: 24.w,

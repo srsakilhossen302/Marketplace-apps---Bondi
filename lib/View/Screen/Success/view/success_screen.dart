@@ -28,7 +28,7 @@ class SuccessScreen extends GetView<SuccessController> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: SvgPicture.asset(
-                    'assets/icons/Component 5.svg',
+                    'assets/icons/horizontal logo light bg 1.svg',
                     width: 140,
                   ),
                 ),
