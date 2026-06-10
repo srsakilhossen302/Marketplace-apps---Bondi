@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../../../Utils/AppColors/app_colors.dart';
 import '../Controller/create_group_controller.dart';
 
 class CreateGroupScreen extends GetView<CreateGroupController> {
@@ -16,12 +17,7 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/img.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: AppColors.backgroundColor,
         child: SafeArea(
           child: Column(
             children: [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../../../Utils/AppColors/app_colors.dart';
 import '../Controller/messages_controller.dart';
 import 'chat_detail_screen.dart';
 
@@ -16,16 +17,7 @@ class MessagesScreen extends GetView<MessagesController> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF4A89FF),
-              Color(0xFF2558A8),
-            ],
-          ),
-        ),
+        color: AppColors.backgroundColor,
         child: SafeArea(
           child: Column(
             children: [
@@ -165,7 +157,7 @@ class MessagesScreen extends GetView<MessagesController> {
                           decoration: BoxDecoration(
                             color: Colors.cyanAccent,
                             shape: BoxShape.circle,
-                            border: Border.all(color: const Color(0xFF2558A8), width: 2),
+                            border: Border.all(color: AppColors.backgroundColor, width: 2),
                           ),
                         ),
                       ),
@@ -373,7 +365,7 @@ class MessagesScreen extends GetView<MessagesController> {
                 decoration: BoxDecoration(
                   color: Colors.cyanAccent,
                   shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFF2558A8), width: 2),
+                  border: Border.all(color: AppColors.backgroundColor, width: 2),
                 ),
               ),
             ),

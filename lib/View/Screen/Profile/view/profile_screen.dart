@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../../Utils/AppColors/app_colors.dart';
 import '../Controller/profile_controller.dart';
 import 'edit_profile_screen.dart';
 import 'friends_screen.dart';
@@ -18,12 +19,7 @@ class ProfileScreen extends GetView<ProfileController> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/img.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: AppColors.backgroundColor,
         child: SafeArea(
           child: Column(
             children: [

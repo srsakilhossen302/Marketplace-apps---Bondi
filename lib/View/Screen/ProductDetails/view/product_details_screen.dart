@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../Widgegt/CustomCard/custom_listing_card.dart';
 import '../../Trade/view/trade_screen.dart';
 import '../Controller/product_details_controller.dart';
@@ -18,12 +19,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/img.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: AppColors.backgroundColor,
         child: SafeArea(
           child: Column(
             children: [

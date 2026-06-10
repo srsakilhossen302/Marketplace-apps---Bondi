@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../../../Utils/AppColors/app_colors.dart';
 import '../../Notification/view/notification_screen.dart';
 import '../Controller/home_controller.dart';
 
@@ -19,12 +20,7 @@ class HomeScreen extends GetView<HomeController> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/img.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: AppColors.backgroundColor,
         child: SafeArea(
           child: Column(
             children: [

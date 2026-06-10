@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../../Utils/AppColors/app_colors.dart';
 import '../Controller/messages_controller.dart';
 
 class ChatDetailScreen extends GetView<MessagesController> {
@@ -12,13 +13,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF4A89FF), Color(0xFF2558A8)],
-          ),
-        ),
+        color: AppColors.backgroundColor,
         child: SafeArea(
           child: Column(
             children: [
@@ -80,7 +75,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
                     color: Colors.green,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: const Color(0xFF2558A8),
+                      color: AppColors.backgroundColor,
                       width: 1.5,
                     ),
                   ),

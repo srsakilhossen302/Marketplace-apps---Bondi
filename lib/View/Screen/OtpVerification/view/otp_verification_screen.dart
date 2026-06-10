@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
+import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../Controller/otp_verification_controller.dart';
 
@@ -21,14 +22,14 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
         fontWeight: FontWeight.w600,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F4FB0).withOpacity(0.4),
+        color: AppColors.inputFillColor,
         borderRadius: BorderRadius.circular(12),
       ),
     );
 
     final focusedPinTheme = defaultPinTheme.copyWith(
       decoration: BoxDecoration(
-        color: const Color(0xFF1F4FB0).withOpacity(0.6),
+        color: AppColors.inputFillColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFF00E5FF)),
       ),
@@ -36,22 +37,17 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: BoxDecoration(
-        color: const Color(0xFF1F4FB0).withOpacity(0.6),
+        color: AppColors.inputFillColor,
         borderRadius: BorderRadius.circular(12),
       ),
     );
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.backgroundColor,
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/img_1.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: AppColors.backgroundColor,
         child: SafeArea(
           child: Column(
             children: [
@@ -119,12 +115,11 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                         // OTP Card
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                            vertical: 25.0,
+                            horizontal: 0.0,
+                            vertical: 10.0,
                           ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF2558A8).withOpacity(0.4),
-                            borderRadius: BorderRadius.circular(20.0),
+                          decoration: const BoxDecoration(
+                            color: Colors.transparent,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -183,8 +178,8 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                                     decoration: BoxDecoration(
                                       gradient: const LinearGradient(
                                         colors: [
-                                          Color(0xFF003399),
-                                          Color(0xFF0044CC),
+                                          AppColors.buttonColor,
+                                          AppColors.buttonColor,
                                         ],
                                         begin: Alignment.centerLeft,
                                         end: Alignment.centerRight,

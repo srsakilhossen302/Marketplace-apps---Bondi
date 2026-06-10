@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../CreateAccount/view/create_account_screen.dart';
 import '../Controller/login_controller.dart';
@@ -14,16 +15,11 @@ class LoginScreen extends GetView<LoginController> {
     final controller = Get.put(LoginController());
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.backgroundColor,
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/img_1.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: AppColors.backgroundColor,
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -64,10 +60,9 @@ class LoginScreen extends GetView<LoginController> {
                   
                   // Login Card
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF2558A8).withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +99,7 @@ class LoginScreen extends GetView<LoginController> {
                             ),
                             contentPadding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10.0),
                             filled: true,
-                            fillColor: const Color(0xFF1F4FB0).withOpacity(0.6),
+                            fillColor: AppColors.inputFillColor,
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
                               borderSide: BorderSide.none,
@@ -186,7 +181,7 @@ class LoginScreen extends GetView<LoginController> {
                               ),
                               contentPadding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10.0),
                               filled: true,
-                              fillColor: Colors.white.withOpacity(0.08),
+                              fillColor: AppColors.inputFillColor,
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
                                 borderSide: BorderSide.none,
@@ -213,8 +208,8 @@ class LoginScreen extends GetView<LoginController> {
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
                                   colors: [
-                                    Color(0xFF003399),
-                                    Color(0xFF0044CC),
+                                    AppColors.buttonColor,
+                                    AppColors.buttonColor,
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,

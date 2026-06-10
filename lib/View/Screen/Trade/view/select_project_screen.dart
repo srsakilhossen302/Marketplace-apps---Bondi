@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Model/home_models.dart';
+import '../../../../Utils/AppColors/app_colors.dart';
 import '../../Profile/view/add_listing_screen.dart';
 import '../Controller/trade_controller.dart';
 import 'trade_screen.dart';
@@ -16,13 +17,7 @@ class SelectProjectScreen extends GetView<TradeController> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF4A89FF), Color(0xFF2558A8)],
-          ),
-        ),
+        color: AppColors.backgroundColor,
         child: SafeArea(
           child: Column(
             children: [

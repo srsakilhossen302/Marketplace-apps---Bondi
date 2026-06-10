@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../../../Utils/AppColors/app_colors.dart';
 import '../Controller/success_controller.dart';
 
 class SuccessScreen extends GetView<SuccessController> {
@@ -12,15 +13,11 @@ class SuccessScreen extends GetView<SuccessController> {
     Get.put(SuccessController());
 
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/img.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: AppColors.backgroundColor,
         child: SafeArea(
           child: Column(
             children: [
@@ -41,10 +38,9 @@ class SuccessScreen extends GetView<SuccessController> {
                 child: Center(
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 30.0),
-                    padding: const EdgeInsets.all(30.0),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF2558A8).withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -88,7 +84,7 @@ class SuccessScreen extends GetView<SuccessController> {
                           child: Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Color(0xFF003399), Color(0xFF0044CC)],
+                                colors: [AppColors.buttonColor, AppColors.buttonColor],
                               ),
                               borderRadius: BorderRadius.circular(25.0),
                             ),
