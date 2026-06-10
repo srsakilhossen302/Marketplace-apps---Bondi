@@ -72,7 +72,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
             'assets/icons/Notification-Icons.svg',
             width: 24.w,
             colorFilter: const ColorFilter.mode(
-              Color(0xFF00E5FF),
+              AppColors.accentColor,
               BlendMode.srcIn,
             ),
           ),
@@ -85,7 +85,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
     return Container(
       height: 50.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: TextField(
@@ -132,8 +132,8 @@ class DiscoverScreen extends GetView<DiscoverController> {
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? const Color(0xFF0052D4)
-                      : const Color(0xFF002FA7).withOpacity(0.2),
+                      ? AppColors.buttonColor
+                      : AppColors.cardColor.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20.r),
                   border: Border.all(
                     color: isSelected
@@ -177,13 +177,13 @@ class DiscoverScreen extends GetView<DiscoverController> {
               Text(
                 "See all",
                 style: TextStyle(
-                  color: const Color(0xFF00E5FF).withOpacity(0.6),
+                  color: AppColors.accentColor.withOpacity(0.6),
                   fontSize: 13.sp,
                 ),
               ),
               Icon(
                 Icons.arrow_right_alt,
-                color: const Color(0xFF00E5FF).withOpacity(0.6),
+                color: AppColors.accentColor.withOpacity(0.6),
                 size: 18.sp,
               ),
             ],
@@ -229,7 +229,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
                     vertical: 6.h,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0052D4),
+                    color: AppColors.buttonColor,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(

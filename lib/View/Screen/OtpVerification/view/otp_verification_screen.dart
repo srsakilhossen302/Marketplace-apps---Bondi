@@ -31,7 +31,7 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
       decoration: BoxDecoration(
         color: AppColors.inputFillColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF00E5FF)),
+        border: Border.all(color: AppColors.accentColor),
       ),
     );
 
@@ -158,7 +158,7 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                                     child: const Text(
                                       'Resend',
                                       style: TextStyle(
-                                        color: Color(0xFF00E5FF),
+                                        color: AppColors.accentColor,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
                                       ),

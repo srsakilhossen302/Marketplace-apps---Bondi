@@ -44,7 +44,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
                       Container(
                         padding: EdgeInsets.all(12.r),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF002FA7).withOpacity(0.5),
+                          color: AppColors.cardColor.withOpacity(0.5),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -93,7 +93,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
                             size: 20.sp,
                           ),
                           filled: true,
-                          fillColor: const Color(0xFF002FA7).withOpacity(0.3),
+                          fillColor: AppColors.cardColor.withOpacity(0.3),
                           contentPadding: EdgeInsets.symmetric(vertical: 15.h),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.r),
@@ -111,7 +111,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
                         child: ElevatedButton(
                           onPressed: () => controller.syncContacts(),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0052D4),
+                            backgroundColor: AppColors.buttonColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25.r),
                             ),
@@ -167,7 +167,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
                         child: ElevatedButton(
                           onPressed: () => controller.continueToFeed(),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0052D4),
+                            backgroundColor: AppColors.buttonColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.r),
                             ),
@@ -233,7 +233,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(15.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Column(
@@ -248,7 +248,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
                 ),
                 child: Icon(
                   hub['icon'] as IconData,
-                  color: const Color(0xFF00E5FF),
+                  color: AppColors.accentColor,
                   size: 20.sp,
                 ),
               ),
@@ -306,7 +306,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
@@ -341,7 +341,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF00E5FF),
+              backgroundColor: AppColors.accentColor,
               minimumSize: Size(70.w, 32.h),
               padding: EdgeInsets.zero,
               shape: RoundedRectangleBorder(
@@ -367,7 +367,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
@@ -410,7 +410,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF00E5FF),
+              backgroundColor: AppColors.accentColor,
               minimumSize: Size(70.w, 32.h),
               padding: EdgeInsets.zero,
               shape: RoundedRectangleBorder(

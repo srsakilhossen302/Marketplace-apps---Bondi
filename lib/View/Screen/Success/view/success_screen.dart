@@ -135,7 +135,7 @@ class SuccessScreen extends GetView<SuccessController> {
                                     ),
                                     valueColor:
                                         const AlwaysStoppedAnimation<Color>(
-                                          Color(0xFF00E5FF),
+                                          AppColors.accentColor,
                                         ),
                                   ),
                                 ),

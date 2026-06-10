@@ -115,7 +115,7 @@ class TradeScreen extends GetView<TradeController> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: const Color(0xFF002FA7).withOpacity(0.4),
+          color: AppColors.cardColor.withOpacity(0.4),
           borderRadius: BorderRadius.circular(30.r),
           border: Border.all(color: Colors.white.withOpacity(0.1)),
         ),
@@ -149,7 +149,7 @@ class TradeScreen extends GetView<TradeController> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: index == 0
-                                  ? const Color(0xFF00E5FF)
+                                  ? AppColors.accentColor
                                   : Colors.white.withOpacity(0.3),
                             ),
                           );
@@ -201,7 +201,7 @@ class TradeScreen extends GetView<TradeController> {
                     vertical: 6.h,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF00E5FF),
+                    color: AppColors.accentColor,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
@@ -241,7 +241,7 @@ class TradeScreen extends GetView<TradeController> {
                 Text(
                   price,
                   style: TextStyle(
-                    color: const Color(0xFF00E5FF),
+                    color: AppColors.accentColor,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -260,7 +260,7 @@ class TradeScreen extends GetView<TradeController> {
       child: Container(
         padding: EdgeInsets.all(12.r),
         decoration: const BoxDecoration(
-          color: Color(0xFF00E5FF),
+          color: AppColors.accentColor,
           shape: BoxShape.circle,
         ),
         child: SvgPicture.asset(
@@ -297,7 +297,7 @@ class TradeScreen extends GetView<TradeController> {
             width: double.infinity,
             height: 250.h,
             decoration: BoxDecoration(
-              color: const Color(0xFF002FA7).withOpacity(0.4),
+              color: AppColors.cardColor.withOpacity(0.4),
               borderRadius: BorderRadius.circular(30.r),
             ),
             child: Column(
@@ -344,7 +344,7 @@ class TradeScreen extends GetView<TradeController> {
           children: [
             Icon(
               Icons.payments_outlined,
-              color: const Color(0xFF00E5FF),
+              color: AppColors.accentColor,
               size: 18.sp,
             ),
             SizedBox(width: 8.w),
@@ -363,11 +363,11 @@ class TradeScreen extends GetView<TradeController> {
             hintStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
             prefixText: "\$  ",
             prefixStyle: TextStyle(
-              color: const Color(0xFF00E5FF),
+              color: AppColors.accentColor,
               fontSize: 16.sp,
             ),
             filled: true,
-            fillColor: const Color(0xFF002FA7).withOpacity(0.3),
+            fillColor: AppColors.cardColor.withOpacity(0.3),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.r),
               borderSide: BorderSide.none,
@@ -395,7 +395,7 @@ class TradeScreen extends GetView<TradeController> {
           children: [
             Icon(
               Icons.chat_bubble_outline,
-              color: const Color(0xFF00E5FF),
+              color: AppColors.accentColor,
               size: 18.sp,
             ),
             SizedBox(width: 8.w),
@@ -417,7 +417,7 @@ class TradeScreen extends GetView<TradeController> {
               fontSize: 15.sp,
             ),
             filled: true,
-            fillColor: const Color(0xFF002FA7).withOpacity(0.3),
+            fillColor: AppColors.cardColor.withOpacity(0.3),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25.r),
               borderSide: BorderSide.none,
@@ -438,7 +438,7 @@ class TradeScreen extends GetView<TradeController> {
           child: ElevatedButton(
             onPressed: () => controller.sendOffer(),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0052D4),
+              backgroundColor: AppColors.buttonColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.r),
               ),
@@ -456,14 +456,14 @@ class TradeScreen extends GetView<TradeController> {
           child: OutlinedButton(
             onPressed: () => Get.back(),
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: Color(0xFF0052D4)),
+              side: const BorderSide(color: AppColors.buttonColor),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.r),
               ),
             ),
             child: Text(
               "Cancel Offer",
-              style: TextStyle(color: const Color(0xFF0052D4), fontSize: 16.sp),
+              style: TextStyle(color: AppColors.buttonColor, fontSize: 16.sp),
             ),
           ),
         ),

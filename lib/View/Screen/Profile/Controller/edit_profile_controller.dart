@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:bondi/Utils/AppColors/app_colors.dart';
+
 import 'package:get/get.dart';
 
 class EditProfileController extends GetxController {
@@ -18,10 +20,10 @@ class EditProfileController extends GetxController {
   final pixKeyType = 'Phone Number'.obs;
 
   final themeColors = [
-    const Color(0xFF0052D4),
+    AppColors.buttonColor,
     const Color(0xFF006699),
     const Color(0xFF334455),
-    const Color(0xFF00E5FF),
+    AppColors.accentColor,
   ];
 
   @override

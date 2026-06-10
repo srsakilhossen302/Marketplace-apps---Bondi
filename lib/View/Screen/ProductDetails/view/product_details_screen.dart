@@ -136,7 +136,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: controller.currentImageIndex.value == index
-                        ? const Color(0xFF00E5FF)
+                        ? AppColors.accentColor
                         : Colors.white.withOpacity(0.4),
                   ),
                 ),
@@ -218,7 +218,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
         Text(
           controller.product.price,
           style: TextStyle(
-            color: const Color(0xFF00E5FF),
+            color: AppColors.accentColor,
             fontSize: 32.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -231,7 +231,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: Row(
@@ -239,7 +239,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
           Container(
             padding: EdgeInsets.all(10.r),
             decoration: const BoxDecoration(
-              color: Color(0xFF00E5FF),
+              color: AppColors.accentColor,
               shape: BoxShape.circle,
             ),
             child: SvgPicture.asset(
@@ -284,7 +284,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
       width: double.infinity,
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -342,7 +342,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: Column(
@@ -368,26 +368,26 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Row(
-                      children: [
-                        ...List.generate(
-                          5,
-                          (index) => Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                            size: 14.sp,
-                          ),
-                        ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          "(124)",
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.5),
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     ...List.generate(
+                    //       5,
+                    //       (index) => Icon(
+                    //         Icons.star,
+                    //         color: Colors.amber,
+                    //         size: 14.sp,
+                    //       ),
+                    //     ),
+                    //     SizedBox(width: 5.w),
+                    //     Text(
+                    //       "(124)",
+                    //       style: TextStyle(
+                    //         color: Colors.white.withOpacity(0.5),
+                    //         fontSize: 12.sp,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
@@ -408,7 +408,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
               onPressed: () {},
               style: OutlinedButton.styleFrom(
                 side: BorderSide(
-                  color: const Color(0xFF00E5FF).withOpacity(0.5),
+                  color: AppColors.accentColor.withOpacity(0.5),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24.r),
@@ -417,7 +417,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
               child: Text(
                 "View Profile",
                 style: TextStyle(
-                  color: const Color(0xFF00E5FF),
+                  color: AppColors.accentColor,
                   fontSize: 14.sp,
                 ),
               ),
@@ -465,7 +465,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
             ),
             Text(
               "See all",
-              style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 13.sp),
+              style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp),
             ),
           ],
         ),
@@ -498,7 +498,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                 arguments: controller.product,
               ),
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFF0052D4)),
+                side: const BorderSide(color: AppColors.buttonColor),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.r),
                 ),
@@ -506,7 +506,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
               child: Text(
                 "Trade Offer",
                 style: TextStyle(
-                  color: const Color(0xFF00E5FF),
+                  color: AppColors.accentColor,
                   fontSize: 16.sp,
                 ),
               ),
@@ -520,7 +520,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0052D4),
+                backgroundColor: AppColors.buttonColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.r),
                 ),

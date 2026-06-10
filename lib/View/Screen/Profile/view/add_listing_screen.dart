@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:bondi/Utils/AppColors/app_colors.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -184,7 +186,7 @@ class AddListingScreen extends GetView<AddListingController> {
             child: Container(
               padding: EdgeInsets.all(4.r),
               decoration: const BoxDecoration(
-                color: Color(0xFF00E5FF),
+                color: AppColors.accentColor,
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.close, color: Colors.white, size: 12.sp),
@@ -199,7 +201,7 @@ class AddListingScreen extends GetView<AddListingController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -269,7 +271,7 @@ class AddListingScreen extends GetView<AddListingController> {
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
           decoration: BoxDecoration(
             color: isSelected
-                ? const Color(0xFF0052D4)
+                ? AppColors.buttonColor
                 : Colors.white.withOpacity(0.05),
             borderRadius: BorderRadius.circular(20.r),
             border: Border.all(
@@ -294,7 +296,7 @@ class AddListingScreen extends GetView<AddListingController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -343,7 +345,7 @@ class AddListingScreen extends GetView<AddListingController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -382,11 +384,11 @@ class AddListingScreen extends GetView<AddListingController> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: const Color(0xFF00E5FF),
+                        color: AppColors.accentColor,
                         width: 1.5.w,
                       ),
                       color: controller.openToOffers.value
-                          ? const Color(0xFF00E5FF)
+                          ? AppColors.accentColor
                           : Colors.transparent,
                     ),
                     child: controller.openToOffers.value
@@ -427,9 +429,9 @@ class AddListingScreen extends GetView<AddListingController> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 15.w),
           decoration: BoxDecoration(
-            color: const Color(0xFF002FA7).withOpacity(0.3),
+            color: AppColors.cardColor.withOpacity(0.3),
             borderRadius: BorderRadius.circular(25.r),
-            border: Border.all(color: const Color(0xFF00E5FF).withOpacity(0.5)),
+            border: Border.all(color: AppColors.accentColor.withOpacity(0.5)),
           ),
           child: TextField(
             controller: controller.locationController,
@@ -437,7 +439,7 @@ class AddListingScreen extends GetView<AddListingController> {
             decoration: InputDecoration(
               icon: Icon(
                 Icons.location_on_outlined,
-                color: const Color(0xFF00E5FF),
+                color: AppColors.accentColor,
                 size: 20.sp,
               ),
               hintText: "Enter city or neighborhood",
@@ -453,7 +455,7 @@ class AddListingScreen extends GetView<AddListingController> {
         Container(
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF002FA7).withOpacity(0.3),
+            color: AppColors.cardColor.withOpacity(0.3),
             borderRadius: BorderRadius.circular(30.r),
           ),
           child: Column(
@@ -486,7 +488,7 @@ class AddListingScreen extends GetView<AddListingController> {
   ) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFF00E5FF), size: 22.sp),
+        Icon(icon, color: AppColors.accentColor, size: 22.sp),
         SizedBox(width: 15.w),
         Expanded(
           child: Column(
@@ -515,7 +517,7 @@ class AddListingScreen extends GetView<AddListingController> {
             value: value.value,
             onChanged: (v) => value.value = v,
             activeColor: Colors.white,
-            activeTrackColor: const Color(0xFF00E5FF),
+            activeTrackColor: AppColors.accentColor,
           ),
         ),
       ],
@@ -529,7 +531,7 @@ class AddListingScreen extends GetView<AddListingController> {
       child: ElevatedButton(
         onPressed: controller.publishListing,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0052D4),
+          backgroundColor: AppColors.buttonColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.r),
           ),
@@ -567,7 +569,7 @@ class AddListingScreen extends GetView<AddListingController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: TextField(
@@ -589,7 +591,7 @@ class AddListingScreen extends GetView<AddListingController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(

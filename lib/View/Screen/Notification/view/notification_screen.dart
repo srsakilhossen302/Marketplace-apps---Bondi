@@ -94,7 +94,7 @@ class NotificationScreen extends GetView<NotificationController> {
       margin: EdgeInsets.only(bottom: 15.h),
       padding: EdgeInsets.all(15.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -153,7 +153,7 @@ class NotificationScreen extends GetView<NotificationController> {
                             Text(
                               data['time'],
                               style: TextStyle(
-                                color: const Color(0xFF00E5FF).withOpacity(0.8),
+                                color: AppColors.accentColor.withOpacity(0.8),
                                 fontSize: 10.sp,
                               ),
                             ),
@@ -195,7 +195,7 @@ class NotificationScreen extends GetView<NotificationController> {
                           vertical: 6.h,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF00E5FF).withOpacity(0.1),
+                          color: AppColors.accentColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(15.r),
                         ),
                         child: Row(
@@ -203,14 +203,14 @@ class NotificationScreen extends GetView<NotificationController> {
                           children: [
                             Icon(
                               Icons.check_circle,
-                              color: const Color(0xFF00E5FF),
+                              color: AppColors.accentColor,
                               size: 14.sp,
                             ),
                             SizedBox(width: 5.w),
                             Text(
                               data['status'],
                               style: TextStyle(
-                                color: const Color(0xFF00E5FF),
+                                color: AppColors.accentColor,
                                 fontSize: 11.sp,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -248,7 +248,7 @@ class NotificationScreen extends GetView<NotificationController> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: const Color(0xFF002FA7),
+                          color: AppColors.cardColor,
                           width: 2,
                         ),
                       ),
@@ -265,10 +265,10 @@ class NotificationScreen extends GetView<NotificationController> {
                     child: Container(
                       padding: EdgeInsets.all(4.r),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0052D4),
+                        color: AppColors.buttonColor,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: const Color(0xFF002FA7),
+                          color: AppColors.cardColor,
                           width: 2,
                         ),
                       ),
@@ -301,7 +301,7 @@ class NotificationScreen extends GetView<NotificationController> {
                 child: Text(
                   "Reply Now",
                   style: TextStyle(
-                    color: const Color(0xFF00E5FF),
+                    color: AppColors.accentColor,
                     fontSize: 14.sp,
                   ),
                 ),
@@ -318,14 +318,14 @@ class NotificationScreen extends GetView<NotificationController> {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0052D4),
+                        backgroundColor: AppColors.buttonColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25.r),
                         ),
                       ),
                       child: Text(
                         "Join Group",
-                        style: TextStyle(fontSize: 14.sp),
+                        style: TextStyle(fontSize: 14.sp,  color: Color(0xffFFFFFF)),
                       ),
                     ),
                   ),
@@ -345,7 +345,7 @@ class NotificationScreen extends GetView<NotificationController> {
                       child: Text(
                         "Decline",
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
+                          color: Color(0xffFFFFFF),
                           fontSize: 14.sp,
                         ),
                       ),
@@ -369,7 +369,7 @@ class NotificationScreen extends GetView<NotificationController> {
             shape: BoxShape.circle,
             border: Border.all(
               color: data['is_unread'] == true
-                  ? const Color(0xFF00E5FF)
+                  ? AppColors.accentColor
                   : Colors.transparent,
               width: 1.5.w,
             ),
@@ -394,7 +394,7 @@ class NotificationScreen extends GetView<NotificationController> {
             child: Container(
               padding: EdgeInsets.all(4.r),
               decoration: const BoxDecoration(
-                color: Color(0xFF0052D4),
+                color: AppColors.buttonColor,
                 shape: BoxShape.circle,
               ),
               child: Icon(

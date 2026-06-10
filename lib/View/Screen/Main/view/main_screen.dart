@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:bondi/Utils/AppColors/app_colors.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -35,7 +37,7 @@ class MainScreen extends GetView<MainController> {
     return Container(
       height: 90.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.95),
+        color: AppColors.cardColor.withOpacity(0.95),
         border: Border(
           top: BorderSide(color: Colors.white.withOpacity(0.1), width: 0.5.w),
         ),
@@ -70,7 +72,7 @@ class MainScreen extends GetView<MainController> {
               width: 24.w,
               height: 24.h,
               colorFilter: ColorFilter.mode(
-                isSelected ? const Color(0xFF00E5FF) : Colors.white,
+                isSelected ? AppColors.accentColor : Colors.white,
                 BlendMode.srcIn,
               ),
             ),
@@ -78,7 +80,7 @@ class MainScreen extends GetView<MainController> {
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? const Color(0xFF00E5FF) : Colors.white,
+                color: isSelected ? AppColors.accentColor : Colors.white,
                 fontSize: 12.sp,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               ),
@@ -100,10 +102,10 @@ class MainScreen extends GetView<MainController> {
             padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFF00E5FF), width: 2.w),
+              border: Border.all(color: AppColors.accentColor, width: 2.w),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF00E5FF).withOpacity(0.3),
+                  color: AppColors.accentColor.withOpacity(0.3),
                   blurRadius: 10.r,
                   spreadRadius: 1.r,
                 ),
@@ -123,7 +125,7 @@ class MainScreen extends GetView<MainController> {
           Text(
             'Sell',
             style: TextStyle(
-              color: isSelected ? const Color(0xFF00E5FF) : Colors.white,
+              color: isSelected ? AppColors.accentColor : Colors.white,
               fontSize: 12.sp,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             ),

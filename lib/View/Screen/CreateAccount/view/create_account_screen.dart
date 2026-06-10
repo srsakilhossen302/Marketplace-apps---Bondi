@@ -101,7 +101,7 @@ class CreateAccountScreen extends GetView<CreateAccountController> {
                                     padding: EdgeInsets.only(left: 15.0, right: 10.0),
                                     child: Icon(
                                       Icons.person_outline,
-                                      color: Color(0xFF00E5FF),
+                                      color: AppColors.accentColor,
                                       size: 22,
                                     ),
                                   ),
@@ -115,7 +115,7 @@ class CreateAccountScreen extends GetView<CreateAccountController> {
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(25.0),
                                     borderSide: const BorderSide(
-                                      color: Color(0xFF00E5FF),
+                                      color: AppColors.accentColor,
                                       width: 1.0,
                                     ),
                                   ),
@@ -149,7 +149,7 @@ class CreateAccountScreen extends GetView<CreateAccountController> {
                                     padding: EdgeInsets.only(left: 15.0, right: 10.0),
                                     child: Icon(
                                       Icons.alternate_email,
-                                      color: Color(0xFF00E5FF),
+                                      color: AppColors.accentColor,
                                       size: 22,
                                     ),
                                   ),
@@ -163,7 +163,7 @@ class CreateAccountScreen extends GetView<CreateAccountController> {
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(25.0),
                                     borderSide: const BorderSide(
-                                      color: Color(0xFF00E5FF),
+                                      color: AppColors.accentColor,
                                       width: 1.0,
                                     ),
                                   ),
@@ -198,7 +198,7 @@ class CreateAccountScreen extends GetView<CreateAccountController> {
                                     padding: EdgeInsets.only(left: 15.0, right: 10.0),
                                     child: Icon(
                                       Icons.phone_outlined,
-                                      color: Color(0xFF00E5FF),
+                                      color: AppColors.accentColor,
                                       size: 22,
                                     ),
                                   ),
@@ -212,7 +212,7 @@ class CreateAccountScreen extends GetView<CreateAccountController> {
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(25.0),
                                     borderSide: const BorderSide(
-                                      color: Color(0xFF00E5FF),
+                                      color: AppColors.accentColor,
                                       width: 1.0,
                                     ),
                                   ),
@@ -247,7 +247,7 @@ class CreateAccountScreen extends GetView<CreateAccountController> {
                                     padding: EdgeInsets.only(left: 15.0, right: 10.0),
                                     child: Icon(
                                       Icons.email_outlined,
-                                      color: Color(0xFF00E5FF),
+                                      color: AppColors.accentColor,
                                       size: 22,
                                     ),
                                   ),
@@ -261,7 +261,7 @@ class CreateAccountScreen extends GetView<CreateAccountController> {
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(25.0),
                                     borderSide: const BorderSide(
-                                      color: Color(0xFF00E5FF),
+                                      color: AppColors.accentColor,
                                       width: 1.0,
                                     ),
                                   ),
@@ -298,7 +298,7 @@ class CreateAccountScreen extends GetView<CreateAccountController> {
                                       padding: EdgeInsets.only(left: 15.0, right: 10.0),
                                       child: Icon(
                                         Icons.lock_outline_rounded,
-                                        color: Color(0xFF00E5FF),
+                                        color: AppColors.accentColor,
                                         size: 22,
                                       ),
                                     ),
@@ -309,7 +309,7 @@ class CreateAccountScreen extends GetView<CreateAccountController> {
                                           controller.isPasswordObscured.value
                                               ? Icons.visibility_outlined
                                               : Icons.visibility_off_outlined,
-                                          color: const Color(0xFF00E5FF),
+                                          color: AppColors.accentColor,
                                           size: 22,
                                         ),
                                         onPressed: controller.togglePasswordVisibility,
@@ -325,7 +325,7 @@ class CreateAccountScreen extends GetView<CreateAccountController> {
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(25.0),
                                       borderSide: const BorderSide(
-                                        color: Color(0xFF00E5FF),
+                                        color: AppColors.accentColor,
                                         width: 1.0,
                                       ),
                                     ),

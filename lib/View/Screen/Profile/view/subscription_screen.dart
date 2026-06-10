@@ -113,10 +113,10 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
             width: double.infinity,
             padding: EdgeInsets.all(25.r),
             decoration: BoxDecoration(
-              color: const Color(0xFF002FA7).withOpacity(0.4),
+              color: AppColors.cardColor.withOpacity(0.4),
               borderRadius: BorderRadius.circular(30.r),
               border: Border.all(
-                color: isCurrent ? const Color(0xFF00E5FF).withOpacity(0.5) : Colors.white.withOpacity(0.1),
+                color: isCurrent ? AppColors.accentColor.withOpacity(0.5) : Colors.white.withOpacity(0.1),
                 width: isCurrent ? 2.w : 1.w,
               ),
             ),
@@ -127,18 +127,18 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF002FA7).withOpacity(0.5),
+                    color: AppColors.cardColor.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Text(
                     plan['tag'],
-                    style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 11.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: AppColors.accentColor, fontSize: 11.sp, fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(height: 20.h),
                 Text(
                   plan['price'],
-                  style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 32.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: AppColors.accentColor, fontSize: 32.sp, fontWeight: FontWeight.bold),
                 ),
                 if (plan['priceSuffix'] != null)
                   Text(
@@ -156,7 +156,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.check_circle_outline, color: const Color(0xFF00E5FF), size: 18.sp),
+                      Icon(Icons.check_circle_outline, color: AppColors.accentColor, size: 18.sp),
                       SizedBox(width: 12.w),
                       Expanded(
                         child: Text(
@@ -175,17 +175,17 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: plan['name'] == 'Silver Plan' ? const Color(0xFF0052D4) : Colors.transparent,
-                        side: plan['name'] == 'Silver Plan' ? null : const BorderSide(color: Color(0xFF0052D4)),
+                        backgroundColor: plan['name'] == 'Silver Plan' ? AppColors.buttonColor : Colors.transparent,
+                        side: plan['name'] == 'Silver Plan' ? null : const BorderSide(color: AppColors.buttonColor),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
                         elevation: 0,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Upgrade to Pro", style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold)),
+                          Text("Upgrade to Pro", style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold,  color: Color(0xffFFFFFF))),
                           SizedBox(width: 8.w),
-                          Icon(Icons.arrow_forward, size: 16.sp),
+                          Icon(Icons.arrow_forward, size: 16.sp,  color: Color(0xffFFFFFF)),
                         ],
                       ),
                     ),
@@ -199,7 +199,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: const Color(0xFF00E5FF),
+                color: AppColors.accentColor,
                 borderRadius: BorderRadius.circular(15.r),
               ),
               child: Text(

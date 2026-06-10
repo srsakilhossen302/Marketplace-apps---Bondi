@@ -125,7 +125,7 @@ class CommunityScreen extends GetView<CommunityController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: TextField(
@@ -156,14 +156,14 @@ class CommunityScreen extends GetView<CommunityController> {
         if (showSeeAll)
           Text(
             "See All",
-            style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 13.sp),
+            style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp),
           ),
         if (showIcons)
           Row(
             children: [
-              Icon(Icons.filter_list, color: const Color(0xFF00E5FF).withOpacity(0.6), size: 20.sp),
+              Icon(Icons.filter_list, color: AppColors.accentColor.withOpacity(0.6), size: 20.sp),
               SizedBox(width: 15.w),
-              Icon(Icons.grid_view, color: const Color(0xFF00E5FF).withOpacity(0.6), size: 20.sp),
+              Icon(Icons.grid_view, color: AppColors.accentColor.withOpacity(0.6), size: 20.sp),
             ],
           ),
       ],
@@ -182,7 +182,7 @@ class CommunityScreen extends GetView<CommunityController> {
             width: 260.w,
             margin: EdgeInsets.only(right: 15.w),
             decoration: BoxDecoration(
-              color: const Color(0xFF002FA7).withOpacity(0.4),
+              color: AppColors.cardColor.withOpacity(0.4),
               borderRadius: BorderRadius.circular(30.r),
               border: Border.all(color: Colors.white.withOpacity(0.1)),
             ),
@@ -211,7 +211,7 @@ class CommunityScreen extends GetView<CommunityController> {
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0052D4),
+                          color: AppColors.buttonColor,
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
@@ -231,7 +231,7 @@ class CommunityScreen extends GetView<CommunityController> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.verified_user, color: const Color(0xFF00E5FF), size: 12.sp),
+                            Icon(Icons.verified_user, color: AppColors.accentColor, size: 12.sp),
                             SizedBox(width: 5.w),
                             Text(
                               "Code: ${item['code']}",
@@ -279,11 +279,11 @@ class CommunityScreen extends GetView<CommunityController> {
                           ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0052D4),
+                              backgroundColor: AppColors.buttonColor,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
                               padding: EdgeInsets.symmetric(horizontal: 15.w),
                             ),
-                            child: Text("Join Group", style: TextStyle(fontSize: 12.sp)),
+                            child: Text("Join Group", style: TextStyle(fontSize: 12.sp,  color: Color(0xffFFFFFF))),
                           ),
                         ],
                       ),
@@ -305,7 +305,7 @@ class CommunityScreen extends GetView<CommunityController> {
           margin: EdgeInsets.only(bottom: 12.h),
           padding: EdgeInsets.all(12.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF002FA7).withOpacity(0.4),
+            color: AppColors.cardColor.withOpacity(0.4),
             borderRadius: BorderRadius.circular(25.r),
             border: Border.all(color: Colors.white.withOpacity(0.1)),
           ),
@@ -333,7 +333,7 @@ class CommunityScreen extends GetView<CommunityController> {
               ),
               Text(
                 "Open",
-                style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 13.sp),
+                style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp),
               ),
             ],
           ),
@@ -348,7 +348,7 @@ class CommunityScreen extends GetView<CommunityController> {
         return Container(
           margin: EdgeInsets.only(bottom: 20.h),
           decoration: BoxDecoration(
-            color: const Color(0xFF002FA7).withOpacity(0.4),
+            color: AppColors.cardColor.withOpacity(0.4),
             borderRadius: BorderRadius.circular(30.r),
             border: Border.all(color: Colors.white.withOpacity(0.1)),
           ),
@@ -393,7 +393,7 @@ class CommunityScreen extends GetView<CommunityController> {
                             style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 11.sp),
                           ),
                           SizedBox(width: 5.w),
-                          Icon(Icons.verified_user, color: const Color(0xFF00E5FF), size: 12.sp),
+                          Icon(Icons.verified_user, color: AppColors.accentColor, size: 12.sp),
                         ],
                       ),
                     ),
@@ -409,12 +409,12 @@ class CommunityScreen extends GetView<CommunityController> {
                       child: OutlinedButton(
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xFF00E5FF)),
+                          side: const BorderSide(color: AppColors.accentColor),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
                         ),
                         child: Text(
                           "Join Community",
-                          style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 14.sp),
+                          style: TextStyle(color: AppColors.accentColor, fontSize: 14.sp),
                         ),
                       ),
                     ),
@@ -435,12 +435,12 @@ class CommunityScreen extends GetView<CommunityController> {
       child: ElevatedButton(
         onPressed: () {},
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0052D4),
+          backgroundColor: AppColors.buttonColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
         ),
         child: Text(
           "Load More Communities",
-          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold,  color: Color(0xffFFFFFF)),
         ),
       ),
     );

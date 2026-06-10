@@ -102,7 +102,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
               padding: EdgeInsets.all(4.r),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF00E5FF), width: 2.w),
+                border: Border.all(color: AppColors.accentColor, width: 2.w),
               ),
               child: CircleAvatar(
                 radius: 60.r,
@@ -115,7 +115,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
               child: Container(
                 padding: EdgeInsets.all(4.r),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF002FA7),
+                  color: AppColors.cardColor,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.verified, color: Colors.white, size: 18.sp),
@@ -168,7 +168,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: const Color(0xFF00E5FF), size: 12.sp),
+          Icon(icon, color: AppColors.accentColor, size: 12.sp),
           SizedBox(width: 5.w),
           Text(
             label,
@@ -195,7 +195,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
     return Container(
       height: 50.h,
       decoration: BoxDecoration(
-        color: isPrimary ? const Color(0xFF0052D4) : Colors.white.withOpacity(0.1),
+        color: isPrimary ? AppColors.buttonColor : Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(25.r),
         border: isPrimary ? null : Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -203,7 +203,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
       child: Text(
         label,
         style: TextStyle(
-          color: isPrimary ? Colors.white : const Color(0xFF00E5FF),
+          color: isPrimary ? Colors.white : AppColors.accentColor,
           fontSize: 14.sp,
           fontWeight: FontWeight.bold,
         ),
@@ -215,7 +215,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -235,7 +235,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
       children: [
         Text(
           value,
-          style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 18.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.accentColor, fontSize: 18.sp, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 4.h),
         Text(
@@ -255,7 +255,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
         Container(
           padding: EdgeInsets.all(25.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF002FA7).withOpacity(0.3),
+            color: AppColors.cardColor.withOpacity(0.3),
             borderRadius: BorderRadius.circular(30.r),
           ),
           child: Column(
@@ -268,11 +268,11 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
               SizedBox(height: 15.h),
               Row(
                 children: [
-                  Icon(Icons.location_on_outlined, color: const Color(0xFF00E5FF), size: 16.sp),
+                  Icon(Icons.location_on_outlined, color: AppColors.accentColor, size: 16.sp),
                   SizedBox(width: 5.w),
                   Text(
                     controller.location.value,
-                    style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 12.sp),
+                    style: TextStyle(color: AppColors.accentColor, fontSize: 12.sp),
                   ),
                 ],
               ),
@@ -290,7 +290,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("ACTIVE LISTINGS (12)", style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold)),
-            Text("View all", style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 12.sp)),
+            Text("View all", style: TextStyle(color: AppColors.accentColor, fontSize: 12.sp)),
           ],
         ),
         SizedBox(height: 15.h),
@@ -300,7 +300,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
               child: Container(
                 margin: EdgeInsets.only(right: 10.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF002FA7).withOpacity(0.3),
+                  color: AppColors.cardColor.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Column(
@@ -317,7 +317,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
                         children: [
                           Text(item['title']!, style: TextStyle(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.bold), maxLines: 1),
                           SizedBox(height: 5.h),
-                          Text(item['price']!, style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 15.sp, fontWeight: FontWeight.bold)),
+                          Text(item['price']!, style: TextStyle(color: AppColors.accentColor, fontSize: 15.sp, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -340,7 +340,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
         Container(
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF002FA7).withOpacity(0.3),
+            color: AppColors.cardColor.withOpacity(0.3),
             borderRadius: BorderRadius.circular(30.r),
           ),
           child: Row(
@@ -353,7 +353,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
                     return Positioned(
                       left: index * 20.w,
                       child: Container(
-                        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: const Color(0xFF002FA7), width: 2.w)),
+                        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppColors.cardColor, width: 2.w)),
                         child: CircleAvatar(radius: 18.r, backgroundImage: NetworkImage(controller.mutualFriends[index])),
                       ),
                     );
@@ -384,7 +384,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
           width: double.infinity,
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF002FA7).withOpacity(0.3),
+            color: AppColors.cardColor.withOpacity(0.3),
             borderRadius: BorderRadius.circular(30.r),
           ),
           child: Column(
@@ -394,9 +394,9 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
                 padding: EdgeInsets.only(bottom: 10.h),
                 child: Row(
                   children: [
-                    Icon(Icons.group_outlined, color: const Color(0xFF00E5FF), size: 16.sp),
+                    Icon(Icons.group_outlined, color: AppColors.accentColor, size: 16.sp),
                     SizedBox(width: 10.w),
-                    Text(group, style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 13.sp)),
+                    Text(group, style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp)),
                   ],
                 ),
               );

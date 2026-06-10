@@ -1,5 +1,7 @@
 import 'package:bondi/View/Screen/ProductDetails/view/product_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:bondi/Utils/AppColors/app_colors.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -24,7 +26,7 @@ class CustomListingCard extends StatelessWidget {
       child: Container(
         width: width ?? 115.81876373291016.w, // Exact width from user
         decoration: BoxDecoration(
-          color: const Color(0xFF002FA7).withOpacity(0.3),
+          color: AppColors.cardColor.withOpacity(0.3),
           borderRadius: BorderRadius.circular(20.r),
         ),
         child: Column(
@@ -71,7 +73,7 @@ class CustomListingCard extends StatelessWidget {
                       child: Text(
                         "NEW",
                         style: TextStyle(
-                          color: const Color(0xFF00E5FF),
+                          color: AppColors.accentColor,
                           fontSize: 9.sp,
                           fontWeight: FontWeight.bold,
                         ),
@@ -89,7 +91,7 @@ class CustomListingCard extends StatelessWidget {
                         vertical: 4.h,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF00E5FF),
+                        color: AppColors.accentColor,
                         borderRadius: BorderRadius.circular(15.r),
                       ),
                       child: Row(
@@ -131,7 +133,7 @@ class CustomListingCard extends StatelessWidget {
                   Text(
                     item.price,
                     style: TextStyle(
-                      color: const Color(0xFF00E5FF),
+                      color: AppColors.accentColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16.sp,
                     ),

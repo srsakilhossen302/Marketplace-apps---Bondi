@@ -50,7 +50,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF00E5FF),
+                              color: AppColors.accentColor,
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Text(
@@ -124,7 +124,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [const Color(0xFF0052D4).withOpacity(0.4), const Color(0xFF00E5FF).withOpacity(0.2)],
+          colors: [AppColors.buttonColor.withOpacity(0.4), AppColors.accentColor.withOpacity(0.2)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -146,7 +146,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
                 child: Container(
                   padding: EdgeInsets.all(6.r),
                   decoration: const BoxDecoration(
-                    color: Color(0xFF0052D4),
+                    color: AppColors.buttonColor,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(Icons.camera_alt, color: Colors.white, size: 16.sp),
@@ -160,7 +160,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: const Color(0xFF0052D4),
+                color: AppColors.buttonColor,
                 borderRadius: BorderRadius.circular(15.r),
               ),
               child: Text(
@@ -178,7 +178,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -215,15 +215,15 @@ class EditProfileScreen extends GetView<EditProfileController> {
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.1),
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white.withOpacity(0.2)),
+                  border: Border.all( color: Color(0xffFFFFFF)),
                 ),
-                child: Icon(Icons.colorize, color: Colors.white.withOpacity(0.4), size: 18.sp),
+                child: Icon(Icons.colorize,  color: Color(0xffFFFFFF), size: 18.sp, ),
               ),
               const Spacer(),
               Text(
                 "Electric\nBlue",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: const Color(0xFF00E5FF).withOpacity(0.6), fontSize: 10.sp),
+                style: TextStyle(color: AppColors.accentColor.withOpacity(0.6), fontSize: 10.sp),
               ),
             ],
           ),
@@ -252,9 +252,9 @@ class EditProfileScreen extends GetView<EditProfileController> {
           controller: textController,
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
-            prefixIcon: icon != null ? Icon(icon, color: const Color(0xFF00E5FF), size: 20.sp) : null,
+            prefixIcon: icon != null ? Icon(icon, color: AppColors.accentColor, size: 20.sp) : null,
             filled: true,
-            fillColor: const Color(0xFF002FA7).withOpacity(0.3),
+            fillColor: AppColors.cardColor.withOpacity(0.3),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.r), borderSide: BorderSide.none),
             contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
           ),
@@ -275,7 +275,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
         Container(
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF002FA7).withOpacity(0.4),
+            color: AppColors.cardColor.withOpacity(0.4),
             borderRadius: BorderRadius.circular(25.r),
           ),
           child: Column(
@@ -289,7 +289,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
               ),
               Text(
                 "108 / 160",
-                style: TextStyle(color: const Color(0xFF00E5FF).withOpacity(0.6), fontSize: 11.sp),
+                style: TextStyle(color: AppColors.accentColor.withOpacity(0.6), fontSize: 11.sp),
               ),
             ],
           ),
@@ -302,7 +302,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Column(
@@ -318,7 +318,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
             ),
             child: Row(
               children: [
-                Icon(Icons.visibility_outlined, color: const Color(0xFF00E5FF), size: 22.sp),
+                Icon(Icons.visibility_outlined, color: AppColors.accentColor, size: 22.sp),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
@@ -332,8 +332,8 @@ class EditProfileScreen extends GetView<EditProfileController> {
                 Obx(() => Switch(
                   value: controller.publicVisibility.value,
                   onChanged: (v) => controller.publicVisibility.value = v,
-                  activeColor: const Color(0xFF00E5FF),
-                  activeTrackColor: const Color(0xFF0052D4),
+                  activeColor: AppColors.accentColor,
+                  activeTrackColor: AppColors.buttonColor,
                 )),
               ],
             ),
@@ -357,18 +357,18 @@ class EditProfileScreen extends GetView<EditProfileController> {
               controller: controller.cpfController,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.badge_outlined, color: const Color(0xFF00E5FF), size: 20.sp),
+                prefixIcon: Icon(Icons.badge_outlined, color: AppColors.accentColor, size: 20.sp),
                 suffixIcon: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.copy, color: const Color(0xFF00E5FF), size: 18.sp),
+                    Icon(Icons.copy, color: AppColors.accentColor, size: 18.sp),
                     SizedBox(width: 5.w),
-                    Text("Copy", style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 14.sp)),
+                    Text("Copy", style: TextStyle(color: AppColors.accentColor, fontSize: 14.sp)),
                     SizedBox(width: 15.w),
                   ],
                 ),
                 filled: true,
-                fillColor: const Color(0xFF002FA7).withOpacity(0.3),
+                fillColor: AppColors.cardColor.withOpacity(0.3),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.r), borderSide: BorderSide.none),
                 contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
               ),
@@ -392,10 +392,10 @@ class EditProfileScreen extends GetView<EditProfileController> {
           height: 55.h,
           child: ElevatedButton.icon(
             onPressed: controller.saveChanges,
-            icon: Icon(Icons.check_circle_outline, size: 20.sp),
-            label: Text("Save Changes", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+            icon: Icon(Icons.check_circle_outline, size: 20.sp,  color: Color(0xffFFFFFF)),
+            label: Text("Save Changes", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold,  color: Color(0xffFFFFFF))),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0052D4),
+              backgroundColor: AppColors.buttonColor,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
             ),
           ),
@@ -407,7 +407,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
           child: OutlinedButton(
             onPressed: () => Get.back(),
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: Color(0xFF0052D4)),
+              side: const BorderSide(color: AppColors.buttonColor),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
             ),
             child: Text("Discard Changes", style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 16.sp)),

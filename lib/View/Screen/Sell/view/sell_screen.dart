@@ -106,7 +106,7 @@ class SellScreen extends GetView<SellController> {
     return Container(
       height: 140.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
         border: Border.all(
           color: Colors.white.withOpacity(0.2),
@@ -123,7 +123,7 @@ class SellScreen extends GetView<SellController> {
               color: Colors.white.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: const Color(0xFF00E5FF), size: 28.sp),
+            child: Icon(icon, color: AppColors.accentColor, size: 28.sp),
           ),
           SizedBox(height: 12.h),
           Text(
@@ -195,9 +195,9 @@ class SellScreen extends GetView<SellController> {
           fontSize: 15.sp,
         ),
         filled: true,
-        fillColor: const Color(0xFF002FA7).withOpacity(0.3),
+        fillColor: AppColors.cardColor.withOpacity(0.3),
         prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: const Color(0xFF00E5FF), size: 20.sp)
+            ? Icon(prefixIcon, color: AppColors.accentColor, size: 20.sp)
             : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.r),
@@ -213,7 +213,7 @@ class SellScreen extends GetView<SellController> {
       () => Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         decoration: BoxDecoration(
-          color: const Color(0xFF002FA7).withOpacity(0.3),
+          color: AppColors.cardColor.withOpacity(0.3),
           borderRadius: BorderRadius.circular(25.r),
         ),
         child: DropdownButtonHideUnderline(
@@ -234,7 +234,7 @@ class SellScreen extends GetView<SellController> {
                       'assets/icons/Category-icons.svg',
                       width: 18.w,
                       colorFilter: const ColorFilter.mode(
-                        Color(0xFF00E5FF),
+                        AppColors.accentColor,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -260,15 +260,15 @@ class SellScreen extends GetView<SellController> {
         hintText: "0.00",
         hintStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
         filled: true,
-        fillColor: const Color(0xFF002FA7).withOpacity(0.3),
+        fillColor: AppColors.cardColor.withOpacity(0.3),
         prefixIcon: Icon(
           Icons.payments_outlined,
-          color: const Color(0xFF00E5FF),
+          color: AppColors.accentColor,
           size: 20.sp,
         ),
         suffixText: "USD",
         suffixStyle: TextStyle(
-          color: const Color(0xFF00E5FF),
+          color: AppColors.accentColor,
           fontWeight: FontWeight.bold,
         ),
         border: OutlineInputBorder(
@@ -284,7 +284,7 @@ class SellScreen extends GetView<SellController> {
     return Container(
       padding: EdgeInsets.all(4.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Obx(
@@ -298,7 +298,7 @@ class SellScreen extends GetView<SellController> {
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? const Color(0xFF0052D4)
+                        ? AppColors.buttonColor
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(25.r),
                   ),
@@ -328,7 +328,7 @@ class SellScreen extends GetView<SellController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: Column(
@@ -366,7 +366,7 @@ class SellScreen extends GetView<SellController> {
             iconPath,
             width: 20.w,
             colorFilter: const ColorFilter.mode(
-              Color(0xFF00E5FF),
+              AppColors.accentColor,
               BlendMode.srcIn,
             ),
           ),
@@ -398,8 +398,8 @@ class SellScreen extends GetView<SellController> {
           () => Switch(
             value: value.value,
             onChanged: (v) => value.value = v,
-            activeColor: const Color(0xFF00E5FF),
-            activeTrackColor: const Color(0xFF00E5FF).withOpacity(0.3),
+            activeColor: AppColors.accentColor,
+            activeTrackColor: AppColors.accentColor.withOpacity(0.3),
           ),
         ),
       ],
@@ -414,9 +414,9 @@ class SellScreen extends GetView<SellController> {
         Container(
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
-            color: const Color(0xFF002FA7).withOpacity(0.4),
+            color: AppColors.cardColor.withOpacity(0.4),
             borderRadius: BorderRadius.circular(25.r),
-            border: Border.all(color: const Color(0xFF00E5FF).withOpacity(0.3)),
+            border: Border.all(color: AppColors.accentColor.withOpacity(0.3)),
           ),
           child: Row(
             children: [
@@ -450,7 +450,7 @@ class SellScreen extends GetView<SellController> {
               ),
               Icon(
                 Icons.check_circle,
-                color: const Color(0xFF0052D4),
+                color: AppColors.buttonColor,
                 size: 20.sp,
               ),
             ],
@@ -470,7 +470,7 @@ class SellScreen extends GetView<SellController> {
             _buildLabel("Share in groups"),
             Text(
               "See all",
-              style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 12.sp),
+              style: TextStyle(color: AppColors.accentColor, fontSize: 12.sp),
             ),
           ],
         ),
@@ -546,7 +546,7 @@ class SellScreen extends GetView<SellController> {
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0052D4),
+              backgroundColor: AppColors.buttonColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(28.r),
               ),
@@ -559,10 +559,11 @@ class SellScreen extends GetView<SellController> {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
+                    color: Color(0xffFFFFFF)
                   ),
                 ),
                 SizedBox(width: 10.w),
-                Icon(Icons.arrow_forward, size: 20.sp),
+                Icon(Icons.arrow_forward, size: 20.sp,  color: Color(0xffFFFFFF)),
               ],
             ),
           ),

@@ -91,7 +91,7 @@ class HomeScreen extends GetView<HomeController> {
                       'assets/icons/Notification-Icons.svg',
                       width: 24.w,
                       colorFilter: const ColorFilter.mode(
-                        Color(0xFF00E5FF),
+                        AppColors.accentColor,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -136,7 +136,7 @@ class HomeScreen extends GetView<HomeController> {
     return Container(
       height: 50.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: TextField(
@@ -183,8 +183,8 @@ class HomeScreen extends GetView<HomeController> {
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? const Color(0xFF0052D4)
-                      : const Color(0xFF002FA7).withOpacity(0.2),
+                      ? AppColors.buttonColor
+                      : AppColors.cardColor.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20.r),
                   border: Border.all(
                     color: isSelected
@@ -197,7 +197,7 @@ class HomeScreen extends GetView<HomeController> {
                     if (cat == 'All') ...[
                       Icon(
                         Icons.grid_view_rounded,
-                        color: const Color(0xFF00E5FF),
+                        color: AppColors.accentColor,
                         size: 16.sp,
                       ),
                       SizedBox(width: 8.w),
@@ -247,7 +247,7 @@ class HomeScreen extends GetView<HomeController> {
             onTap: onAction,
             child: Text(
               "View All",
-              style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 13.sp),
+              style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp),
             ),
           ),
       ],
@@ -287,7 +287,7 @@ class HomeScreen extends GetView<HomeController> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: const Color(0xFF00E5FF),
+                        color: AppColors.accentColor,
                         width: 2.w,
                       ),
                     ),
@@ -334,7 +334,7 @@ class HomeScreen extends GetView<HomeController> {
             margin: EdgeInsets.only(bottom: 12.h),
             padding: EdgeInsets.all(15.r),
             decoration: BoxDecoration(
-              color: const Color(0xFF002FA7).withOpacity(0.3),
+              color: AppColors.cardColor.withOpacity(0.3),
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Row(
@@ -349,7 +349,7 @@ class HomeScreen extends GetView<HomeController> {
                     group.icon,
                     width: 20.w,
                     colorFilter: const ColorFilter.mode(
-                      Color(0xFF00E5FF),
+                      AppColors.accentColor,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -406,7 +406,7 @@ class HomeScreen extends GetView<HomeController> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: ClipRRect(
@@ -453,7 +453,7 @@ class HomeScreen extends GetView<HomeController> {
                     child: Text(
                       'Create New Group',
                       style: TextStyle(
-                        color: const Color(0xFF0052D4),
+                        color: AppColors.buttonColor,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                       ),

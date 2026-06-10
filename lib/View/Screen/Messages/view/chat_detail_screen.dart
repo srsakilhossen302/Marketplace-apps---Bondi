@@ -328,7 +328,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
                           child: ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0052D4),
+                              backgroundColor: AppColors.buttonColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25.r),
                               ),
@@ -391,7 +391,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.add, color: const Color(0xFF002FA7), size: 24.sp),
+            child: Icon(Icons.add, color: AppColors.cardColor, size: 24.sp),
           ),
           SizedBox(width: 12.w),
           Expanded(
@@ -428,7 +428,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
           Container(
             padding: EdgeInsets.all(10.r),
             decoration: const BoxDecoration(
-              color: Color(0xFF0052D4),
+              color: AppColors.buttonColor,
               shape: BoxShape.circle,
             ),
             child: Icon(Icons.send, color: Colors.white, size: 24.sp),

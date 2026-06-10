@@ -103,7 +103,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
               padding: EdgeInsets.all(4.r),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF00E5FF), width: 2.w),
+                border: Border.all(color: AppColors.accentColor, width: 2.w),
               ),
               child: CircleAvatar(
                 radius: 60.r,
@@ -116,7 +116,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
               child: Container(
                 padding: EdgeInsets.all(4.r),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF002FA7),
+                  color: AppColors.cardColor,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.verified, color: Colors.white, size: 18.sp),
@@ -145,7 +145,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
             children: [
               Icon(
                 Icons.workspace_premium,
-                color: const Color(0xFF00E5FF),
+                color: AppColors.accentColor,
                 size: 14.sp,
               ),
               SizedBox(width: 6.w),
@@ -187,7 +187,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                     style: TextStyle(fontSize: 15.sp, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0052D4),
+                    backgroundColor: AppColors.buttonColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25.r),
                     ),
@@ -246,7 +246,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF002FA7).withOpacity(0.4),
+          color: AppColors.cardColor.withOpacity(0.4),
           borderRadius: BorderRadius.circular(25.r),
           border: Border.all(color: Colors.white.withOpacity(0.1)),
         ),
@@ -259,14 +259,14 @@ class UserProfileScreen extends GetView<UserProfileController> {
                 Text(
                   value,
                   style: TextStyle(
-                    color: const Color(0xFF00E5FF),
+                    color: AppColors.accentColor,
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 if (isRating) ...[
                   SizedBox(width: 4.w),
-                  Icon(Icons.star, color: const Color(0xFF00E5FF), size: 16.sp),
+                  Icon(Icons.star, color: AppColors.accentColor, size: 16.sp),
                 ],
               ],
             ),
@@ -364,7 +364,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
   Widget _buildListingCard(Map<String, dynamic> item) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -396,7 +396,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                         ),
                         decoration: BoxDecoration(
                           color: item['status'] == 'ACTIVE'
-                              ? const Color(0xFF00E5FF)
+                              ? AppColors.accentColor
                               : Colors.cyan.shade700,
                           borderRadius: BorderRadius.circular(5.r),
                         ),
@@ -423,7 +423,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                           children: [
                             Icon(
                               Icons.auto_awesome,
-                              color: const Color(0xFF00E5FF),
+                              color: AppColors.accentColor,
                               size: 10.sp,
                             ),
                             SizedBox(width: 2.w),

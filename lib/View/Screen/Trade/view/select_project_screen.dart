@@ -140,7 +140,7 @@ class SelectProjectScreen extends GetView<TradeController> {
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? const Color(0xFF0052D4)
+                      ? AppColors.buttonColor
                       : Colors.white.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20.r),
                 ),
@@ -187,7 +187,7 @@ class SelectProjectScreen extends GetView<TradeController> {
                     : Colors.white.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(25.r),
                 border: isSelected
-                    ? Border.all(color: const Color(0xFF00E5FF), width: 2)
+                    ? Border.all(color: AppColors.accentColor, width: 2)
                     : null,
               ),
               child: Row(
@@ -223,13 +223,13 @@ class SelectProjectScreen extends GetView<TradeController> {
                                 vertical: 4.h,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF00E5FF).withOpacity(0.2),
+                                color: AppColors.accentColor.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Text(
                                 "ACTIVE",
                                 style: TextStyle(
-                                  color: const Color(0xFF00E5FF),
+                                  color: AppColors.accentColor,
                                   fontSize: 9.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -249,7 +249,7 @@ class SelectProjectScreen extends GetView<TradeController> {
                         Text(
                           product['price'],
                           style: TextStyle(
-                            color: const Color(0xFF00E5FF),
+                            color: AppColors.accentColor,
                             fontSize: 15.sp,
                             fontWeight: FontWeight.bold,
                           ),
@@ -324,7 +324,7 @@ class SelectProjectScreen extends GetView<TradeController> {
       child: ElevatedButton(
         onPressed: () => Get.back(),
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0052D4),
+          backgroundColor: AppColors.buttonColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.r),
           ),

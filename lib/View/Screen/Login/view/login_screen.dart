@@ -93,7 +93,7 @@ class LoginScreen extends GetView<LoginController> {
                               padding: EdgeInsets.only(left: 15.0, right: 10.0),
                               child: Icon(
                                 Icons.phone_outlined,
-                                color: Color(0xFF00E5FF),
+                                color: AppColors.accentColor,
                                 size: 22,
                               ),
                             ),
@@ -107,7 +107,7 @@ class LoginScreen extends GetView<LoginController> {
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
                               borderSide: const BorderSide(
-                                color: Color(0xFF00E5FF),
+                                color: AppColors.accentColor,
                                 width: 1.0,
                               ),
                             ),
@@ -135,7 +135,7 @@ class LoginScreen extends GetView<LoginController> {
                               child: const Text(
                                 'Forgot Password?',
                                 style: TextStyle(
-                                  color: Color(0xFF00E5FF),
+                                  color: AppColors.accentColor,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -162,7 +162,7 @@ class LoginScreen extends GetView<LoginController> {
                                 padding: EdgeInsets.only(left: 15.0, right: 10.0),
                                 child: Icon(
                                   Icons.lock_outline_rounded,
-                                  color: Color(0xFF00E5FF),
+                                  color: AppColors.accentColor,
                                   size: 22,
                                 ),
                               ),
@@ -173,7 +173,7 @@ class LoginScreen extends GetView<LoginController> {
                                     controller.isPasswordObscured.value
                                         ? Icons.visibility_outlined
                                         : Icons.visibility_off_outlined,
-                                    color: const Color(0xFF00E5FF),
+                                    color: AppColors.accentColor,
                                     size: 22,
                                   ),
                                   onPressed: controller.togglePasswordVisibility,
@@ -189,7 +189,7 @@ class LoginScreen extends GetView<LoginController> {
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
                                 borderSide: const BorderSide(
-                                  color: Color(0xFF00E5FF),
+                                  color: AppColors.accentColor,
                                   width: 1.0,
                                 ),
                               ),
@@ -281,7 +281,7 @@ class LoginScreen extends GetView<LoginController> {
                         child: const Text(
                           'Create Account',
                           style: TextStyle(
-                            color: Color(0xFF00E5FF),
+                            color: AppColors.accentColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),

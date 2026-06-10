@@ -140,7 +140,7 @@ class ProfileScreen extends GetView<ProfileController> {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -176,12 +176,12 @@ class ProfileScreen extends GetView<ProfileController> {
           Container(
             padding: EdgeInsets.all(8.r),
             decoration: BoxDecoration(
-              color: const Color(0xFF00E5FF).withOpacity(0.1),
+              color: AppColors.accentColor.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.arrow_forward_ios,
-              color: const Color(0xFF00E5FF),
+              color: AppColors.accentColor,
               size: 14.sp,
             ),
           ),
@@ -208,7 +208,7 @@ class ProfileScreen extends GetView<ProfileController> {
   Widget _buildSettingsGroup(List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(25.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -241,7 +241,7 @@ class ProfileScreen extends GetView<ProfileController> {
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         child: Row(
           children: [
-            Icon(icon, color: const Color(0xFF00E5FF), size: 24.sp),
+            Icon(icon, color: AppColors.accentColor, size: 24.sp),
             SizedBox(width: 15.w),
             Expanded(
               child: Column(
@@ -273,7 +273,7 @@ class ProfileScreen extends GetView<ProfileController> {
               Container(
                 padding: EdgeInsets.all(6.r),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF0052D4),
+                  color: AppColors.buttonColor,
                   shape: BoxShape.circle,
                 ),
                 child: Text(
@@ -301,7 +301,7 @@ class ProfileScreen extends GetView<ProfileController> {
     return Container(
       padding: EdgeInsets.all(25.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.4),
+        color: AppColors.cardColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
@@ -329,7 +329,7 @@ class ProfileScreen extends GetView<ProfileController> {
           Container(
             padding: EdgeInsets.all(20.r),
             decoration: BoxDecoration(
-              color: const Color(0xFF002FA7).withOpacity(0.3),
+              color: AppColors.cardColor.withOpacity(0.3),
               borderRadius: BorderRadius.circular(25.r),
               border: Border.all(color: Colors.white.withOpacity(0.1)),
             ),
@@ -365,14 +365,14 @@ class ProfileScreen extends GetView<ProfileController> {
                     children: [
                       Icon(
                         Icons.copy,
-                        color: const Color(0xFF00E5FF),
+                        color: AppColors.accentColor,
                         size: 20.sp,
                       ),
                       SizedBox(width: 6.w),
                       Text(
                         "Copy",
                         style: TextStyle(
-                          color: const Color(0xFF00E5FF),
+                          color: AppColors.accentColor,
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w600,
                         ),
@@ -390,7 +390,7 @@ class ProfileScreen extends GetView<ProfileController> {
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0052D4),
+                backgroundColor: AppColors.buttonColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25.r),
                 ),

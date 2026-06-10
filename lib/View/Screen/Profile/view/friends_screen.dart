@@ -106,18 +106,18 @@ class FriendsScreen extends GetView<FriendsController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(25.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.person_add_alt_1, color: const Color(0xFF00E5FF), size: 18.sp),
+          Icon(Icons.person_add_alt_1, color: AppColors.accentColor, size: 18.sp),
           SizedBox(width: 8.w),
           Text(
             "Invite Contacts",
-            style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 13.sp, fontWeight: FontWeight.bold),
+            style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -128,7 +128,7 @@ class FriendsScreen extends GetView<FriendsController> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF002FA7).withOpacity(0.3),
+        color: AppColors.cardColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: TextField(
@@ -162,7 +162,7 @@ class FriendsScreen extends GetView<FriendsController> {
                       Text(
                         text,
                         style: TextStyle(
-                          color: controller.selectedTab.value == idx ? const Color(0xFF00E5FF) : Colors.white.withOpacity(0.5),
+                          color: controller.selectedTab.value == idx ? AppColors.accentColor : Colors.white.withOpacity(0.5),
                           fontSize: 14.sp,
                           fontWeight: controller.selectedTab.value == idx ? FontWeight.bold : FontWeight.normal,
                         ),
@@ -182,7 +182,7 @@ class FriendsScreen extends GetView<FriendsController> {
                       margin: EdgeInsets.only(top: 8.h),
                       height: 2.h,
                       width: 40.w,
-                      color: const Color(0xFF00E5FF),
+                      color: AppColors.accentColor,
                     ),
                 ],
               ),
@@ -223,7 +223,7 @@ class FriendsScreen extends GetView<FriendsController> {
                 margin: EdgeInsets.only(bottom: 15.h),
                 padding: EdgeInsets.all(15.r),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF002FA7).withOpacity(0.4),
+                  color: AppColors.cardColor.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(25.r),
                   border: Border.all(color: Colors.white.withOpacity(0.1)),
                 ),
@@ -262,7 +262,7 @@ class FriendsScreen extends GetView<FriendsController> {
                             child: ElevatedButton(
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0052D4),
+                                backgroundColor: AppColors.buttonColor,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
                               ),
                               child: Text("Accept", style: TextStyle(fontSize: 14.sp)),
@@ -298,7 +298,7 @@ class FriendsScreen extends GetView<FriendsController> {
               margin: EdgeInsets.only(bottom: 15.h),
               padding: EdgeInsets.all(15.r),
               decoration: BoxDecoration(
-                color: const Color(0xFF002FA7).withOpacity(0.4),
+                color: AppColors.cardColor.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(color: Colors.white.withOpacity(0.1)),
               ),
@@ -339,13 +339,13 @@ class FriendsScreen extends GetView<FriendsController> {
       case 1: // Following
         return Text(
           "Unfollow",
-          style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 13.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp, fontWeight: FontWeight.bold),
         );
       case 3: // Suggested
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
           decoration: BoxDecoration(
-            color: const Color(0xFF0052D4),
+            color: AppColors.buttonColor,
             borderRadius: BorderRadius.circular(15.r),
           ),
           child: Text(
@@ -360,7 +360,7 @@ class FriendsScreen extends GetView<FriendsController> {
             color: Colors.white.withOpacity(0.1),
             borderRadius: BorderRadius.circular(10.r),
           ),
-          child: Icon(Icons.chat_bubble_outline, color: const Color(0xFF00E5FF), size: 18.sp),
+          child: Icon(Icons.chat_bubble_outline, color: AppColors.accentColor, size: 18.sp),
         );
     }
   }
@@ -375,7 +375,7 @@ class FriendsScreen extends GetView<FriendsController> {
         ),
         Text(
           "View all",
-          style: TextStyle(color: const Color(0xFF00E5FF), fontSize: 13.sp),
+          style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp),
         ),
       ],
     );
@@ -391,7 +391,7 @@ class FriendsScreen extends GetView<FriendsController> {
               margin: EdgeInsets.only(right: 15.w),
               padding: EdgeInsets.all(15.r),
               decoration: BoxDecoration(
-                color: const Color(0xFF002FA7).withOpacity(0.4),
+                color: AppColors.cardColor.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(color: Colors.white.withOpacity(0.1)),
               ),
@@ -408,7 +408,7 @@ class FriendsScreen extends GetView<FriendsController> {
                         right: 0,
                         child: Container(
                           padding: EdgeInsets.all(4.r),
-                          decoration: const BoxDecoration(color: Color(0xFF00E5FF), shape: BoxShape.circle),
+                          decoration: const BoxDecoration(color: AppColors.accentColor, shape: BoxShape.circle),
                           child: Icon(Icons.bolt, color: Colors.white, size: 10.sp),
                         ),
                       ),
@@ -430,7 +430,7 @@ class FriendsScreen extends GetView<FriendsController> {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0052D4),
+                        backgroundColor: AppColors.buttonColor,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
                       ),
                       child: Text("Add Friend", style: TextStyle(fontSize: 12.sp)),
