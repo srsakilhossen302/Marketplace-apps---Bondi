@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
-import '../../OtpVerification/view/otp_verification_screen.dart';
 import '../Controller/create_account_controller.dart';
 
 class CreateAccountScreen extends GetView<CreateAccountController> {
