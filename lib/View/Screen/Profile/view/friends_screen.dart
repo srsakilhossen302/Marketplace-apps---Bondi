@@ -113,11 +113,19 @@ class FriendsScreen extends GetView<FriendsController> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.person_add_alt_1, color: AppColors.accentColor, size: 18.sp),
+          Icon(
+            Icons.person_add_alt_1,
+            color: AppColors.accentColor,
+            size: 18.sp,
+          ),
           SizedBox(width: 8.w),
           Text(
             "Invite Contacts",
-            style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: AppColors.accentColor,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
@@ -134,9 +142,16 @@ class FriendsScreen extends GetView<FriendsController> {
       child: TextField(
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
-          icon: Icon(Icons.search, color: Colors.white.withOpacity(0.6), size: 20.sp),
+          icon: Icon(
+            Icons.search,
+            color: Colors.white.withOpacity(0.6),
+            size: 20.sp,
+          ),
           hintText: "Search people or username",
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14.sp),
+          hintStyle: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontSize: 14.sp,
+          ),
           border: InputBorder.none,
         ),
       ),
@@ -151,43 +166,52 @@ class FriendsScreen extends GetView<FriendsController> {
         children: tabs.asMap().entries.map((entry) {
           int idx = entry.key;
           String text = entry.value;
-          return Obx(() => GestureDetector(
-            onTap: () => controller.selectedTab.value = idx,
-            child: Container(
-              margin: EdgeInsets.only(right: 25.w),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        text,
-                        style: TextStyle(
-                          color: controller.selectedTab.value == idx ? AppColors.accentColor : Colors.white.withOpacity(0.5),
-                          fontSize: 14.sp,
-                          fontWeight: controller.selectedTab.value == idx ? FontWeight.bold : FontWeight.normal,
+          return Obx(
+            () => GestureDetector(
+              onTap: () => controller.selectedTab.value = idx,
+              child: Container(
+                margin: EdgeInsets.only(right: 25.w),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          text,
+                          style: TextStyle(
+                            color: controller.selectedTab.value == idx
+                                ? AppColors.accentColor
+                                : Colors.white.withOpacity(0.5),
+                            fontSize: 14.sp,
+                            fontWeight: controller.selectedTab.value == idx
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
                         ),
-                      ),
-                      if (text == "Requests") ...[
-                        SizedBox(width: 5.w),
-                        Container(
-                          width: 8.w,
-                          height: 8.w,
-                          decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                        ),
+                        if (text == "Requests") ...[
+                          SizedBox(width: 5.w),
+                          Container(
+                            width: 8.w,
+                            height: 8.w,
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ],
                       ],
-                    ],
-                  ),
-                  if (controller.selectedTab.value == idx)
-                    Container(
-                      margin: EdgeInsets.only(top: 8.h),
-                      height: 2.h,
-                      width: 40.w,
-                      color: AppColors.accentColor,
                     ),
-                ],
+                    if (controller.selectedTab.value == idx)
+                      Container(
+                        margin: EdgeInsets.only(top: 8.h),
+                        height: 2.h,
+                        width: 40.w,
+                        color: AppColors.accentColor,
+                      ),
+                  ],
+                ),
               ),
             ),
-          ));
+          );
         }).toList(),
       ),
     );
@@ -242,11 +266,18 @@ class FriendsScreen extends GetView<FriendsController> {
                             children: [
                               Text(
                                 item['name']!,
-                                style: TextStyle(color: Colors.white, fontSize: 15.sp, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text(
                                 item['mutual']!,
-                                style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.sp),
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 12.sp,
+                                ),
                               ),
                             ],
                           ),
@@ -263,9 +294,14 @@ class FriendsScreen extends GetView<FriendsController> {
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.buttonColor,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
                               ),
-                              child: Text("Accept", style: TextStyle(fontSize: 14.sp)),
+                              child: Text(
+                                "Accept",
+                                style: TextStyle(fontSize: 14.sp,  color: Color(0xffFFFFFF)),
+                              ),
                             ),
                           ),
                         ),
@@ -276,10 +312,20 @@ class FriendsScreen extends GetView<FriendsController> {
                             child: OutlinedButton(
                               onPressed: () {},
                               style: OutlinedButton.styleFrom(
-                                side: BorderSide(color: Colors.white.withOpacity(0.3)),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+                                side: BorderSide(
+                                  color: Colors.white.withOpacity(0.3),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
                               ),
-                              child: Text("Decline", style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14.sp)),
+                              child: Text(
+                                "Decline",
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 14.sp,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -315,11 +361,18 @@ class FriendsScreen extends GetView<FriendsController> {
                       children: [
                         Text(
                           item['name']!,
-                          style: TextStyle(color: Colors.white, fontSize: 15.sp, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Text(
                           item['mutual']!,
-                          style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.sp),
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.5),
+                            fontSize: 12.sp,
+                          ),
                         ),
                       ],
                     ),
@@ -339,7 +392,11 @@ class FriendsScreen extends GetView<FriendsController> {
       case 1: // Following
         return Text(
           "Unfollow",
-          style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: AppColors.accentColor,
+            fontSize: 13.sp,
+            fontWeight: FontWeight.bold,
+          ),
         );
       case 3: // Suggested
         return Container(
@@ -350,7 +407,11 @@ class FriendsScreen extends GetView<FriendsController> {
           ),
           child: Text(
             "Add Friend",
-            style: TextStyle(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         );
       default: // Friends
@@ -360,7 +421,11 @@ class FriendsScreen extends GetView<FriendsController> {
             color: Colors.white.withOpacity(0.1),
             borderRadius: BorderRadius.circular(10.r),
           ),
-          child: Icon(Icons.chat_bubble_outline, color: AppColors.accentColor, size: 18.sp),
+          child: Icon(
+            Icons.chat_bubble_outline,
+            color: AppColors.accentColor,
+            size: 18.sp,
+          ),
         );
     }
   }
@@ -371,7 +436,11 @@ class FriendsScreen extends GetView<FriendsController> {
       children: [
         Text(
           "Recommended for you",
-          style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         Text(
           "View all",
@@ -408,8 +477,15 @@ class FriendsScreen extends GetView<FriendsController> {
                         right: 0,
                         child: Container(
                           padding: EdgeInsets.all(4.r),
-                          decoration: const BoxDecoration(color: AppColors.accentColor, shape: BoxShape.circle),
-                          child: Icon(Icons.bolt, color: Colors.white, size: 10.sp),
+                          decoration: const BoxDecoration(
+                            color: AppColors.accentColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.bolt,
+                            color: Colors.white,
+                            size: 10.sp,
+                          ),
                         ),
                       ),
                     ],
@@ -417,11 +493,18 @@ class FriendsScreen extends GetView<FriendsController> {
                   SizedBox(height: 12.h),
                   Text(
                     item['name']!,
-                    style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     item['mutual']!,
-                    style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11.sp),
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 11.sp,
+                    ),
                   ),
                   SizedBox(height: 15.h),
                   SizedBox(
@@ -431,9 +514,17 @@ class FriendsScreen extends GetView<FriendsController> {
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.buttonColor,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.r),
+                        ),
                       ),
-                      child: Text("Add Friend", style: TextStyle(fontSize: 12.sp)),
+                      child: Text(
+                        "Add Friend",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Color(0xffFFFFFF),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -445,4 +536,3 @@ class FriendsScreen extends GetView<FriendsController> {
     );
   }
 }
-
