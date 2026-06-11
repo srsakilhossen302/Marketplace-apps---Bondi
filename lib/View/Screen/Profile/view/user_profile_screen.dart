@@ -33,7 +33,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                       SizedBox(height: 20.h),
                       _buildProfileHeader(),
                       SizedBox(height: 30.h),
-                      _buildStatsGrid(),
+                      _buildStatsRow(),
                       SizedBox(height: 25.h),
                       _buildMyOrdersButton(),
                       SizedBox(height: 40.h),
@@ -57,21 +57,18 @@ class UserProfileScreen extends GetView<UserProfileController> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-          child: Stack(
-            alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: GestureDetector(
-                  onTap: () => Get.back(),
-                  child: Container(
-                    padding: EdgeInsets.all(8.r),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.close, color: Colors.white, size: 20.sp),
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: Container(
+                  padding: EdgeInsets.all(8.r),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    shape: BoxShape.circle,
                   ),
+                  child: Icon(Icons.close, color: Colors.white, size: 20.sp),
                 ),
               ),
               Text(
@@ -111,15 +108,19 @@ class UserProfileScreen extends GetView<UserProfileController> {
               ),
             ),
             Positioned(
-              bottom: 5.h,
-              right: 5.w,
+              bottom: 4.h,
+              right: 4.w,
               child: Container(
-                padding: EdgeInsets.all(4.r),
                 decoration: const BoxDecoration(
-                  color: AppColors.cardColor,
+                  color: Colors.white,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.verified, color: Colors.white, size: 18.sp),
+                padding: EdgeInsets.all(1.r),
+                child: Icon(
+                  Icons.verified,
+                  color: const Color(0xFF1E5EF3),
+                  size: 22.sp,
+                ),
               ),
             ),
           ],
@@ -135,25 +136,30 @@ class UserProfileScreen extends GetView<UserProfileController> {
         ),
         SizedBox(height: 8.h),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(15.r),
+            color: const Color(0xFF0C1B3A),
+            borderRadius: BorderRadius.circular(10.r),
+            border: Border.all(
+              color: const Color(0xFF1E5EF3).withOpacity(0.3),
+              width: 1.w,
+            ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                Icons.workspace_premium,
-                color: AppColors.accentColor,
-                size: 14.sp,
+                Icons.location_on_outlined,
+                color: const Color(0xFF1E5EF3),
+                size: 11.sp,
               ),
-              SizedBox(width: 6.w),
+              SizedBox(width: 4.w),
               Text(
                 "Top Trader",
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.6),
-                  fontSize: 12.sp,
+                  color: const Color(0xFF1E5EF3),
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -178,35 +184,53 @@ class UserProfileScreen extends GetView<UserProfileController> {
           children: [
             Expanded(
               child: SizedBox(
-                height: 50.h,
-                child: ElevatedButton.icon(
+                height: 48.h,
+                child: ElevatedButton(
                   onPressed: () => Get.to(() => const EditProfileScreen()),
-                  icon: Icon(Icons.edit, size: 18.sp),
-                  label: Text(
-                    "Edit Profile",
-                    style: TextStyle(fontSize: 15.sp, color: Colors.white),
-                  ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.buttonColor,
+                    backgroundColor: const Color(0xFF0040C0),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25.r),
+                      borderRadius: BorderRadius.circular(24.r),
                     ),
+                    elevation: 0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Edit Profile",
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Icon(
+                        Icons.edit,
+                        size: 14.sp,
+                        color: Colors.white,
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
             SizedBox(width: 15.w),
             Container(
-              height: 50.h,
-              width: 50.h,
+              height: 48.h,
+              width: 48.h,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: const Color(0xFF002FA7),
+                  width: 1.2.w,
+                ),
               ),
               child: Icon(
                 Icons.share_outlined,
-                color: Colors.white,
-                size: 20.sp,
+                color: const Color(0xFF0052D4),
+                size: 18.sp,
               ),
             ),
           ],
@@ -215,23 +239,31 @@ class UserProfileScreen extends GetView<UserProfileController> {
     );
   }
 
-  Widget _buildStatsGrid() {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      mainAxisSpacing: 15.h,
-      crossAxisSpacing: 15.w,
-      childAspectRatio: 2.0,
+  Widget _buildStatsRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildStatCard(
-          controller.friendsCount.value,
-          "FRIENDS",
-          onTap: () => Get.to(() => const FriendsScreen()),
+        Expanded(
+          child: _buildStatCard(
+            controller.friendsCount.value,
+            "FRIENDS",
+            onTap: () => Get.to(() => const FriendsScreen()),
+          ),
         ),
-        _buildStatCard(controller.groupsCount.value, "GROUPS"),
-        _buildStatCard(controller.tradesCount.value, "TRADES"),
-        _buildStatCard(controller.rating.value, "RATING", isRating: true),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: _buildStatCard(
+            controller.groupsCount.value,
+            "GROUPS",
+          ),
+        ),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: _buildStatCard(
+            controller.tradesCount.value,
+            "TRADES",
+          ),
+        ),
       ],
     );
   }
@@ -239,44 +271,39 @@ class UserProfileScreen extends GetView<UserProfileController> {
   Widget _buildStatCard(
     String value,
     String label, {
-    bool isRating = false,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: 75.h,
         decoration: BoxDecoration(
-          color: AppColors.cardColor.withOpacity(0.4),
-          borderRadius: BorderRadius.circular(25.r),
-          border: Border.all(color: Colors.white.withOpacity(0.1)),
+          color: const Color(0xFF00195C).withOpacity(0.5),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(
+            color: const Color(0xFF004ECC),
+            width: 1.2.w,
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  value,
-                  style: TextStyle(
-                    color: AppColors.accentColor,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (isRating) ...[
-                  SizedBox(width: 4.w),
-                  Icon(Icons.star, color: AppColors.accentColor, size: 16.sp),
-                ],
-              ],
+            Text(
+              value,
+              style: TextStyle(
+                color: const Color(0xFF00D8F6),
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 4.h),
             Text(
               label,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.6),
-                fontSize: 11.sp,
-                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.5,
               ),
             ),
           ],
@@ -364,88 +391,67 @@ class UserProfileScreen extends GetView<UserProfileController> {
   Widget _buildListingCard(Map<String, dynamic> item) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.cardColor.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        color: const Color(0xFF0C1B3A).withOpacity(0.2), // Dark transparent background
+        borderRadius: BorderRadius.circular(15.r),
+        border: Border.all(
+          color: const Color(0xFF002FA7).withOpacity(0.5),
+          width: 1.2.w,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Image Section
           Expanded(
             child: Stack(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20.r),
-                  ),
-                  child: Image.network(
-                    item['image'],
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(14.r),
+                    ),
+                    child: Image.network(
+                      item['image'],
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
+                // Status Badge
                 Positioned(
-                  top: 10.h,
-                  left: 10.w,
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 4.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: item['status'] == 'ACTIVE'
-                              ? AppColors.accentColor
-                              : Colors.cyan.shade700,
-                          borderRadius: BorderRadius.circular(5.r),
-                        ),
-                        child: Text(
-                          item['status'],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 9.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                  top: 8.h,
+                  left: 8.w,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 3.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _getBadgeColor(item['status'], item['title']),
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    child: Text(
+                      item['status'],
+                      style: TextStyle(
+                        color: _getBadgeTextColor(item['status'], item['title']),
+                        fontSize: 8.sp,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(width: 5.w),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6.w,
-                          vertical: 4.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(5.r),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.auto_awesome,
-                              color: AppColors.accentColor,
-                              size: 10.sp,
-                            ),
-                            SizedBox(width: 2.w),
-                            Text(
-                              "AI",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 9.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.all(12.r),
+          // Info Section
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+            decoration: BoxDecoration(
+              color: AppColors.cardColor, // Royal blue background for info section
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(14.r),
+              ),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -453,8 +459,8 @@ class UserProfileScreen extends GetView<UserProfileController> {
                   item['title'],
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -464,7 +470,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                   item['price'],
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14.sp,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -476,37 +482,88 @@ class UserProfileScreen extends GetView<UserProfileController> {
     );
   }
 
+  Color _getBadgeColor(String status, String title) {
+    if (status == 'SOLD') {
+      return const Color(0xFF00D8F6); // Cyan
+    }
+    if (title.contains('Bond')) {
+      return Colors.white; // White
+    }
+    return const Color(0xFF00E5FF); // Bright cyan
+  }
+
+  Color _getBadgeTextColor(String status, String title) {
+    if (title.contains('Bond')) {
+      return const Color(0xFF000039); // Deep dark navy
+    }
+    return Colors.white;
+  }
+
   Widget _buildAddListingCard() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20.r),
+        color: const Color(0xFF0C1B3A).withOpacity(0.2), // Dark transparent background
+        borderRadius: BorderRadius.circular(15.r),
+        border: Border.all(
+          color: const Color(0xFF002FA7).withOpacity(0.5),
+          width: 1.2.w,
+        ),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Plus Icon Section
+          Expanded(
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(8.r),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 1.5.w,
+                  ),
+                ),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 20.sp,
+                ),
+              ),
+            ),
+          ),
+          // Info Section
           Container(
-            padding: EdgeInsets.all(10.r),
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              shape: BoxShape.circle,
+              color: AppColors.cardColor, // Royal blue background
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(14.r),
+              ),
             ),
-            child: Icon(Icons.add, color: Colors.white, size: 24.sp),
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            "Add New Listing",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            "Start trading",
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.5),
-              fontSize: 11.sp,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Add New Listing",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  "Start trading",
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.6),
+                    fontSize: 10.sp,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
