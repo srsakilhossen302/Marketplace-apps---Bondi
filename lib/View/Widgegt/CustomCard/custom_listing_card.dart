@@ -57,59 +57,59 @@ class CustomListingCard extends StatelessWidget {
                   ),
                 ),
                 // NEW Badge
-                if (item.isNew)
-                  Positioned(
-                    top: 8.h,
-                    right: 8.w,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 3.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(6.r),
-                      ),
-                      child: Text(
-                        "NEW",
-                        style: TextStyle(
-                          color: AppColors.accentColor,
-                          fontSize: 9.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+                // if (item.isNew)
+                //   Positioned(
+                //     top: 8.h,
+                //     right: 8.w,
+                //     child: Container(
+                //       padding: EdgeInsets.symmetric(
+                //         horizontal: 8.w,
+                //         vertical: 3.h,
+                //       ),
+                //       decoration: BoxDecoration(
+                //         color: Colors.white,
+                //         borderRadius: BorderRadius.circular(6.r),
+                //       ),
+                //       child: Text(
+                //         "NEW",
+                //         style: TextStyle(
+                //           color: AppColors.accentColor,
+                //           fontSize: 9.sp,
+                //           fontWeight: FontWeight.bold,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
                 // Trade Badge
-                if (item.isTrade)
-                  Positioned(
-                    bottom: 8.h,
-                    left: 8.w,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 4.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.accentColor,
-                        borderRadius: BorderRadius.circular(15.r),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.sync, color: Colors.white, size: 10.sp),
-                          SizedBox(width: 3.w),
-                          Text(
-                            "Trade",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 9.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                // if (item.isTrade)
+                //   Positioned(
+                //     bottom: 8.h,
+                //     left: 8.w,
+                //     child: Container(
+                //       padding: EdgeInsets.symmetric(
+                //         horizontal: 8.w,
+                //         vertical: 4.h,
+                //       ),
+                //       decoration: BoxDecoration(
+                //         color: AppColors.accentColor,
+                //         borderRadius: BorderRadius.circular(15.r),
+                //       ),
+                //       child: Row(
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Icon(Icons.sync, color: Colors.white, size: 10.sp),
+                //           SizedBox(width: 3.w),
+                //           Text(
+                //             "Trade",
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontSize: 9.sp,
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
               ],
             ),
 
