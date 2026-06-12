@@ -115,17 +115,54 @@ class OtpVerificationController extends GetxController {
     }
   }
 
-  void resendCode() {
-    Get.snackbar(
-      'Code Resent',
-      'A new verification code has been sent to your email',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.blue.withOpacity(0.9),
-      colorText: Colors.white,
-      margin: const EdgeInsets.all(16),
-      borderRadius: 8,
-    );
-    startTimer();
+  Future<void> resendCode() async {
+    try {
+      final response = await http.post(
+        Uri.parse(ApiUrl.resendOtp),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+          'type': 'email_verification',
+        }),
+      );
+
+      final responseBody = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar(
+          'Success',
+          responseBody['message'] ?? 'A new verification code has been sent to your email.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.9),
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 8,
+        );
+        startTimer();
+      } else {
+        Get.snackbar(
+          'Error',
+          responseBody['message'] ?? 'Failed to resend code.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.9),
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 8,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'An error occurred: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.9),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 8,
+      );
+    }
   }
 
   @override

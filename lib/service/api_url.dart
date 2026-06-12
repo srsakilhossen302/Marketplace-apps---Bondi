@@ -7,4 +7,5 @@ class ApiUrl {
   static const String refreshToken = "$baseUrl/auth/refresh-token";
   static const String forgotPassword = "$baseUrl/auth/forgot-password";
   static const String resetPassword = "$baseUrl/auth/reset-password";
+  static const String resendOtp = "$baseUrl/auth/resend-otp";
 }
