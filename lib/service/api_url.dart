@@ -5,4 +5,6 @@ class ApiUrl {
   static const String login = "$baseUrl/auth/login";
   static const String logout = "$baseUrl/auth/logout";
   static const String refreshToken = "$baseUrl/auth/refresh-token";
+  static const String forgotPassword = "$baseUrl/auth/forgot-password";
+  static const String resetPassword = "$baseUrl/auth/reset-password";
 }

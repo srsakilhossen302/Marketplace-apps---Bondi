@@ -5,6 +5,7 @@ import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../../CreateAccount/view/create_account_screen.dart';
+import '../../ForgotPassword/view/forgot_password_screen.dart';
 import '../Controller/login_controller.dart';
 
 class LoginScreen extends GetView<LoginController> {
@@ -137,9 +138,7 @@ class LoginScreen extends GetView<LoginController> {
                               ),
                             ),
                             GestureDetector(
-                              onTap: () {
-                                // Handle forgot password
-                              },
+                              onTap: () => Get.to(() => const ForgotPasswordScreen()),
                               child: Text(
                                 StaticString.forgotPassword,
                                 style: TextStyle(

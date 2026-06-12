@@ -142,6 +142,7 @@ class LoginController extends GetxController {
     }
   }
 
+
   @override
   void onClose() {
     emailController.dispose();
