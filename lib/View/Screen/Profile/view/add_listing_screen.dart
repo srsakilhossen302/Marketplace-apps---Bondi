@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bondi/Utils/AppColors/app_colors.dart';
+import 'package:bondi/Utils/StaticString/static_string.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -72,7 +73,7 @@ class AddListingScreen extends GetView<AddListingController> {
                 ),
               ),
               Text(
-                "Add New Listing",
+                StaticString.addNewListing,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24.sp,
@@ -99,7 +100,7 @@ class AddListingScreen extends GetView<AddListingController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Media",
+              StaticString.media,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20.sp,
@@ -107,7 +108,7 @@ class AddListingScreen extends GetView<AddListingController> {
               ),
             ),
             Text(
-              "Up to 10 photos, 1 video",
+              StaticString.upTo10Photos1Video,
               style: TextStyle(
                 color: Colors.white.withOpacity(0.6),
                 fontSize: 11.sp,
@@ -155,7 +156,7 @@ class AddListingScreen extends GetView<AddListingController> {
             ),
             SizedBox(height: 8.h),
             Text(
-              "Add Photo",
+              StaticString.addPhoto,
               style: TextStyle(
                 color: Colors.white.withOpacity(0.4),
                 fontSize: 11.sp,
@@ -208,7 +209,7 @@ class AddListingScreen extends GetView<AddListingController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "ITEM DETAILS",
+            StaticString.itemDetails,
             style: TextStyle(
               color: Colors.white.withOpacity(0.6),
               fontSize: 12.sp,
@@ -216,10 +217,10 @@ class AddListingScreen extends GetView<AddListingController> {
             ),
           ),
           SizedBox(height: 20.h),
-          _buildFieldLabel("Product Title"),
+          _buildFieldLabel(StaticString.productTitle),
           _buildTextField(
             controller.titleController,
-            hint: "What are you selling?",
+            hint: StaticString.whatAreYouSelling,
           ),
           SizedBox(height: 20.h),
           Row(
@@ -228,7 +229,7 @@ class AddListingScreen extends GetView<AddListingController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildFieldLabel("Category"),
+                    _buildFieldLabel(StaticString.category),
                     _buildDropdownField(),
                   ],
                 ),
@@ -238,23 +239,26 @@ class AddListingScreen extends GetView<AddListingController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildFieldLabel("Price (\$)"),
-                    _buildTextField(controller.priceController, hint: "0.00"),
+                    _buildFieldLabel(StaticString.price),
+                    _buildTextField(
+                      controller.priceController,
+                      hint: StaticString.priceHint,
+                    ),
                   ],
                 ),
               ),
             ],
           ),
           SizedBox(height: 20.h),
-          _buildFieldLabel("Condition"),
+          _buildFieldLabel(StaticString.condition),
           Wrap(
             spacing: 10.w,
             runSpacing: 10.h,
             children: [
-              _buildConditionChip("New"),
-              _buildConditionChip("Like New"),
-              _buildConditionChip("Fair"),
-              _buildConditionChip("Good"),
+              _buildConditionChip(StaticString.newItem),
+              _buildConditionChip(StaticString.likeNew),
+              _buildConditionChip(StaticString.fair),
+              _buildConditionChip(StaticString.good),
             ],
           ),
         ],
@@ -303,7 +307,7 @@ class AddListingScreen extends GetView<AddListingController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Detailed Description",
+            StaticString.detailedDescription,
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.sp,
@@ -326,8 +330,7 @@ class AddListingScreen extends GetView<AddListingController> {
                 fontSize: 13.sp,
               ),
               decoration: InputDecoration(
-                hintText:
-                    "Describe features, flaws, or include a story about the item...",
+                hintText: StaticString.describeFeaturesFlawsStory,
                 hintStyle: TextStyle(
                   color: Colors.white.withOpacity(0.3),
                   fontSize: 13.sp,
@@ -356,7 +359,7 @@ class AddListingScreen extends GetView<AddListingController> {
               Icon(Icons.swap_horiz, color: Colors.white, size: 18.sp),
               SizedBox(width: 8.w),
               Text(
-                "TRADE PREFERENCES",
+                StaticString.tradePreferences,
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.6),
                   fontSize: 12.sp,
@@ -366,10 +369,10 @@ class AddListingScreen extends GetView<AddListingController> {
             ],
           ),
           SizedBox(height: 20.h),
-          _buildFieldLabel("Looking for..."),
+          _buildFieldLabel(StaticString.lookingFor),
           _buildTextField(
             controller.tradePrefController,
-            hint: "e.g. Vintage cameras, mechanical keyboards",
+            hint: StaticString.exampleVintageCameras,
           ),
           SizedBox(height: 15.h),
           Row(
@@ -399,7 +402,7 @@ class AddListingScreen extends GetView<AddListingController> {
               ),
               SizedBox(width: 12.w),
               Text(
-                "Open to offers outside of\npreferences",
+                StaticString.openToOffersOutsidePreferences,
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.6),
                   fontSize: 12.sp,
@@ -417,7 +420,7 @@ class AddListingScreen extends GetView<AddListingController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Location & Delivery",
+          StaticString.locationDelivery,
           style: TextStyle(
             color: Colors.white,
             fontSize: 20.sp,
@@ -425,7 +428,7 @@ class AddListingScreen extends GetView<AddListingController> {
           ),
         ),
         SizedBox(height: 20.h),
-        _buildFieldLabel("Meetup Location"),
+        _buildFieldLabel(StaticString.meetupLocation),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 15.w),
           decoration: BoxDecoration(
@@ -442,7 +445,7 @@ class AddListingScreen extends GetView<AddListingController> {
                 color: AppColors.accentColor,
                 size: 20.sp,
               ),
-              hintText: "Enter city or neighborhood",
+              hintText: StaticString.enterCityOrNeighborhood,
               hintStyle: TextStyle(
                 color: Colors.white.withOpacity(0.3),
                 fontSize: 14.sp,
@@ -462,15 +465,15 @@ class AddListingScreen extends GetView<AddListingController> {
             children: [
               _buildSwitchRow(
                 Icons.local_shipping_outlined,
-                "Available for Shipping",
-                "You'll print a label through Bond",
+                StaticString.availableForShipping,
+                StaticString.youllPrintALabelThroughBond,
                 controller.availableForShipping,
               ),
               SizedBox(height: 20.h),
               _buildSwitchRow(
                 Icons.location_on_outlined,
-                "Local Pickup",
-                "Coordinate a safe meetup",
+                StaticString.localPickup,
+                StaticString.coordinateASafeMeetup,
                 controller.localPickup,
               ),
             ],
@@ -540,7 +543,7 @@ class AddListingScreen extends GetView<AddListingController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Publish Listing",
+              StaticString.publishListing,
               style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(width: 10.w),

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Model/home_models.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../../Profile/view/add_listing_screen.dart';
 import '../Controller/trade_controller.dart';
 import 'trade_screen.dart';
@@ -34,7 +35,7 @@ class SelectProjectScreen extends GetView<TradeController> {
                       _buildCategories(),
                       SizedBox(height: 25.h),
                       Text(
-                        "Choose one of your active listings to\ninclude in this trade offer.",
+                        StaticString.chooseOneOfYourActiveListingsToInclude,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14.sp,
@@ -78,7 +79,7 @@ class SelectProjectScreen extends GetView<TradeController> {
           Expanded(
             child: Center(
               child: Text(
-                "Select your project",
+                StaticString.selectYourProject,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20.sp,
@@ -103,7 +104,7 @@ class SelectProjectScreen extends GetView<TradeController> {
       child: TextField(
         style: TextStyle(color: Colors.white, fontSize: 15.sp),
         decoration: InputDecoration(
-          hintText: 'Search your items',
+          hintText: StaticString.searchYourItems,
           hintStyle: TextStyle(
             color: Colors.white.withOpacity(0.6),
             fontSize: 15.sp,
@@ -227,7 +228,7 @@ class SelectProjectScreen extends GetView<TradeController> {
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Text(
-                                "ACTIVE",
+                                StaticString.active,
                                 style: TextStyle(
                                   color: AppColors.accentColor,
                                   fontSize: 9.sp,
@@ -295,7 +296,7 @@ class SelectProjectScreen extends GetView<TradeController> {
               ),
               SizedBox(height: 12.h),
               Text(
-                "Add New Listing",
+                StaticString.addNewListing,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 15.sp,
@@ -304,7 +305,7 @@ class SelectProjectScreen extends GetView<TradeController> {
               ),
               SizedBox(height: 4.h),
               Text(
-                "Don't see what you want to trade?",
+                StaticString.dontSeeWhatYouWantToTrade,
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.5),
                   fontSize: 12.sp,
@@ -333,7 +334,7 @@ class SelectProjectScreen extends GetView<TradeController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Use for Trade",
+              StaticString.useForTrade,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16.sp,

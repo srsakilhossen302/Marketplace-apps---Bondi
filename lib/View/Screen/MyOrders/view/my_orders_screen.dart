@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../../../Widgegt/CustomCard/custom_listing_card.dart';
 import '../Controller/my_orders_controller.dart';
 
@@ -30,7 +31,7 @@ class MyOrdersScreen extends GetView<MyOrdersController> {
                     children: [
                       SizedBox(height: 20.h),
                       Text(
-                        "Track your purchases and view order history.",
+                        StaticString.trackYourPurchasesViewOrderHistory,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.8),
                           fontSize: 15.sp,
@@ -75,7 +76,7 @@ class MyOrdersScreen extends GetView<MyOrdersController> {
                 ),
               ),
               Text(
-                "My Orders",
+                StaticString.myOrders,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24.sp,
@@ -98,11 +99,24 @@ class MyOrdersScreen extends GetView<MyOrdersController> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: controller.segments.map((segment) {
+        children: controller.segments.map((segmentKey) {
           return Obx(() {
-            bool isSelected = controller.selectedSegment.value == segment;
+            bool isSelected = controller.selectedSegment.value == segmentKey;
+            String getSegmentText(String key) {
+              switch (key) {
+                case 'activeOrders':
+                  return StaticString.activeOrders;
+                case 'delivered':
+                  return StaticString.delivered;
+                case 'pickup':
+                  return StaticString.pickup;
+                default:
+                  return key;
+              }
+            }
+
             return GestureDetector(
-              onTap: () => controller.selectedSegment.value = segment,
+              onTap: () => controller.selectedSegment.value = segmentKey,
               child: Container(
                 margin: EdgeInsets.only(right: 15.w),
                 padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
@@ -118,11 +132,13 @@ class MyOrdersScreen extends GetView<MyOrdersController> {
                   ),
                 ),
                 child: Text(
-                  segment,
+                  getSegmentText(segmentKey),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
               ),
@@ -136,18 +152,18 @@ class MyOrdersScreen extends GetView<MyOrdersController> {
   Widget _buildOrdersList() {
     return Obx(() {
       final selected = controller.selectedSegment.value;
-      final list = selected == 'Active Orders'
+      final list = selected == 'activeOrders'
           ? controller.activeOrders
-          : selected == 'Delivered'
-              ? controller.deliveredOrders
-              : controller.pickupOrders;
+          : selected == 'delivered'
+          ? controller.deliveredOrders
+          : controller.pickupOrders;
 
       if (list.isEmpty) {
         return Container(
           height: 300.h,
           alignment: Alignment.center,
           child: Text(
-            "No orders found",
+            StaticString.noOrdersFound,
             style: TextStyle(
               color: Colors.white.withOpacity(0.5),
               fontSize: 16.sp,

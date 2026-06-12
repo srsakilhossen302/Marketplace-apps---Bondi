@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/sell_controller.dart';
 
 class SellScreen extends GetView<SellController> {
@@ -75,7 +76,7 @@ class SellScreen extends GetView<SellController> {
             ),
           ),
           Text(
-            "Sell Something",
+            StaticString.sellSomething,
             style: TextStyle(
               color: Colors.white,
               fontSize: 22.sp,
@@ -92,11 +93,17 @@ class SellScreen extends GetView<SellController> {
     return Row(
       children: [
         Expanded(
-          child: _buildUploadBox("Upload Photos", Icons.camera_alt_outlined),
+          child: _buildUploadBox(
+            StaticString.uploadPhotos,
+            Icons.camera_alt_outlined,
+          ),
         ),
         SizedBox(width: 15.w),
         Expanded(
-          child: _buildUploadBox("Upload Videos", Icons.videocam_outlined),
+          child: _buildUploadBox(
+            StaticString.uploadVideos,
+            Icons.videocam_outlined,
+          ),
         ),
       ],
     );
@@ -142,27 +149,27 @@ class SellScreen extends GetView<SellController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildLabel("Product Title"),
+        _buildLabel(StaticString.productTitle),
         _buildTextField(
           controller: controller.titleController,
-          hint: "What are you selling?",
+          hint: StaticString.whatAreYouSelling,
           prefixIcon: Icons.shopping_bag_outlined,
         ),
         SizedBox(height: 25.h),
-        _buildLabel("Description"),
+        _buildLabel(StaticString.description),
         _buildTextField(
           controller: controller.descriptionController,
-          hint: "Describe your item's features, history, and why it's great...",
+          hint: StaticString.describeYourItemsFeaturesHistoryWhyItsGreat,
           maxLines: 4,
         ),
         SizedBox(height: 25.h),
-        _buildLabel("Category"),
+        _buildLabel(StaticString.category),
         _buildDropdown(),
         SizedBox(height: 25.h),
-        _buildLabel("Selling Price"),
+        _buildLabel(StaticString.price),
         _buildPriceField(),
         SizedBox(height: 25.h),
-        _buildLabel("Condition"),
+        _buildLabel(StaticString.condition),
         _buildConditionSelector(),
       ],
     );
@@ -257,7 +264,7 @@ class SellScreen extends GetView<SellController> {
       keyboardType: TextInputType.number,
       style: TextStyle(color: Colors.white, fontSize: 16.sp),
       decoration: InputDecoration(
-        hintText: "0.00",
+        hintText: StaticString.priceHint,
         hintStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
         filled: true,
         fillColor: AppColors.cardColor.withOpacity(0.3),
@@ -334,14 +341,14 @@ class SellScreen extends GetView<SellController> {
       child: Column(
         children: [
           _buildSwitchRow(
-            "Allow Trade Offers",
-            "Open to swapping for other items",
+            StaticString.allowTradeOffers,
+            StaticString.openToSwappingForOtherItems,
             controller.allowTradeOffers,
           ),
           Divider(color: Colors.white.withOpacity(0.1), height: 30.h),
           _buildSwitchRow(
-            "Shipping Available",
-            "List item for national delivery",
+            StaticString.shippingAvailable,
+            StaticString.listItemForNationalDelivery,
             controller.shippingAvailable,
           ),
         ],
@@ -410,7 +417,7 @@ class SellScreen extends GetView<SellController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildLabel("Payment & Fulfillment"),
+        _buildLabel(StaticString.paymentFulfillment),
         Container(
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
@@ -431,7 +438,7 @@ class SellScreen extends GetView<SellController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Sell Directly",
+                      StaticString.sellDirectly,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15.sp,
@@ -439,7 +446,7 @@ class SellScreen extends GetView<SellController> {
                       ),
                     ),
                     Text(
-                      "Free listing, cash on pickup",
+                      StaticString.freeListingCashOnPickup,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.5),
                         fontSize: 12.sp,
@@ -467,9 +474,9 @@ class SellScreen extends GetView<SellController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildLabel("Share in groups"),
+            _buildLabel(StaticString.shareInGroups),
             Text(
-              "See all",
+              StaticString.seeAllShort,
               style: TextStyle(color: AppColors.accentColor, fontSize: 12.sp),
             ),
           ],
@@ -478,13 +485,16 @@ class SellScreen extends GetView<SellController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildGroupAvatar("Local Tech", "https://i.pravatar.cc/150?u=tech"),
             _buildGroupAvatar(
-              "Vintage Finds",
+              StaticString.localTech,
+              "https://i.pravatar.cc/150?u=tech",
+            ),
+            _buildGroupAvatar(
+              StaticString.vintageFinds,
               "https://i.pravatar.cc/150?u=vintage",
             ),
             _buildGroupAvatar(
-              "Hike & Swap",
+              StaticString.hikeSwap,
               "https://i.pravatar.cc/150?u=hike",
             ),
             _buildAddGroupButton(),
@@ -527,7 +537,7 @@ class SellScreen extends GetView<SellController> {
         ),
         SizedBox(height: 8.h),
         Text(
-          "Join More",
+          StaticString.joinMore,
           style: TextStyle(
             color: Colors.white.withOpacity(0.7),
             fontSize: 11.sp,
@@ -555,15 +565,19 @@ class SellScreen extends GetView<SellController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Publish Listing",
+                  StaticString.publishListing,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xffFFFFFF)
+                    color: Color(0xffFFFFFF),
                   ),
                 ),
                 SizedBox(width: 10.w),
-                Icon(Icons.arrow_forward, size: 20.sp,  color: Color(0xffFFFFFF)),
+                Icon(
+                  Icons.arrow_forward,
+                  size: 20.sp,
+                  color: Color(0xffFFFFFF),
+                ),
               ],
             ),
           ),
@@ -581,7 +595,7 @@ class SellScreen extends GetView<SellController> {
               ),
             ),
             child: Text(
-              "Save as Draft",
+              StaticString.saveAsDraft,
               style: TextStyle(color: Colors.white, fontSize: 16.sp),
             ),
           ),

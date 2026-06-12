@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import '../../../../Model/home_models.dart';
 
 class MyOrdersController extends GetxController {
-  final segments = ['Active Orders', 'Delivered', 'Pickup'].obs;
-  final selectedSegment = 'Active Orders'.obs;
+  final segments = ['activeOrders', 'delivered', 'pickup'].obs;
+  final selectedSegment = 'activeOrders'.obs;
 
   final activeOrders = <ListingModel>[].obs;
   final deliveredOrders = <ListingModel>[].obs;

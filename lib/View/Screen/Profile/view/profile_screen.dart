@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/profile_controller.dart';
 import 'edit_profile_screen.dart';
 import 'friends_screen.dart';
@@ -10,6 +11,10 @@ import 'user_profile_screen.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
   const ProfileScreen({super.key});
+
+  void _changeLanguage(Locale locale) {
+    Get.updateLocale(locale);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,52 +38,58 @@ class ProfileScreen extends GetView<ProfileController> {
                       SizedBox(height: 20.h),
                       _buildUserInfoCard(),
                       SizedBox(height: 30.h),
-                      _buildSectionLabel("ACCOUNT"),
+                      _buildSectionLabel(StaticString.account),
                       _buildSettingsGroup([
                         _buildSettingsTile(
                           Icons.person_outline,
-                          "Account Settings",
+                          StaticString.accountSettings,
                           onTap: () => Get.to(() => const UserProfileScreen()),
                         ),
-                        _buildSettingsTile(Icons.sync, "Contact Sync"),
+                        _buildSettingsTile(Icons.sync, StaticString.contactSync),
+                        _buildSettingsTile(
+                          Icons.language,
+                          StaticString.language,
+                          subtitle: _getCurrentLanguage(),
+                          onTap: () => _showLanguageDialog(context),
+                        ),
                       ]),
                       SizedBox(height: 25.h),
-                      _buildSectionLabel("SECURITY & PRIVACY"),
+                      _buildSectionLabel(StaticString.securityPrivacy),
                       _buildSettingsGroup([
                         _buildSettingsTile(
                           Icons.shield_outlined,
-                          "Privacy Controls",
+                          StaticString.privacyControls,
                         ),
                         _buildSettingsTile(
                           Icons.block_outlined,
-                          "Blocked Users",
+                          StaticString.blockedUsers,
                         ),
                       ]),
                       SizedBox(height: 25.h),
-                      _buildSectionLabel("ACTIVITY"),
+                      _buildSectionLabel(StaticString.activity),
                       _buildSettingsGroup([
                         _buildSettingsTile(
                           Icons.notifications_none,
-                          "Notifications",
+                          StaticString.notifications,
                           badge: "3",
                         ),
                       ]),
                       SizedBox(height: 25.h),
-                      _buildSectionLabel("FINANCE"),
+                      _buildSectionLabel(StaticString.finance),
                       _buildSettingsGroup([
                         _buildSettingsTile(
                           Icons.account_balance_wallet_outlined,
-                          "Payments",
+                          StaticString.payments,
                         ),
                         _buildSettingsTile(
                           Icons.star_outline,
-                          "Subscription",
-                          subtitle: "Bond Plus",
+                          StaticString.subscription,
+                          subtitle: StaticString.bondPlus,
                           onTap: () => Get.to(() => const SubscriptionScreen()),
                         ),
                       ]),
                       SizedBox(height: 25.h),
-                      _buildSectionLabel("REFERRAL PROGRAM"),
+                      _buildSectionLabel(StaticString.referralProgram),
                       _buildReferralCard(),
                       SizedBox(height: 30.h),
                       _buildSignOutButton(),
@@ -89,6 +100,57 @@ class ProfileScreen extends GetView<ProfileController> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  String _getCurrentLanguage() {
+    final locale = Get.locale;
+    if (locale?.languageCode == 'pt') {
+      return StaticString.portuguese;
+    }
+    return StaticString.english;
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: AppColors.cardColor,
+        title: Text(
+          StaticString.language,
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text(
+                StaticString.english,
+                style: TextStyle(color: Colors.white),
+              ),
+              trailing: Get.locale?.languageCode == 'en'
+                  ? Icon(Icons.check, color: AppColors.accentColor)
+                  : null,
+              onTap: () {
+                _changeLanguage(const Locale('en', 'US'));
+                Get.back();
+              },
+            ),
+            ListTile(
+              title: Text(
+                StaticString.portuguese,
+                style: TextStyle(color: Colors.white),
+              ),
+              trailing: Get.locale?.languageCode == 'pt'
+                  ? Icon(Icons.check, color: AppColors.accentColor)
+                  : null,
+              onTap: () {
+                _changeLanguage(const Locale('pt', 'BR'));
+                Get.back();
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -117,7 +179,7 @@ class ProfileScreen extends GetView<ProfileController> {
                 ),
               ),
               Text(
-                "Settings",
+                StaticString.settings,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24.sp,
@@ -309,7 +371,7 @@ class ProfileScreen extends GetView<ProfileController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Share Bond, Earn Credits",
+            StaticString.shareBondEarnCredits,
             style: TextStyle(
               color: Colors.white,
               fontSize: 18.sp,
@@ -318,7 +380,7 @@ class ProfileScreen extends GetView<ProfileController> {
           ),
           SizedBox(height: 12.h),
           Text(
-            "Invite friends and get R\$ 10,00 in credits for each person who activates a paid subscription using your code.",
+            StaticString.referralDescription,
             style: TextStyle(
               color: Colors.white.withOpacity(0.7),
               fontSize: 13.sp,
@@ -340,7 +402,7 @@ class ProfileScreen extends GetView<ProfileController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "YOUR REFERRAL CODE",
+                      StaticString.yourReferralCode,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.4),
                         fontSize: 10.sp,
@@ -370,7 +432,7 @@ class ProfileScreen extends GetView<ProfileController> {
                       ),
                       SizedBox(width: 6.w),
                       Text(
-                        "Copy",
+                        StaticString.copy,
                         style: TextStyle(
                           color: AppColors.accentColor,
                           fontSize: 15.sp,
@@ -397,7 +459,7 @@ class ProfileScreen extends GetView<ProfileController> {
                 elevation: 0,
               ),
               child: Text(
-                "Share Invite Link",
+                StaticString.shareInviteLink,
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
@@ -413,7 +475,7 @@ class ProfileScreen extends GetView<ProfileController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Credits Earned",
+                  StaticString.creditsEarned,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.8),
                     fontSize: 15.sp,
@@ -470,7 +532,7 @@ class ProfileScreen extends GetView<ProfileController> {
             Icon(Icons.logout, color: Colors.red.shade700, size: 24.sp),
             SizedBox(width: 12.w),
             Text(
-              "Sign Out",
+              StaticString.signOut,
               style: TextStyle(
                 color: Colors.red.shade700,
                 fontSize: 18.sp,

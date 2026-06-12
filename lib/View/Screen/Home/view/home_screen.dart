@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../../Notification/view/notification_screen.dart';
 import '../../Messages/view/messages_screen.dart';
 import '../Controller/home_controller.dart';
@@ -37,10 +38,13 @@ class HomeScreen extends GetView<HomeController> {
                       SizedBox(height: 20.h),
                       _buildCategories(),
                       SizedBox(height: 30.h),
-                      _buildSectionHeader("New Listings", onAction: () {}),
+                      _buildSectionHeader(
+                        StaticString.newListings,
+                        onAction: () {},
+                      ),
                       SizedBox(height: 4.h),
                       Text(
-                        "Fresh arrivals from your network",
+                        StaticString.freshArrivalsFromYourNetwork,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.6),
                           fontSize: 13.sp,
@@ -49,15 +53,15 @@ class HomeScreen extends GetView<HomeController> {
                       SizedBox(height: 15.h),
                       _buildNewListings(),
                       SizedBox(height: 30.h),
-                      _buildSectionHeader("Suggested Sellers"),
+                      _buildSectionHeader(StaticString.suggestedSellers),
                       SizedBox(height: 20.h),
                       _buildSuggestedSellers(),
                       SizedBox(height: 30.h),
-                      _buildSectionHeader("Trending Groups"),
+                      _buildSectionHeader(StaticString.trendingGroups),
                       SizedBox(height: 15.h),
                       _buildTrendingGroups(),
                       SizedBox(height: 30.h),
-                      _buildSectionHeader("Recommended For You"),
+                      _buildSectionHeader(StaticString.recommendedForYouHome),
                       SizedBox(height: 15.h),
                       _buildRecommendedList(),
                       SizedBox(height: 30.h),
@@ -80,7 +84,10 @@ class HomeScreen extends GetView<HomeController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SvgPicture.asset('assets/icons/horizontal logo light bg 1.svg', width: 120.w),
+          SvgPicture.asset(
+            'assets/icons/horizontal logo light bg 1.svg',
+            width: 120.w,
+          ),
           Row(
             children: [
               GestureDetector(
@@ -211,7 +218,7 @@ class HomeScreen extends GetView<HomeController> {
                       SizedBox(width: 8.w),
                     ],
                     Text(
-                      cat,
+                      _getCategoryText(cat),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14.sp,
@@ -230,6 +237,19 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
+  String _getCategoryText(String cat) {
+    switch (cat) {
+      case 'All':
+        return StaticString.all;
+      case 'Electronics':
+        return StaticString.electronics;
+      case 'Fashion':
+        return StaticString.fashion;
+      default:
+        return cat;
+    }
+  }
+
   Widget _buildSectionHeader(String title, {VoidCallback? onAction}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -246,7 +266,7 @@ class HomeScreen extends GetView<HomeController> {
           GestureDetector(
             onTap: onAction,
             child: Text(
-              "View All",
+              StaticString.viewAll,
               style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp),
             ),
           ),
@@ -420,7 +440,7 @@ class HomeScreen extends GetView<HomeController> {
                 SvgPicture.asset('assets/icons/FDAdd-icons.svg', width: 48.w),
                 SizedBox(height: 25.h),
                 Text(
-                  "Can't find your niche?",
+                  StaticString.cantFindYourNiche,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18.sp,
@@ -429,7 +449,7 @@ class HomeScreen extends GetView<HomeController> {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  "Start your own community and connect with like-minded traders.",
+                  StaticString.startYourOwnCommunityConnectTraders,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.7),
@@ -451,7 +471,7 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                     ),
                     child: Text(
-                      'Create New Group',
+                      StaticString.createNewGroup,
                       style: TextStyle(
                         color: AppColors.buttonColor,
                         fontSize: 16.sp,

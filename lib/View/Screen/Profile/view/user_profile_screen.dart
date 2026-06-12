@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/user_profile_controller.dart';
 import 'add_listing_screen.dart';
 import 'edit_listing_screen.dart';
@@ -72,7 +73,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                 ),
               ),
               Text(
-                "User Profile",
+                StaticString.userProfile,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24.sp,
@@ -155,7 +156,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
               ),
               SizedBox(width: 4.w),
               Text(
-                "Top Trader",
+                StaticString.topTraderLabel,
                 style: TextStyle(
                   color: const Color(0xFF1E5EF3),
                   fontSize: 10.sp,
@@ -198,7 +199,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Edit Profile",
+                        StaticString.editProfileButton,
                         style: TextStyle(
                           fontSize: 15.sp,
                           color: Colors.white,
@@ -206,11 +207,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                         ),
                       ),
                       SizedBox(width: 8.w),
-                      Icon(
-                        Icons.edit,
-                        size: 14.sp,
-                        color: Colors.white,
-                      ),
+                      Icon(Icons.edit, size: 14.sp, color: Colors.white),
                     ],
                   ),
                 ),
@@ -246,7 +243,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
         Expanded(
           child: _buildStatCard(
             controller.friendsCount.value,
-            "FRIENDS",
+            StaticString.friends.toUpperCase(),
             onTap: () => Get.to(() => const FriendsScreen()),
           ),
         ),
@@ -254,25 +251,21 @@ class UserProfileScreen extends GetView<UserProfileController> {
         Expanded(
           child: _buildStatCard(
             controller.groupsCount.value,
-            "GROUPS",
+            StaticString.groups.toUpperCase(),
           ),
         ),
         SizedBox(width: 10.w),
         Expanded(
           child: _buildStatCard(
             controller.tradesCount.value,
-            "TRADES",
+            StaticString.trades.toUpperCase(),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildStatCard(
-    String value,
-    String label, {
-    VoidCallback? onTap,
-  }) {
+  Widget _buildStatCard(String value, String label, {VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -280,10 +273,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
         decoration: BoxDecoration(
           color: const Color(0xFF00195C).withOpacity(0.5),
           borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(
-            color: const Color(0xFF004ECC),
-            width: 1.2.w,
-          ),
+          border: Border.all(color: const Color(0xFF004ECC), width: 1.2.w),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -326,7 +316,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
           elevation: 0,
         ),
         child: Text(
-          "My Orders",
+          StaticString.myOrders,
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.sp,
@@ -342,7 +332,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "My Listings",
+          StaticString.myListings,
           style: TextStyle(
             color: Colors.white,
             fontSize: 22.sp,
@@ -350,7 +340,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
           ),
         ),
         Text(
-          "Manage All",
+          StaticString.manageAll,
           style: TextStyle(
             color: Colors.white.withOpacity(0.6),
             fontSize: 14.sp,
@@ -391,7 +381,9 @@ class UserProfileScreen extends GetView<UserProfileController> {
   Widget _buildListingCard(Map<String, dynamic> item) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF0C1B3A).withOpacity(0.2), // Dark transparent background
+        color: const Color(
+          0xFF0C1B3A,
+        ).withOpacity(0.2), // Dark transparent background
         borderRadius: BorderRadius.circular(15.r),
         border: Border.all(
           color: const Color(0xFF002FA7).withOpacity(0.5),
@@ -410,10 +402,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(14.r),
                     ),
-                    child: Image.network(
-                      item['image'],
-                      fit: BoxFit.cover,
-                    ),
+                    child: Image.network(item['image'], fit: BoxFit.cover),
                   ),
                 ),
                 // Status Badge
@@ -432,7 +421,10 @@ class UserProfileScreen extends GetView<UserProfileController> {
                     child: Text(
                       item['status'],
                       style: TextStyle(
-                        color: _getBadgeTextColor(item['status'], item['title']),
+                        color: _getBadgeTextColor(
+                          item['status'],
+                          item['title'],
+                        ),
                         fontSize: 8.sp,
                         fontWeight: FontWeight.bold,
                       ),
@@ -447,7 +439,8 @@ class UserProfileScreen extends GetView<UserProfileController> {
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
             decoration: BoxDecoration(
-              color: AppColors.cardColor, // Royal blue background for info section
+              color:
+                  AppColors.cardColor, // Royal blue background for info section
               borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(14.r),
               ),
@@ -502,7 +495,9 @@ class UserProfileScreen extends GetView<UserProfileController> {
   Widget _buildAddListingCard() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF0C1B3A).withOpacity(0.2), // Dark transparent background
+        color: const Color(
+          0xFF0C1B3A,
+        ).withOpacity(0.2), // Dark transparent background
         borderRadius: BorderRadius.circular(15.r),
         border: Border.all(
           color: const Color(0xFF002FA7).withOpacity(0.5),
@@ -519,16 +514,9 @@ class UserProfileScreen extends GetView<UserProfileController> {
                 padding: EdgeInsets.all(8.r),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 1.5.w,
-                  ),
+                  border: Border.all(color: Colors.white, width: 1.5.w),
                 ),
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 20.sp,
-                ),
+                child: Icon(Icons.add, color: Colors.white, size: 20.sp),
               ),
             ),
           ),
@@ -546,7 +534,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Add New Listing",
+                  StaticString.addNewListing,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12.sp,
@@ -557,7 +545,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  "Start trading",
+                  StaticString.startTrading,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.6),
                     fontSize: 10.sp,

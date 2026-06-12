@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/trade_controller.dart';
 import 'select_project_screen.dart';
 
@@ -35,7 +36,7 @@ class TradeScreen extends GetView<TradeController> {
                     children: [
                       SizedBox(height: 30.h),
                       Text(
-                        "Offer A Trade",
+                        StaticString.offerATrade,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24.sp,
@@ -44,7 +45,7 @@ class TradeScreen extends GetView<TradeController> {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        "Choose one of your products to exchange.",
+                        StaticString.chooseOneOfYourProductsToExchange,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.6),
                           fontSize: 14.sp,
@@ -52,7 +53,7 @@ class TradeScreen extends GetView<TradeController> {
                       ),
                       SizedBox(height: 30.h),
                       _buildProductCard(
-                        "Their Item",
+                        StaticString.theirItem,
                         controller.product.title,
                         controller.product.price,
                         controller.product.image,
@@ -97,7 +98,7 @@ class TradeScreen extends GetView<TradeController> {
             ),
           ),
           Text(
-            "Trade",
+            StaticString.trade,
             style: TextStyle(
               color: Colors.white,
               fontSize: 22.sp,
@@ -109,7 +110,13 @@ class TradeScreen extends GetView<TradeController> {
     );
   }
 
-  Widget _buildProductCard(String tag, String title, String price, String img, {VoidCallback? onTap}) {
+  Widget _buildProductCard(
+    String tag,
+    String title,
+    String price,
+    String img, {
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -120,138 +127,140 @@ class TradeScreen extends GetView<TradeController> {
           border: Border.all(color: Colors.white.withOpacity(0.1)),
         ),
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
-                child: Stack(
-                  children: [
-                    Image.network(
-                      img,
-                      height: 260.h,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                    // Mock carousel dots
-                    Positioned(
-                      bottom: 15.h,
-                      left: 0,
-                      right: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(3, (index) {
-                          return Container(
-                            width: 8.w,
-                            height: 8.h,
-                            margin: EdgeInsets.symmetric(horizontal: 4.w),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: index == 0
-                                  ? AppColors.accentColor
-                                  : Colors.white.withOpacity(0.3),
-                            ),
-                          );
-                        }),
-                      ),
-                    ),
-                    // Navigation arrows (mock)
-                    Positioned(
-                      left: 10.w,
-                      top: 110.h,
-                      child: Container(
-                        padding: EdgeInsets.all(8.r),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white,
-                          size: 14.sp,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 10.w,
-                      top: 110.h,
-                      child: Container(
-                        padding: EdgeInsets.all(8.r),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                          size: 14.sp,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: 15.h,
-                left: 15.w,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 6.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.accentColor,
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Text(
-                    tag,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.all(20.r),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
+                ClipRRect(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(30.r),
+                  ),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        img,
+                        height: 260.h,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                      // Mock carousel dots
+                      Positioned(
+                        bottom: 15.h,
+                        left: 0,
+                        right: 0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(3, (index) {
+                            return Container(
+                              width: 8.w,
+                              height: 8.h,
+                              margin: EdgeInsets.symmetric(horizontal: 4.w),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: index == 0
+                                    ? AppColors.accentColor
+                                    : Colors.white.withOpacity(0.3),
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                      // Navigation arrows (mock)
+                      Positioned(
+                        left: 10.w,
+                        top: 110.h,
+                        child: Container(
+                          padding: EdgeInsets.all(8.r),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.arrow_back_ios_new,
+                            color: Colors.white,
+                            size: 14.sp,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 10.w,
+                        top: 110.h,
+                        child: Container(
+                          padding: EdgeInsets.all(8.r),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                            size: 14.sp,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  "Ref. 126610LN • 2023",
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
-                    fontSize: 13.sp,
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  price,
-                  style: TextStyle(
-                    color: AppColors.accentColor,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
+                Positioned(
+                  top: 15.h,
+                  left: 15.w,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.accentColor,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Text(
+                      tag,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.all(20.r),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    "Ref. 126610LN • 2023",
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 13.sp,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    price,
+                    style: TextStyle(
+                      color: AppColors.accentColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-      )
     );
   }
 
@@ -277,7 +286,7 @@ class TradeScreen extends GetView<TradeController> {
       final selectedProduct = controller.selectedProduct.value;
       if (selectedProduct != null) {
         return _buildProductCard(
-          "Your Item",
+          StaticString.yourItem,
           selectedProduct.title,
           selectedProduct.price,
           selectedProduct.image,
@@ -313,7 +322,7 @@ class TradeScreen extends GetView<TradeController> {
                 ),
                 SizedBox(height: 15.h),
                 Text(
-                  "Select Your Product",
+                  StaticString.selectYourProduct,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15.sp,
@@ -322,7 +331,7 @@ class TradeScreen extends GetView<TradeController> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  "Choose from your active listings",
+                  StaticString.chooseFromYourActiveListings,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.5),
                     fontSize: 12.sp,
@@ -349,7 +358,7 @@ class TradeScreen extends GetView<TradeController> {
             ),
             SizedBox(width: 8.w),
             Text(
-              "Add Extra Cash (Optional)",
+              StaticString.addExtraCashOptional,
               style: TextStyle(color: Colors.white, fontSize: 14.sp),
             ),
           ],
@@ -359,7 +368,7 @@ class TradeScreen extends GetView<TradeController> {
           controller: controller.cashController,
           style: TextStyle(color: Colors.white, fontSize: 16.sp),
           decoration: InputDecoration(
-            hintText: "0.00",
+            hintText: StaticString.priceHint,
             hintStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
             prefixText: "\$  ",
             prefixStyle: TextStyle(
@@ -377,7 +386,7 @@ class TradeScreen extends GetView<TradeController> {
         ),
         SizedBox(height: 8.h),
         Text(
-          "Increases your chances of trade acceptance.",
+          StaticString.increasesYourChancesOfTradeAcceptance,
           style: TextStyle(
             color: Colors.white.withOpacity(0.5),
             fontSize: 11.sp,
@@ -400,7 +409,7 @@ class TradeScreen extends GetView<TradeController> {
             ),
             SizedBox(width: 8.w),
             Text(
-              "Message To Seller",
+              StaticString.messageToSeller,
               style: TextStyle(color: Colors.white, fontSize: 14.sp),
             ),
           ],
@@ -411,7 +420,7 @@ class TradeScreen extends GetView<TradeController> {
           maxLines: 4,
           style: TextStyle(color: Colors.white, fontSize: 15.sp),
           decoration: InputDecoration(
-            hintText: "Tell the seller why this is a great trade...",
+            hintText: StaticString.tellTheSellerWhyThisIsAGreatTrade,
             hintStyle: TextStyle(
               color: Colors.white.withOpacity(0.4),
               fontSize: 15.sp,
@@ -444,7 +453,7 @@ class TradeScreen extends GetView<TradeController> {
               ),
             ),
             child: Text(
-              "Send Offer",
+              StaticString.sendOffer,
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
           ),
@@ -462,7 +471,7 @@ class TradeScreen extends GetView<TradeController> {
               ),
             ),
             child: Text(
-              "Cancel Offer",
+              StaticString.cancelOffer,
               style: TextStyle(color: AppColors.buttonColor, fontSize: 16.sp),
             ),
           ),

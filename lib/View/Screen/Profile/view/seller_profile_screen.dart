@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/seller_profile_controller.dart';
 
 class SellerProfileScreen extends GetView<SellerProfileController> {
@@ -74,7 +75,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
                 ),
               ),
               Text(
-                "Seller Profile",
+                StaticString.sellerProfile,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24.sp,
@@ -136,9 +137,9 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildBadge(Icons.verified_user, "Verified Seller"),
+            _buildBadge(Icons.verified_user, StaticString.verifiedSeller),
             SizedBox(width: 10.w),
-            _buildBadge(Icons.bolt, "Top Trader"),
+            _buildBadge(Icons.bolt, StaticString.topTrader),
           ],
         ),
         SizedBox(height: 20.h),
@@ -172,7 +173,10 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
           SizedBox(width: 5.w),
           Text(
             label,
-            style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 11.sp),
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.6),
+              fontSize: 11.sp,
+            ),
           ),
         ],
       ),
@@ -195,9 +199,13 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
     return Container(
       height: 50.h,
       decoration: BoxDecoration(
-        color: isPrimary ? AppColors.buttonColor : Colors.white.withOpacity(0.1),
+        color: isPrimary
+            ? AppColors.buttonColor
+            : Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(25.r),
-        border: isPrimary ? null : Border.all(color: Colors.white.withOpacity(0.1)),
+        border: isPrimary
+            ? null
+            : Border.all(color: Colors.white.withOpacity(0.1)),
       ),
       alignment: Alignment.center,
       child: Text(
@@ -222,9 +230,9 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildStat(controller.tradesCount.value, "Trades"),
-          _buildStat(controller.rating.value, "Rating"),
-          _buildStat(controller.followersCount.value, "Followers"),
+          _buildStat(controller.tradesCount.value, StaticString.trades),
+          _buildStat(controller.rating.value, StaticString.rating),
+          _buildStat(controller.followersCount.value, StaticString.followers),
         ],
       ),
     );
@@ -235,12 +243,19 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
       children: [
         Text(
           value,
-          style: TextStyle(color: AppColors.accentColor, fontSize: 18.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: AppColors.accentColor,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         SizedBox(height: 4.h),
         Text(
           label,
-          style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.sp),
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.5),
+            fontSize: 12.sp,
+          ),
         ),
       ],
     );
@@ -250,7 +265,14 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("ABOUT SELLER", style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12.sp, fontWeight: FontWeight.bold)),
+        Text(
+          StaticString.aboutSeller,
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontSize: 12.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         SizedBox(height: 15.h),
         Container(
           padding: EdgeInsets.all(25.r),
@@ -263,16 +285,27 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
             children: [
               Text(
                 controller.longBio.value,
-                style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14.sp, height: 1.5),
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 14.sp,
+                  height: 1.5,
+                ),
               ),
               SizedBox(height: 15.h),
               Row(
                 children: [
-                  Icon(Icons.location_on_outlined, color: AppColors.accentColor, size: 16.sp),
+                  Icon(
+                    Icons.location_on_outlined,
+                    color: AppColors.accentColor,
+                    size: 16.sp,
+                  ),
                   SizedBox(width: 5.w),
                   Text(
                     controller.location.value,
-                    style: TextStyle(color: AppColors.accentColor, fontSize: 12.sp),
+                    style: TextStyle(
+                      color: AppColors.accentColor,
+                      fontSize: 12.sp,
+                    ),
                   ),
                 ],
               ),
@@ -289,8 +322,18 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("ACTIVE LISTINGS (12)", style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold)),
-            Text("View all", style: TextStyle(color: AppColors.accentColor, fontSize: 12.sp)),
+            Text(
+              StaticString.activeListingsCount,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              StaticString.viewAll,
+              style: TextStyle(color: AppColors.accentColor, fontSize: 12.sp),
+            ),
           ],
         ),
         SizedBox(height: 15.h),
@@ -307,17 +350,39 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-                      child: Image.network(item['image']!, height: 120.h, width: double.infinity, fit: BoxFit.cover),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20.r),
+                      ),
+                      child: Image.network(
+                        item['image']!,
+                        height: 120.h,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.all(12.r),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(item['title']!, style: TextStyle(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.bold), maxLines: 1),
+                          Text(
+                            item['title']!,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                          ),
                           SizedBox(height: 5.h),
-                          Text(item['price']!, style: TextStyle(color: AppColors.accentColor, fontSize: 15.sp, fontWeight: FontWeight.bold)),
+                          Text(
+                            item['price']!,
+                            style: TextStyle(
+                              color: AppColors.accentColor,
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -335,7 +400,14 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("MUTUAL FRIENDS", style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12.sp, fontWeight: FontWeight.bold)),
+        Text(
+          StaticString.mutualFriends,
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontSize: 12.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         SizedBox(height: 15.h),
         Container(
           padding: EdgeInsets.all(20.r),
@@ -349,12 +421,25 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
                 height: 40.h,
                 width: 80.w,
                 child: Stack(
-                  children: List.generate(controller.mutualFriends.length, (index) {
+                  children: List.generate(controller.mutualFriends.length, (
+                    index,
+                  ) {
                     return Positioned(
                       left: index * 20.w,
                       child: Container(
-                        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppColors.cardColor, width: 2.w)),
-                        child: CircleAvatar(radius: 18.r, backgroundImage: NetworkImage(controller.mutualFriends[index])),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.cardColor,
+                            width: 2.w,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          radius: 18.r,
+                          backgroundImage: NetworkImage(
+                            controller.mutualFriends[index],
+                          ),
+                        ),
                       ),
                     );
                   }),
@@ -363,8 +448,11 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
               SizedBox(width: 10.w),
               Expanded(
                 child: Text(
-                  "17 mutual friends\nincluding Sarah W.",
-                  style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12.sp),
+                  StaticString.oneSevenMutualFriendsIncludingSarahW,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: 12.sp,
+                  ),
                 ),
               ),
             ],
@@ -378,7 +466,14 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("SHARED GROUPS", style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12.sp, fontWeight: FontWeight.bold)),
+        Text(
+          StaticString.sharedGroups,
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontSize: 12.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         SizedBox(height: 15.h),
         Container(
           width: double.infinity,
@@ -394,9 +489,19 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
                 padding: EdgeInsets.only(bottom: 10.h),
                 child: Row(
                   children: [
-                    Icon(Icons.group_outlined, color: AppColors.accentColor, size: 16.sp),
+                    Icon(
+                      Icons.group_outlined,
+                      color: AppColors.accentColor,
+                      size: 16.sp,
+                    ),
                     SizedBox(width: 10.w),
-                    Text(group, style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp)),
+                    Text(
+                      group,
+                      style: TextStyle(
+                        color: AppColors.accentColor,
+                        fontSize: 13.sp,
+                      ),
+                    ),
                   ],
                 ),
               );

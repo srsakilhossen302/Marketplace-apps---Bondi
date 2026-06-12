@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/edit_profile_controller.dart';
 
 class EditProfileScreen extends GetView<EditProfileController> {
@@ -31,31 +32,46 @@ class EditProfileScreen extends GetView<EditProfileController> {
                       SizedBox(height: 25.h),
                       _buildThemeSelector(),
                       SizedBox(height: 30.h),
-                      _buildSectionHeader("Personal Information"),
+                      _buildSectionHeader(StaticString.personalInformation),
                       SizedBox(height: 20.h),
-                      _buildInputField("Username", controller.usernameController, icon: Icons.alternate_email),
+                      _buildInputField(
+                        StaticString.username,
+                        controller.usernameController,
+                        icon: Icons.alternate_email,
+                      ),
                       SizedBox(height: 20.h),
-                      _buildInputField("Display Name", controller.displayNameController, icon: Icons.person_outline),
+                      _buildInputField(
+                        StaticString.displayName,
+                        controller.displayNameController,
+                        icon: Icons.person_outline,
+                      ),
                       SizedBox(height: 20.h),
                       _buildBioField(),
                       SizedBox(height: 30.h),
-                      _buildSectionHeader("Contact & Privacy"),
+                      _buildSectionHeader(StaticString.contactPrivacy),
                       SizedBox(height: 20.h),
                       _buildContactPrivacyCard(),
                       SizedBox(height: 30.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildSectionHeader("Financial Details"),
+                          _buildSectionHeader(StaticString.financialDetails),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 4.h,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.accentColor,
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Text(
-                              "BRAZIL MARKET",
-                              style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold),
+                              StaticString.brazilMarket,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -99,7 +115,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
                 ),
               ),
               Text(
-                "Edit Profile",
+                StaticString.editProfile,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24.sp,
@@ -124,7 +140,10 @@ class EditProfileScreen extends GetView<EditProfileController> {
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.buttonColor.withOpacity(0.4), AppColors.accentColor.withOpacity(0.2)],
+          colors: [
+            AppColors.buttonColor.withOpacity(0.4),
+            AppColors.accentColor.withOpacity(0.2),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -138,7 +157,9 @@ class EditProfileScreen extends GetView<EditProfileController> {
             children: [
               CircleAvatar(
                 radius: 50.r,
-                backgroundImage: const NetworkImage('https://randomuser.me/api/portraits/men/1.jpg'),
+                backgroundImage: const NetworkImage(
+                  'https://randomuser.me/api/portraits/men/1.jpg',
+                ),
               ),
               Positioned(
                 bottom: 0,
@@ -149,7 +170,11 @@ class EditProfileScreen extends GetView<EditProfileController> {
                     color: AppColors.buttonColor,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.camera_alt, color: Colors.white, size: 16.sp),
+                  child: Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                    size: 16.sp,
+                  ),
                 ),
               ),
             ],
@@ -164,7 +189,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
                 borderRadius: BorderRadius.circular(15.r),
               ),
               child: Text(
-                "Update Cover",
+                StaticString.updateCover,
                 style: TextStyle(color: Colors.white, fontSize: 12.sp),
               ),
             ),
@@ -186,28 +211,34 @@ class EditProfileScreen extends GetView<EditProfileController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Header Theme Color",
-            style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold),
+            StaticString.headerThemeColor,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: 15.h),
           Row(
             children: [
               ...List.generate(controller.themeColors.length, (index) {
-                return Obx(() => GestureDetector(
-                  onTap: () => controller.selectedColorIndex.value = index,
-                  child: Container(
-                    margin: EdgeInsets.only(right: 12.w),
-                    width: 35.w,
-                    height: 35.w,
-                    decoration: BoxDecoration(
-                      color: controller.themeColors[index],
-                      shape: BoxShape.circle,
-                      border: controller.selectedColorIndex.value == index
-                          ? Border.all(color: Colors.white, width: 2.w)
-                          : null,
+                return Obx(
+                  () => GestureDetector(
+                    onTap: () => controller.selectedColorIndex.value = index,
+                    child: Container(
+                      margin: EdgeInsets.only(right: 12.w),
+                      width: 35.w,
+                      height: 35.w,
+                      decoration: BoxDecoration(
+                        color: controller.themeColors[index],
+                        shape: BoxShape.circle,
+                        border: controller.selectedColorIndex.value == index
+                            ? Border.all(color: Colors.white, width: 2.w)
+                            : null,
+                      ),
                     ),
                   ),
-                ));
+                );
               }),
               Container(
                 width: 35.w,
@@ -215,15 +246,22 @@ class EditProfileScreen extends GetView<EditProfileController> {
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.1),
                   shape: BoxShape.circle,
-                  border: Border.all( color: Color(0xffFFFFFF)),
+                  border: Border.all(color: Color(0xffFFFFFF)),
                 ),
-                child: Icon(Icons.colorize,  color: Color(0xffFFFFFF), size: 18.sp, ),
+                child: Icon(
+                  Icons.colorize,
+                  color: Color(0xffFFFFFF),
+                  size: 18.sp,
+                ),
               ),
               const Spacer(),
               Text(
-                "Electric\nBlue",
+                StaticString.electricBlue,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.accentColor.withOpacity(0.6), fontSize: 10.sp),
+                style: TextStyle(
+                  color: AppColors.accentColor.withOpacity(0.6),
+                  fontSize: 10.sp,
+                ),
               ),
             ],
           ),
@@ -235,28 +273,47 @@ class EditProfileScreen extends GetView<EditProfileController> {
   Widget _buildSectionHeader(String title) {
     return Text(
       title,
-      style: TextStyle(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 20.sp,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 
-  Widget _buildInputField(String label, TextEditingController textController, {IconData? icon}) {
+  Widget _buildInputField(
+    String label,
+    TextEditingController textController, {
+    IconData? icon,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13.sp),
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontSize: 13.sp,
+          ),
         ),
         SizedBox(height: 10.h),
         TextField(
           controller: textController,
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
-            prefixIcon: icon != null ? Icon(icon, color: AppColors.accentColor, size: 20.sp) : null,
+            prefixIcon: icon != null
+                ? Icon(icon, color: AppColors.accentColor, size: 20.sp)
+                : null,
             filled: true,
             fillColor: AppColors.cardColor.withOpacity(0.3),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.r), borderSide: BorderSide.none),
-            contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25.r),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 15.h,
+            ),
           ),
         ),
       ],
@@ -268,8 +325,11 @@ class EditProfileScreen extends GetView<EditProfileController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Bio",
-          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13.sp),
+          StaticString.bio,
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontSize: 13.sp,
+          ),
         ),
         SizedBox(height: 10.h),
         Container(
@@ -284,12 +344,19 @@ class EditProfileScreen extends GetView<EditProfileController> {
               TextField(
                 controller: controller.bioController,
                 maxLines: 4,
-                style: TextStyle(color: Colors.white, fontSize: 14.sp, height: 1.5),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.sp,
+                  height: 1.5,
+                ),
                 decoration: const InputDecoration(border: InputBorder.none),
               ),
               Text(
-                "108 / 160",
-                style: TextStyle(color: AppColors.accentColor.withOpacity(0.6), fontSize: 11.sp),
+                StaticString.oneZeroEightOfOneSixty,
+                style: TextStyle(
+                  color: AppColors.accentColor.withOpacity(0.6),
+                  fontSize: 11.sp,
+                ),
               ),
             ],
           ),
@@ -308,7 +375,11 @@ class EditProfileScreen extends GetView<EditProfileController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildInputField("Phone Number", controller.phoneNumberController, icon: Icons.phone_outlined),
+          _buildInputField(
+            StaticString.phoneNumber,
+            controller.phoneNumberController,
+            icon: Icons.phone_outlined,
+          ),
           SizedBox(height: 20.h),
           Container(
             padding: EdgeInsets.all(15.r),
@@ -318,23 +389,42 @@ class EditProfileScreen extends GetView<EditProfileController> {
             ),
             child: Row(
               children: [
-                Icon(Icons.visibility_outlined, color: AppColors.accentColor, size: 22.sp),
+                Icon(
+                  Icons.visibility_outlined,
+                  color: AppColors.accentColor,
+                  size: 22.sp,
+                ),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Public Visibility", style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold)),
-                      Text("Allow traders to call you directly", style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11.sp)),
+                      Text(
+                        StaticString.publicVisibility,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        StaticString.allowTradersToCallYouDirectly,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                          fontSize: 11.sp,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Obx(() => Switch(
-                  value: controller.publicVisibility.value,
-                  onChanged: (v) => controller.publicVisibility.value = v,
-                  activeColor: AppColors.accentColor,
-                  activeTrackColor: AppColors.buttonColor,
-                )),
+                Obx(
+                  () => Switch(
+                    value: controller.publicVisibility.value,
+                    onChanged: (v) => controller.publicVisibility.value = v,
+                    activeColor: AppColors.accentColor,
+                    activeTrackColor: AppColors.buttonColor,
+                  ),
+                ),
               ],
             ),
           ),
@@ -346,39 +436,68 @@ class EditProfileScreen extends GetView<EditProfileController> {
   Widget _buildFinancialFields() {
     return Column(
       children: [
-        _buildInputField("Pix Key Type", TextEditingController(text: controller.pixKeyType.value)), // Simplified for UI
+        _buildInputField(
+          StaticString.pixKeyType,
+          TextEditingController(text: controller.pixKeyType.value),
+        ), // Simplified for UI
         SizedBox(height: 20.h),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("CPF (Tax ID)", style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13.sp)),
+            Text(
+              StaticString.cpf,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.6),
+                fontSize: 13.sp,
+              ),
+            ),
             SizedBox(height: 10.h),
             TextField(
               controller: controller.cpfController,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.badge_outlined, color: AppColors.accentColor, size: 20.sp),
+                prefixIcon: Icon(
+                  Icons.badge_outlined,
+                  color: AppColors.accentColor,
+                  size: 20.sp,
+                ),
                 suffixIcon: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.copy, color: AppColors.accentColor, size: 18.sp),
                     SizedBox(width: 5.w),
-                    Text("Copy", style: TextStyle(color: AppColors.accentColor, fontSize: 14.sp)),
+                    Text(
+                      StaticString.copy,
+                      style: TextStyle(
+                        color: AppColors.accentColor,
+                        fontSize: 14.sp,
+                      ),
+                    ),
                     SizedBox(width: 15.w),
                   ],
                 ),
                 filled: true,
                 fillColor: AppColors.cardColor.withOpacity(0.3),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.r), borderSide: BorderSide.none),
-                contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.r),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 20.w,
+                  vertical: 15.h,
+                ),
               ),
             ),
           ],
         ),
         SizedBox(height: 10.h),
         Text(
-          "These details are encrypted and only used for secure payment processing on the Bond platform.",
-          style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11.sp, fontStyle: FontStyle.italic),
+          StaticString.theseDetailsEncrypted,
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.5),
+            fontSize: 11.sp,
+            fontStyle: FontStyle.italic,
+          ),
         ),
       ],
     );
@@ -392,11 +511,24 @@ class EditProfileScreen extends GetView<EditProfileController> {
           height: 55.h,
           child: ElevatedButton.icon(
             onPressed: controller.saveChanges,
-            icon: Icon(Icons.check_circle_outline, size: 20.sp,  color: Color(0xffFFFFFF)),
-            label: Text("Save Changes", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold,  color: Color(0xffFFFFFF))),
+            icon: Icon(
+              Icons.check_circle_outline,
+              size: 20.sp,
+              color: Color(0xffFFFFFF),
+            ),
+            label: Text(
+              StaticString.saveChanges,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: Color(0xffFFFFFF),
+              ),
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.buttonColor,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25.r),
+              ),
             ),
           ),
         ),
@@ -408,9 +540,17 @@ class EditProfileScreen extends GetView<EditProfileController> {
             onPressed: () => Get.back(),
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: AppColors.buttonColor),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25.r),
+              ),
             ),
-            child: Text("Discard Changes", style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 16.sp)),
+            child: Text(
+              StaticString.discardChanges,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 16.sp,
+              ),
+            ),
           ),
         ),
       ],

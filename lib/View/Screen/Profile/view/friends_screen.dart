@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/friends_controller.dart';
 import 'seller_profile_screen.dart';
 
@@ -29,7 +30,7 @@ class FriendsScreen extends GetView<FriendsController> {
                     children: [
                       SizedBox(height: 20.h),
                       Text(
-                        "Manage your network and discover new\nconnections.",
+                        StaticString.manageYourNetworkDiscoverNewConnections,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.7),
                           fontSize: 14.sp,
@@ -83,7 +84,7 @@ class FriendsScreen extends GetView<FriendsController> {
                 ),
               ),
               Text(
-                "Friends",
+                StaticString.friends,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24.sp,
@@ -120,7 +121,7 @@ class FriendsScreen extends GetView<FriendsController> {
           ),
           SizedBox(width: 8.w),
           Text(
-            "Invite Contacts",
+            StaticString.inviteContacts,
             style: TextStyle(
               color: AppColors.accentColor,
               fontSize: 13.sp,
@@ -147,7 +148,7 @@ class FriendsScreen extends GetView<FriendsController> {
             color: Colors.white.withOpacity(0.6),
             size: 20.sp,
           ),
-          hintText: "Search people or username",
+          hintText: StaticString.searchPeopleOrUsername,
           hintStyle: TextStyle(
             color: Colors.white.withOpacity(0.6),
             fontSize: 14.sp,
@@ -159,7 +160,12 @@ class FriendsScreen extends GetView<FriendsController> {
   }
 
   Widget _buildTabs() {
-    final tabs = ["Friends", "Following", "Requests", "Suggested"];
+    final tabs = [
+      StaticString.friends,
+      StaticString.following,
+      StaticString.requests,
+      StaticString.suggested,
+    ];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -187,7 +193,7 @@ class FriendsScreen extends GetView<FriendsController> {
                                 : FontWeight.normal,
                           ),
                         ),
-                        if (text == "Requests") ...[
+                        if (idx == 2) ...[
                           SizedBox(width: 5.w),
                           Container(
                             width: 8.w,
@@ -299,8 +305,11 @@ class FriendsScreen extends GetView<FriendsController> {
                                 ),
                               ),
                               child: Text(
-                                "Accept",
-                                style: TextStyle(fontSize: 14.sp,  color: Color(0xffFFFFFF)),
+                                StaticString.accept,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Color(0xffFFFFFF),
+                                ),
                               ),
                             ),
                           ),
@@ -320,7 +329,7 @@ class FriendsScreen extends GetView<FriendsController> {
                                 ),
                               ),
                               child: Text(
-                                "Decline",
+                                StaticString.decline,
                                 style: TextStyle(
                                   color: Colors.white.withOpacity(0.8),
                                   fontSize: 14.sp,
@@ -391,7 +400,7 @@ class FriendsScreen extends GetView<FriendsController> {
     switch (controller.selectedTab.value) {
       case 1: // Following
         return Text(
-          "Unfollow",
+          StaticString.unfollow,
           style: TextStyle(
             color: AppColors.accentColor,
             fontSize: 13.sp,
@@ -406,7 +415,7 @@ class FriendsScreen extends GetView<FriendsController> {
             borderRadius: BorderRadius.circular(15.r),
           ),
           child: Text(
-            "Add Friend",
+            StaticString.addFriend,
             style: TextStyle(
               color: Colors.white,
               fontSize: 12.sp,
@@ -435,7 +444,7 @@ class FriendsScreen extends GetView<FriendsController> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Recommended for you",
+          StaticString.recommendedForYou,
           style: TextStyle(
             color: Colors.white,
             fontSize: 18.sp,
@@ -443,7 +452,7 @@ class FriendsScreen extends GetView<FriendsController> {
           ),
         ),
         Text(
-          "View all",
+          StaticString.viewAll,
           style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp),
         ),
       ],
@@ -519,7 +528,7 @@ class FriendsScreen extends GetView<FriendsController> {
                         ),
                       ),
                       child: Text(
-                        "Add Friend",
+                        StaticString.addFriend,
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: Color(0xffFFFFFF),

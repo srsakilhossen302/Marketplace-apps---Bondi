@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/success_controller.dart';
 
 class SuccessScreen extends GetView<SuccessController> {
@@ -38,10 +39,11 @@ class SuccessScreen extends GetView<SuccessController> {
                 child: Center(
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 30.0),
-                    padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
-                    decoration: const BoxDecoration(
-                      color: Colors.transparent,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 0.0,
+                      vertical: 10.0,
                     ),
+                    decoration: const BoxDecoration(color: Colors.transparent),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -54,8 +56,8 @@ class SuccessScreen extends GetView<SuccessController> {
                         const SizedBox(height: 30),
 
                         // Success Message
-                        const Text(
-                          "You're all set!",
+                        Text(
+                          StaticString.youreAllSet,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -67,7 +69,7 @@ class SuccessScreen extends GetView<SuccessController> {
                         const SizedBox(height: 15),
 
                         Text(
-                          "Your account is ready. Welcome to the Bond community.",
+                          StaticString.yourAccountReadyWelcomeBondCommunity,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.8),
@@ -84,7 +86,10 @@ class SuccessScreen extends GetView<SuccessController> {
                           child: Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [AppColors.buttonColor, AppColors.buttonColor],
+                                colors: [
+                                  AppColors.buttonColor,
+                                  AppColors.buttonColor,
+                                ],
                               ),
                               borderRadius: BorderRadius.circular(25.0),
                             ),
@@ -97,8 +102,8 @@ class SuccessScreen extends GetView<SuccessController> {
                                   borderRadius: BorderRadius.circular(25.0),
                                 ),
                               ),
-                              child: const Text(
-                                'Continue',
+                              child: Text(
+                                StaticString.continueStr,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 17,
@@ -116,7 +121,10 @@ class SuccessScreen extends GetView<SuccessController> {
                           () => Column(
                             children: [
                               Text(
-                                "Redirecting in ${controller.redirectingIn.value} seconds...",
+                                'redirectingInSeconds'.trParams({
+                                  'seconds': controller.redirectingIn.value
+                                      .toString(),
+                                }),
                                 style: TextStyle(
                                   color: Colors.white.withOpacity(0.7),
                                   fontSize: 12,

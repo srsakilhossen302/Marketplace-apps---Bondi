@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/subscription_controller.dart';
 
 class SubscriptionScreen extends GetView<SubscriptionController> {
@@ -27,7 +28,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                     children: [
                       SizedBox(height: 30.h),
                       Text(
-                        "Upgrade Your\nExperience",
+                        StaticString.upgradeYourExperience,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -37,7 +38,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                       ),
                       SizedBox(height: 15.h),
                       Text(
-                        "Choose the perfect plan to boost your\ntrading game.",
+                        StaticString.choosePerfectPlanToBoostTradingGame,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.7),
@@ -82,7 +83,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 ),
               ),
               Text(
-                "Subscriptions Plan",
+                StaticString.subscriptionsPlan,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 22.sp,
@@ -116,7 +117,9 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
               color: AppColors.cardColor.withOpacity(0.4),
               borderRadius: BorderRadius.circular(30.r),
               border: Border.all(
-                color: isCurrent ? AppColors.accentColor.withOpacity(0.5) : Colors.white.withOpacity(0.1),
+                color: isCurrent
+                    ? AppColors.accentColor.withOpacity(0.5)
+                    : Colors.white.withOpacity(0.1),
                 width: isCurrent ? 2.w : 1.w,
               ),
             ),
@@ -125,48 +128,75 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
               children: [
                 SizedBox(height: 10.h),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 4.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.cardColor.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Text(
                     plan['tag'],
-                    style: TextStyle(color: AppColors.accentColor, fontSize: 11.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: AppColors.accentColor,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 SizedBox(height: 20.h),
                 Text(
                   plan['price'],
-                  style: TextStyle(color: AppColors.accentColor, fontSize: 32.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: AppColors.accentColor,
+                    fontSize: 32.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 if (plan['priceSuffix'] != null)
                   Text(
                     plan['priceSuffix'],
-                    style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13.sp),
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.6),
+                      fontSize: 13.sp,
+                    ),
                   ),
                 if (plan['subtitle'] != null)
                   Text(
                     plan['subtitle'],
-                    style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13.sp),
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.6),
+                      fontSize: 13.sp,
+                    ),
                   ),
                 SizedBox(height: 25.h),
-                ... (plan['features'] as List<String>).map((feature) => Padding(
-                  padding: EdgeInsets.only(bottom: 15.h),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(Icons.check_circle_outline, color: AppColors.accentColor, size: 18.sp),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: Text(
-                          feature,
-                          style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 13.sp, height: 1.4),
+                ...(plan['features'] as List<String>).map(
+                  (feature) => Padding(
+                    padding: EdgeInsets.only(bottom: 15.h),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.check_circle_outline,
+                          color: AppColors.accentColor,
+                          size: 18.sp,
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Text(
+                            feature,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 13.sp,
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                )),
+                ),
                 if (!isCurrent) ...[
                   SizedBox(height: 10.h),
                   SizedBox(
@@ -175,17 +205,34 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: plan['name'] == 'Silver Plan' ? AppColors.buttonColor : Colors.transparent,
-                        side: plan['name'] == 'Silver Plan' ? null : const BorderSide(color: AppColors.buttonColor),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
+                        backgroundColor: plan['name'] == 'Silver Plan'
+                            ? AppColors.buttonColor
+                            : Colors.transparent,
+                        side: plan['name'] == 'Silver Plan'
+                            ? null
+                            : const BorderSide(color: AppColors.buttonColor),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25.r),
+                        ),
                         elevation: 0,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Upgrade to Pro", style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold,  color: Color(0xffFFFFFF))),
+                          Text(
+                            StaticString.upgradeToPro,
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xffFFFFFF),
+                            ),
+                          ),
                           SizedBox(width: 8.w),
-                          Icon(Icons.arrow_forward, size: 16.sp,  color: Color(0xffFFFFFF)),
+                          Icon(
+                            Icons.arrow_forward,
+                            size: 16.sp,
+                            color: Color(0xffFFFFFF),
+                          ),
                         ],
                       ),
                     ),
@@ -203,8 +250,12 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 borderRadius: BorderRadius.circular(15.r),
               ),
               child: Text(
-                isCurrent ? "Current Plan" : "Popular",
-                style: TextStyle(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.bold),
+                isCurrent ? StaticString.currentPlan : StaticString.popular,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

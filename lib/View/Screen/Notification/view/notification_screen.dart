@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/notification_controller.dart';
 
 class NotificationScreen extends GetView<NotificationController> {
@@ -66,7 +67,7 @@ class NotificationScreen extends GetView<NotificationController> {
           Column(
             children: [
               Text(
-                "Notifications",
+                StaticString.notifications,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 22.sp,
@@ -299,7 +300,7 @@ class NotificationScreen extends GetView<NotificationController> {
                   ),
                 ),
                 child: Text(
-                  "Reply Now",
+                  StaticString.replyNow,
                   style: TextStyle(
                     color: AppColors.accentColor,
                     fontSize: 14.sp,
@@ -324,8 +325,11 @@ class NotificationScreen extends GetView<NotificationController> {
                         ),
                       ),
                       child: Text(
-                        "Join Group",
-                        style: TextStyle(fontSize: 14.sp,  color: Color(0xffFFFFFF)),
+                        StaticString.joinGroup,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Color(0xffFFFFFF),
+                        ),
                       ),
                     ),
                   ),
@@ -343,7 +347,7 @@ class NotificationScreen extends GetView<NotificationController> {
                         ),
                       ),
                       child: Text(
-                        "Decline",
+                        StaticString.decline,
                         style: TextStyle(
                           color: Color(0xffFFFFFF),
                           fontSize: 14.sp,

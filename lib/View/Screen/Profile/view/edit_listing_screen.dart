@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../../Trade/view/trade_screen.dart';
 import '../Controller/edit_listing_controller.dart';
 
@@ -75,7 +76,7 @@ class EditListingScreen extends GetView<EditListingController> {
                 ),
               ),
               Text(
-                "Edit Listing",
+                StaticString.editListing,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24.sp,
@@ -102,7 +103,7 @@ class EditListingScreen extends GetView<EditListingController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "PHOTO MANAGEMENT",
+              StaticString.photoManagement,
               style: TextStyle(
                 color: Colors.white.withOpacity(0.6),
                 fontSize: 12.sp,
@@ -110,7 +111,7 @@ class EditListingScreen extends GetView<EditListingController> {
               ),
             ),
             Text(
-              "3 / 10 Photos",
+              StaticString.threeOfTenPhotos,
               style: TextStyle(
                 color: Colors.white.withOpacity(0.6),
                 fontSize: 11.sp,
@@ -158,7 +159,7 @@ class EditListingScreen extends GetView<EditListingController> {
             ),
             SizedBox(height: 8.h),
             Text(
-              "Add Photo",
+              StaticString.addPhoto,
               style: TextStyle(
                 color: Colors.white.withOpacity(0.4),
                 fontSize: 11.sp,
@@ -210,7 +211,7 @@ class EditListingScreen extends GetView<EditListingController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Primary Information",
+            StaticString.primaryInformation,
             style: TextStyle(
               color: Colors.white,
               fontSize: 18.sp,
@@ -218,13 +219,13 @@ class EditListingScreen extends GetView<EditListingController> {
             ),
           ),
           SizedBox(height: 20.h),
-          _buildFieldLabel("Product Title"),
+          _buildFieldLabel(StaticString.productTitle),
           _buildTextField(controller.titleController),
           SizedBox(height: 20.h),
-          _buildFieldLabel("Price (\$)"),
+          _buildFieldLabel(StaticString.price),
           _buildTextField(controller.priceController),
           SizedBox(height: 20.h),
-          _buildFieldLabel("Category"),
+          _buildFieldLabel(StaticString.category),
           _buildDropdownField(),
         ],
       ),
@@ -242,7 +243,7 @@ class EditListingScreen extends GetView<EditListingController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Description",
+            StaticString.description,
             style: TextStyle(
               color: Colors.white,
               fontSize: 18.sp,
@@ -284,7 +285,7 @@ class EditListingScreen extends GetView<EditListingController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Status & Visibility",
+            StaticString.statusVisibility,
             style: TextStyle(
               color: Colors.white,
               fontSize: 18.sp,
@@ -294,17 +295,21 @@ class EditListingScreen extends GetView<EditListingController> {
           SizedBox(height: 20.h),
           Row(
             children: [
-              _buildStatusChip("Available", 'assets/icons/Available.svg', true),
+              _buildStatusChip(
+                StaticString.available,
+                'assets/icons/Available.svg',
+                true,
+              ),
               SizedBox(width: 10.w),
               _buildStatusChip(
-                "Pending Trade",
+                StaticString.pendingTrade,
                 'assets/icons/Pending Trade.svg',
                 false,
               ),
             ],
           ),
           SizedBox(height: 10.h),
-          _buildStatusChip("Sold", 'assets/icons/Sold.svg', false),
+          _buildStatusChip(StaticString.sold, 'assets/icons/Sold.svg', false),
         ],
       ),
     );
@@ -364,7 +369,7 @@ class EditListingScreen extends GetView<EditListingController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Trade Preferences",
+                StaticString.tradePreferencesShort,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18.sp,
@@ -372,7 +377,7 @@ class EditListingScreen extends GetView<EditListingController> {
                 ),
               ),
               Text(
-                "+ Add Item",
+                StaticString.addItem,
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.4),
                   fontSize: 12.sp,
@@ -469,7 +474,7 @@ class EditListingScreen extends GetView<EditListingController> {
               ),
             ),
             child: Text(
-              "Save Changes",
+              StaticString.saveChanges,
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
           ),
@@ -489,7 +494,7 @@ class EditListingScreen extends GetView<EditListingController> {
               ),
             ),
             label: Text(
-              "Delete Listing",
+              StaticString.deleteListing,
               style: TextStyle(
                 color: Colors.red.shade400,
                 fontSize: 16.sp,

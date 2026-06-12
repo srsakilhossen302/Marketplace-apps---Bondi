@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/otp_verification_controller.dart';
 
 class OtpVerificationScreen extends GetView<OtpVerificationController> {
@@ -89,8 +90,8 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                         const SizedBox(height: 20),
 
                         // Check Your Inbox Text
-                        const Text(
-                          'Check Your Inbox',
+                        Text(
+                          StaticString.checkYourInbox,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 28,
@@ -102,7 +103,7 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
 
                         // Subtitle
                         Text(
-                          "We've sent a 6-digit verification code to your email. Please enter it below to activate your account.",
+                          StaticString.weveSent6DigitVerificationCodeEmail,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.8),
@@ -145,7 +146,7 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Didn't receive a code? ",
+                                    StaticString.didntReceiveCode,
                                     style: TextStyle(
                                       color: Colors.white.withOpacity(0.8),
                                       fontSize: 14,
@@ -155,8 +156,8 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                                     onTap: () {
                                       controller.resendCode();
                                     },
-                                    child: const Text(
-                                      'Resend',
+                                    child: Text(
+                                      StaticString.resend,
                                       style: TextStyle(
                                         color: AppColors.accentColor,
                                         fontSize: 14,
@@ -220,8 +221,8 @@ class OtpVerificationScreen extends GetView<OtpVerificationController> {
                                                 strokeWidth: 2.5,
                                               ),
                                             )
-                                          : const Text(
-                                              'Verify',
+                                          : Text(
+                                              StaticString.verify,
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 17,

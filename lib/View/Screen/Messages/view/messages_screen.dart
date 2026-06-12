@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/messages_controller.dart';
 import 'chat_detail_screen.dart';
 
@@ -32,7 +33,7 @@ class MessagesScreen extends GetView<MessagesController> {
                       _buildSearchBar(),
                       SizedBox(height: 30.h),
                       Text(
-                        "RECENT CHATS",
+                        StaticString.recentChats.toUpperCase(),
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.6),
                           fontSize: 12.sp,
@@ -73,7 +74,7 @@ class MessagesScreen extends GetView<MessagesController> {
             ),
           ),
           Text(
-            "Messages",
+            StaticString.messages,
             style: TextStyle(
               color: Colors.white,
               fontSize: 24.sp,
@@ -96,7 +97,7 @@ class MessagesScreen extends GetView<MessagesController> {
       child: TextField(
         style: TextStyle(color: Colors.white, fontSize: 16.sp),
         decoration: InputDecoration(
-          hintText: 'Search Trade & more',
+          hintText: StaticString.searchTradeMore,
           hintStyle: TextStyle(
             color: Colors.white.withOpacity(0.6),
             fontSize: 16.sp,
@@ -105,14 +106,20 @@ class MessagesScreen extends GetView<MessagesController> {
             padding: EdgeInsets.all(15.r),
             child: SvgPicture.asset(
               'assets/icons/Search-icons.svg',
-              colorFilter: const ColorFilter.mode(Colors.cyanAccent, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                Colors.cyanAccent,
+                BlendMode.srcIn,
+              ),
             ),
           ),
           suffixIcon: Padding(
             padding: EdgeInsets.all(15.r),
             child: SvgPicture.asset(
               'assets/icons/Filtering-icons.svg',
-              colorFilter: const ColorFilter.mode(Colors.cyanAccent, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                Colors.cyanAccent,
+                BlendMode.srcIn,
+              ),
             ),
           ),
           border: InputBorder.none,
@@ -157,7 +164,10 @@ class MessagesScreen extends GetView<MessagesController> {
                           decoration: BoxDecoration(
                             color: Colors.cyanAccent,
                             shape: BoxShape.circle,
-                            border: Border.all(color: AppColors.backgroundColor, width: 2),
+                            border: Border.all(
+                              color: AppColors.backgroundColor,
+                              width: 2,
+                            ),
                           ),
                         ),
                       ),
@@ -177,106 +187,125 @@ class MessagesScreen extends GetView<MessagesController> {
   }
 
   Widget _buildChatList() {
-    return Obx(() => Column(
-          children: controller.chatList.map((chat) {
-            return GestureDetector(
-              onTap: () => Get.to(() => const ChatDetailScreen()),
-              child: Container(
-                margin: EdgeInsets.only(bottom: 15.h),
-                padding: EdgeInsets.all(15.r),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(25.r),
-                ),
-                child: Row(
-                  children: [
-                    _buildChatAvatar(chat),
-                    SizedBox(width: 15.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  chat['title'] as String,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Text(
-                                chat['time'] as String,
+    return Obx(
+      () => Column(
+        children: controller.chatList.map((chat) {
+          return GestureDetector(
+            onTap: () => Get.to(() => const ChatDetailScreen()),
+            child: Container(
+              margin: EdgeInsets.only(bottom: 15.h),
+              padding: EdgeInsets.all(15.r),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(25.r),
+              ),
+              child: Row(
+                children: [
+                  _buildChatAvatar(chat),
+                  SizedBox(width: 15.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                chat['title'] as String,
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.4),
-                                  fontSize: 11.sp,
+                                  color: Colors.white,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 5.h),
-                          if (chat['status'] != null && (chat['status'] as String).contains('TRADE'))
-                            Container(
-                              margin: EdgeInsets.only(bottom: 5.h),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.sync, color: Colors.cyanAccent, size: 12.sp),
-                                  SizedBox(width: 4.w),
-                                  Text(
-                                    chat['status'] as String,
-                                    style: TextStyle(
-                                      color: Colors.cyanAccent,
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  chat['lastMsg'] as String,
+                            Text(
+                              chat['time'] as String,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.4),
+                                fontSize: 11.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5.h),
+                        if (chat['status'] != null &&
+                            (chat['status'] as String).contains('TRADE'))
+                          Container(
+                            margin: EdgeInsets.only(bottom: 5.h),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.sync,
+                                  color: Colors.cyanAccent,
+                                  size: 12.sp,
+                                ),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  chat['status'] as String,
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.6),
-                                    fontSize: 13.sp,
+                                    color: Colors.cyanAccent,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                chat['lastMsg'] as String,
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.6),
+                                  fontSize: 13.sp,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (chat['status'] == 'Read')
+                              Icon(
+                                Icons.done_all,
+                                color: Colors.cyanAccent,
+                                size: 14.sp,
+                              )
+                            else if ((chat['status'] as String).contains(
+                              'online',
+                            ))
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w,
+                                  vertical: 2.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Text(
+                                  chat['status'] as String,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10.sp,
+                                  ),
                                 ),
                               ),
-                              if (chat['status'] == 'Read')
-                                Icon(Icons.done_all, color: Colors.cyanAccent, size: 14.sp)
-                              else if ((chat['status'] as String).contains('online'))
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(10.r),
-                                  ),
-                                  child: Text(
-                                    chat['status'] as String,
-                                    style: TextStyle(color: Colors.white, fontSize: 10.sp),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            );
-          }).toList(),
-        ));
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 
   Widget _buildChatAvatar(Map<String, dynamic> chat) {
@@ -298,8 +327,14 @@ class MessagesScreen extends GetView<MessagesController> {
               top: 0,
               child: Container(
                 padding: EdgeInsets.all(4.r),
-                decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-                child: Text("2", style: TextStyle(color: Colors.white, fontSize: 10.sp)),
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  "2",
+                  style: TextStyle(color: Colors.white, fontSize: 10.sp),
+                ),
               ),
             ),
           ],
@@ -328,7 +363,7 @@ class MessagesScreen extends GetView<MessagesController> {
         ),
       );
     } else if (chat['itemImage'] != null) {
-       return SizedBox(
+      return SizedBox(
         width: 60.w,
         height: 60.h,
         child: Stack(
@@ -342,7 +377,12 @@ class MessagesScreen extends GetView<MessagesController> {
               bottom: 0,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5.r),
-                child: Image.network(chat['itemImage'] as String, width: 25.w, height: 25.h, fit: BoxFit.cover),
+                child: Image.network(
+                  chat['itemImage'] as String,
+                  width: 25.w,
+                  height: 25.h,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ],
@@ -356,7 +396,7 @@ class MessagesScreen extends GetView<MessagesController> {
             backgroundImage: NetworkImage(chat['image'] as String),
           ),
           if (chat['status'] == 'online')
-             Positioned(
+            Positioned(
               right: 2.w,
               bottom: 2.h,
               child: Container(
@@ -365,7 +405,10 @@ class MessagesScreen extends GetView<MessagesController> {
                 decoration: BoxDecoration(
                   color: Colors.cyanAccent,
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.backgroundColor, width: 2),
+                  border: Border.all(
+                    color: AppColors.backgroundColor,
+                    width: 2,
+                  ),
                 ),
               ),
             ),

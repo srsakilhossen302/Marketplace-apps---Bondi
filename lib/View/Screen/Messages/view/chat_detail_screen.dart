@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/messages_controller.dart';
 
 class ChatDetailScreen extends GetView<MessagesController> {
@@ -89,7 +90,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Sneaker Traders",
+                  StaticString.sneakerTraders,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.sp,
@@ -97,7 +98,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
                   ),
                 ),
                 Text(
-                  "12.4k Members • 2.1k Online",
+                  StaticString.oneTwoFourKMembersTwoOneKOnline,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.6),
                     fontSize: 11.sp,
@@ -122,7 +123,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
           text: TextSpan(
             children: [
               TextSpan(
-                text: "LacesOut ",
+                text: "${StaticString.lacesOut} ",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12.sp,
@@ -272,7 +273,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                           child: Text(
-                            "NEW LISTING",
+                            StaticString.newListing.toUpperCase(),
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 9.sp,
@@ -337,7 +338,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "View Listing",
+                                  StaticString.viewListing,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 14.sp,
@@ -407,7 +408,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
                   Expanded(
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: "Message Group...",
+                        hintText: StaticString.messageGroup,
                         hintStyle: TextStyle(
                           color: Colors.black.withOpacity(0.3),
                           fontSize: 14.sp,

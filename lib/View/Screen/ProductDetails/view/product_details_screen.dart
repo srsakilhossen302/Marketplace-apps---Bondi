@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../../../Widgegt/CustomCard/custom_listing_card.dart';
 import '../../Trade/view/trade_screen.dart';
 import '../Controller/product_details_controller.dart';
@@ -87,7 +88,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
             ),
           ),
           Text(
-            "Product Details",
+            StaticString.productDetails,
             style: TextStyle(
               color: Colors.white,
               fontSize: 22.sp,
@@ -257,7 +258,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Trade-In Available",
+                  StaticString.tradeInAvailable,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15.sp,
@@ -265,7 +266,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                   ),
                 ),
                 Text(
-                  "Seller accepts trade offers for this listing.",
+                  StaticString.sellerAcceptsTradeOffers,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.5),
                     fontSize: 12.sp,
@@ -291,7 +292,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Description",
+            StaticString.description,
             style: TextStyle(
               color: Colors.white,
               fontSize: 18.sp,
@@ -317,9 +318,9 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
       spacing: 10.w,
       runSpacing: 10.h,
       children: [
-        _buildTag("Condition: New"),
-        _buildTag("Authentic"),
-        _buildTag("Warranty Included"),
+        _buildTag(StaticString.conditionNew),
+        _buildTag(StaticString.authentic),
+        _buildTag(StaticString.warrantyIncluded),
       ],
     );
   }
@@ -394,11 +395,14 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
             ],
           ),
           SizedBox(height: 20.h),
-          _buildSellerStat('assets/icons/Friends.svg', "4 Mutual Friends"),
+          _buildSellerStat(
+            'assets/icons/Friends.svg',
+            StaticString.fourMutualFriends,
+          ),
           SizedBox(height: 10.h),
           _buildSellerStat(
             'assets/icons/Member of 3 Groups.svg',
-            "Member of 3 Groups",
+            StaticString.memberOfThreeGroups,
           ),
           SizedBox(height: 25.h),
           SizedBox(
@@ -407,19 +411,14 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
             child: OutlinedButton(
               onPressed: () {},
               style: OutlinedButton.styleFrom(
-                side: BorderSide(
-                  color: AppColors.accentColor.withOpacity(0.5),
-                ),
+                side: BorderSide(color: AppColors.accentColor.withOpacity(0.5)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24.r),
                 ),
               ),
               child: Text(
-                "View Profile",
-                style: TextStyle(
-                  color: AppColors.accentColor,
-                  fontSize: 14.sp,
-                ),
+                StaticString.viewProfile,
+                style: TextStyle(color: AppColors.accentColor, fontSize: 14.sp),
               ),
             ),
           ),
@@ -456,7 +455,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Similar Listings",
+              StaticString.similarListings,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20.sp,
@@ -464,7 +463,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
               ),
             ),
             Text(
-              "See all",
+              StaticString.seeAllShort,
               style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp),
             ),
           ],
@@ -504,11 +503,8 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                 ),
               ),
               child: Text(
-                "Trade Offer",
-                style: TextStyle(
-                  color: AppColors.accentColor,
-                  fontSize: 16.sp,
-                ),
+                StaticString.tradeOffer,
+                style: TextStyle(color: AppColors.accentColor, fontSize: 16.sp),
               ),
             ),
           ),
@@ -526,7 +522,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                 ),
               ),
               child: Text(
-                "Buy Now",
+                StaticString.buyNow,
                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
               ),
             ),
