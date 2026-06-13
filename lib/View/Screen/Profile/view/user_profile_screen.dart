@@ -103,9 +103,11 @@ class UserProfileScreen extends GetView<UserProfileController> {
                 shape: BoxShape.circle,
                 border: Border.all(color: AppColors.accentColor, width: 2.w),
               ),
-              child: CircleAvatar(
-                radius: 60.r,
-                backgroundImage: NetworkImage(controller.userImage.value),
+              child: Obx(
+                () => CircleAvatar(
+                  radius: 60.r,
+                  backgroundImage: NetworkImage(controller.userImage.value),
+                ),
               ),
             ),
             Positioned(
@@ -127,12 +129,14 @@ class UserProfileScreen extends GetView<UserProfileController> {
           ],
         ),
         SizedBox(height: 15.h),
-        Text(
-          controller.userName.value,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 28.sp,
-            fontWeight: FontWeight.bold,
+        Obx(
+          () => Text(
+            controller.displayName.value,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 28.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         SizedBox(height: 8.h),
@@ -169,13 +173,15 @@ class UserProfileScreen extends GetView<UserProfileController> {
         SizedBox(height: 15.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Text(
-            controller.bio.value,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontSize: 14.sp,
-              height: 1.5,
+          child: Obx(
+            () => Text(
+              controller.bio.value,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontSize: 14.sp,
+                height: 1.5,
+              ),
             ),
           ),
         ),
@@ -242,7 +248,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
       children: [
         Expanded(
           child: _buildStatCard(
-            controller.friendsCount.value,
+            controller.friendsCount,
             StaticString.friends.toUpperCase(),
             onTap: () => Get.to(() => const FriendsScreen()),
           ),
@@ -250,14 +256,14 @@ class UserProfileScreen extends GetView<UserProfileController> {
         SizedBox(width: 10.w),
         Expanded(
           child: _buildStatCard(
-            controller.groupsCount.value,
+            controller.groupsCount,
             StaticString.groups.toUpperCase(),
           ),
         ),
         SizedBox(width: 10.w),
         Expanded(
           child: _buildStatCard(
-            controller.tradesCount.value,
+            controller.tradesCount,
             StaticString.trades.toUpperCase(),
           ),
         ),
@@ -265,7 +271,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
     );
   }
 
-  Widget _buildStatCard(String value, String label, {VoidCallback? onTap}) {
+  Widget _buildStatCard(RxString value, String label, {VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -278,12 +284,14 @@ class UserProfileScreen extends GetView<UserProfileController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              value,
-              style: TextStyle(
-                color: const Color(0xFF00D8F6),
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
+            Obx(
+              () => Text(
+                value.value,
+                style: TextStyle(
+                  color: const Color(0xFF00D8F6),
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             SizedBox(height: 4.h),

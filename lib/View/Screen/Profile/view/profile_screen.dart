@@ -45,7 +45,10 @@ class ProfileScreen extends GetView<ProfileController> {
                           StaticString.accountSettings,
                           onTap: () => Get.to(() => const UserProfileScreen()),
                         ),
-                        _buildSettingsTile(Icons.sync, StaticString.contactSync),
+                        _buildSettingsTile(
+                          Icons.sync,
+                          StaticString.contactSync,
+                        ),
                         _buildSettingsTile(
                           Icons.language,
                           StaticString.language,
@@ -208,21 +211,25 @@ class ProfileScreen extends GetView<ProfileController> {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 35.r,
-            backgroundImage: NetworkImage(controller.userImage.value),
+          Obx(
+            () => CircleAvatar(
+              radius: 35.r,
+              backgroundImage: NetworkImage(controller.userImage.value),
+            ),
           ),
           SizedBox(width: 15.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  controller.userName.value,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.bold,
+                Obx(
+                  () => Text(
+                    controller.displayName.value,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 Text(
