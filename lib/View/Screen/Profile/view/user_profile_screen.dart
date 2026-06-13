@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/user_profile_controller.dart';
-import 'add_listing_screen.dart';
+import '../../Sell/view/sell_screen.dart';
 import 'edit_listing_screen.dart';
 import 'edit_profile_screen.dart';
 import 'friends_screen.dart';
@@ -40,7 +40,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
                       SizedBox(height: 40.h),
                       _buildMyListingsHeader(),
                       SizedBox(height: 20.h),
-                      _buildMyListingsGrid(),
+                      Obx(() => _buildMyListingsGrid()),
                       SizedBox(height: 40.h),
                     ],
                   ),
@@ -378,7 +378,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
           );
         } else {
           return GestureDetector(
-            onTap: () => Get.to(() => const AddListingScreen()),
+            onTap: () => Get.to(() => const SellScreen()),
             child: _buildAddListingCard(),
           );
         }
