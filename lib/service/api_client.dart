@@ -23,6 +23,34 @@ class ApiClient {
     return headers;
   }
 
+  // Multipart POST Request (for file uploads)
+  static Future<http.StreamedResponse> multipartPost(
+    String url,
+    Map<String, String> fields, {
+    List<http.MultipartFile> files = const [],
+    bool requireAuth = true,
+  }) async {
+    final request = http.MultipartRequest('POST', Uri.parse(url));
+    
+    // Add headers
+    if (requireAuth) {
+      final token = await SharedPrefsHelper.getToken();
+      if (token != null && token.isNotEmpty) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+    }
+    
+    // Add fields
+    request.fields.addAll(fields);
+    
+    // Add files
+    for (var file in files) {
+      request.files.add(file);
+    }
+    
+    return await request.send();
+  }
+
   // GET Request
   static Future<http.Response> get(String url, {bool requireAuth = true}) async {
     final headers = await _getHeaders(requireAuth: requireAuth);

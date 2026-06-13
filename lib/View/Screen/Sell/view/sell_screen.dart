@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,38 +20,49 @@ class SellScreen extends GetView<SellController> {
         height: double.infinity,
         color: AppColors.backgroundColor,
         child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(),
-              Container(
-                height: 1.h,
-                width: double.infinity,
-                color: Colors.white.withOpacity(0.2),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 25.h),
-                      _buildUploadSection(),
-                      SizedBox(height: 30.h),
-                      _buildFormFields(),
-                      SizedBox(height: 30.h),
-                      _buildOptionsSection(),
-                      SizedBox(height: 30.h),
-                      _buildFulfillmentSection(),
-                      SizedBox(height: 30.h),
-                      _buildShareSection(),
-                      SizedBox(height: 40.h),
-                      _buildActionButtons(),
-                      SizedBox(height: 100.h),
-                    ],
-                  ),
+          child: Obx(
+            () => Stack(
+              children: [
+                Column(
+                  children: [
+                    _buildAppBar(),
+                    Container(
+                      height: 1.h,
+                      width: double.infinity,
+                      color: Colors.white.withOpacity(0.2),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 25.h,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildUploadSection(),
+                            SizedBox(height: 30.h),
+                            _buildFormFields(),
+                            SizedBox(height: 30.h),
+                            _buildOptionsSection(),
+                            SizedBox(height: 30.h),
+                            _buildFulfillmentSection(),
+                            SizedBox(height: 30.h),
+                            _buildActionButtons(),
+                            SizedBox(height: 40.h),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                if (controller.isLoading.value)
+                  Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -90,57 +101,180 @@ class SellScreen extends GetView<SellController> {
   }
 
   Widget _buildUploadSection() {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: _buildUploadBox(
-            StaticString.uploadPhotos,
-            Icons.camera_alt_outlined,
-          ),
-        ),
-        SizedBox(width: 15.w),
-        Expanded(
-          child: _buildUploadBox(
-            StaticString.uploadVideos,
-            Icons.videocam_outlined,
-          ),
+        if (controller.selectedImages.isNotEmpty) _buildSelectedImages(),
+        if (controller.selectedVideos.isNotEmpty) ...[
+          SizedBox(height: 10.h),
+          _buildSelectedVideos(),
+        ],
+        SizedBox(height: 10.h),
+        Row(
+          children: [
+            Expanded(
+              child: _buildUploadBox(
+                StaticString.uploadPhotos,
+                Icons.camera_alt_outlined,
+                onTap: controller.pickImages,
+                maxCount: 10,
+                currentCount: controller.selectedImages.length,
+              ),
+            ),
+            SizedBox(width: 15.w),
+            Expanded(
+              child: _buildUploadBox(
+                StaticString.uploadVideos,
+                Icons.videocam_outlined,
+                onTap: controller.pickVideos,
+                maxCount: 1,
+                currentCount: controller.selectedVideos.length,
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildUploadBox(String label, IconData icon) {
-    return Container(
-      height: 140.h,
-      decoration: BoxDecoration(
-        color: AppColors.cardColor.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(25.r),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.2),
-          width: 1.5,
-          style: BorderStyle.solid, // Placeholder for dashed
-        ),
+  Widget _buildSelectedImages() {
+    return SizedBox(
+      height: 120.h,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: controller.selectedImages.length,
+        separatorBuilder: (context, index) => SizedBox(width: 10.w),
+        itemBuilder: (context, index) {
+          final image = controller.selectedImages[index];
+          return Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12.r),
+                child: Image.file(
+                  File(image.path),
+                  width: 100.w,
+                  height: 100.h,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 5,
+                child: GestureDetector(
+                  onTap: () => controller.removeImage(index),
+                  child: Container(
+                    padding: EdgeInsets.all(4.r),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.close, color: Colors.white, size: 16.sp),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(12.r),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: AppColors.accentColor, size: 28.sp),
+    );
+  }
+
+  Widget _buildSelectedVideos() {
+    return SizedBox(
+      height: 120.h,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: controller.selectedVideos.length,
+        separatorBuilder: (context, index) => SizedBox(width: 10.w),
+        itemBuilder: (context, index) {
+          final video = controller.selectedVideos[index];
+          return Stack(
+            children: [
+              Container(
+                width: 100.w,
+                height: 100.h,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: const Icon(
+                  Icons.videocam,
+                  color: Colors.white,
+                  size: 40,
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 5,
+                child: GestureDetector(
+                  onTap: () => controller.removeVideo(index),
+                  child: Container(
+                    padding: EdgeInsets.all(4.r),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.close, color: Colors.white, size: 16.sp),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildUploadBox(
+    String label,
+    IconData icon, {
+    required VoidCallback onTap,
+    required int maxCount,
+    required int currentCount,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 140.h,
+        decoration: BoxDecoration(
+          color: AppColors.cardColor.withOpacity(0.4),
+          borderRadius: BorderRadius.circular(25.r),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.2),
+            width: 1.5,
+            style: BorderStyle.solid,
           ),
-          SizedBox(height: 12.h),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.6),
-              fontSize: 13.sp,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(12.r),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: AppColors.accentColor, size: 28.sp),
             ),
-          ),
-        ],
+            SizedBox(height: 12.h),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.6),
+                fontSize: 13.sp,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              "$currentCount/$maxCount",
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.4),
+                fontSize: 11.sp,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -332,27 +466,112 @@ class SellScreen extends GetView<SellController> {
   }
 
   Widget _buildOptionsSection() {
-    return Container(
-      padding: EdgeInsets.all(20.r),
-      decoration: BoxDecoration(
-        color: AppColors.cardColor.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(25.r),
-      ),
-      child: Column(
-        children: [
-          _buildSwitchRow(
-            StaticString.allowTradeOffers,
-            StaticString.openToSwappingForOtherItems,
-            controller.allowTradeOffers,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabel(StaticString.transactionType),
+        SizedBox(height: 12.h),
+        Container(
+          padding: EdgeInsets.all(4.r),
+          decoration: BoxDecoration(
+            color: AppColors.cardColor.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(30.r),
           ),
-          Divider(color: Colors.white.withOpacity(0.1), height: 30.h),
-          _buildSwitchRow(
-            StaticString.shippingAvailable,
-            StaticString.listItemForNationalDelivery,
-            controller.shippingAvailable,
+          child: Obx(
+            () => Row(
+              children: controller.transactionTypes.map((type) {
+                bool isSelected =
+                    controller.selectedTransactionType.value == type;
+                IconData icon = type == 'Trade'
+                    ? Icons.swap_horiz
+                    : type == 'Sell'
+                    ? Icons.shopping_cart_outlined
+                    : Icons.shopping_bag_outlined;
+
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => controller.updateTransactionType(type),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16.h,
+                        horizontal: 10.w,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.buttonColor
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(25.r),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            icon,
+                            color: isSelected
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.5),
+                            size: 24.sp,
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            type,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? Colors.white
+                                  : Colors.white.withOpacity(0.5),
+                              fontSize: 12.sp,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFulfillmentSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabel(StaticString.paymentFulfillment),
+        Container(
+          padding: EdgeInsets.all(20.r),
+          decoration: BoxDecoration(
+            color: AppColors.cardColor.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(25.r),
+          ),
+          child: Column(
+            children: [
+              _buildSwitchRow(
+                StaticString.allowTradeOffers,
+                StaticString.openToSwappingForOtherItems,
+                controller.allowTradeOffers,
+              ),
+              Divider(color: Colors.white.withOpacity(0.1), height: 30.h),
+              _buildSwitchRow(
+                StaticString.shippingAvailable,
+                StaticString.listItemForNationalDelivery,
+                controller.shippingAvailable,
+              ),
+              Divider(color: Colors.white.withOpacity(0.1), height: 30.h),
+              _buildSwitchRow(
+                "Sell Directly",
+                "Free listing, cash on pickup",
+                controller.availableForPickup,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -413,140 +632,6 @@ class SellScreen extends GetView<SellController> {
     );
   }
 
-  Widget _buildFulfillmentSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildLabel(StaticString.paymentFulfillment),
-        Container(
-          padding: EdgeInsets.all(20.r),
-          decoration: BoxDecoration(
-            color: AppColors.cardColor.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(25.r),
-            border: Border.all(color: AppColors.accentColor.withOpacity(0.3)),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.person_outline,
-                color: Colors.white.withOpacity(0.5),
-                size: 24.sp,
-              ),
-              SizedBox(width: 15.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      StaticString.sellDirectly,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      StaticString.freeListingCashOnPickup,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
-                        fontSize: 12.sp,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.check_circle,
-                color: AppColors.buttonColor,
-                size: 20.sp,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildShareSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildLabel(StaticString.shareInGroups),
-            Text(
-              StaticString.seeAllShort,
-              style: TextStyle(color: AppColors.accentColor, fontSize: 12.sp),
-            ),
-          ],
-        ),
-        SizedBox(height: 10.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildGroupAvatar(
-              StaticString.localTech,
-              "https://i.pravatar.cc/150?u=tech",
-            ),
-            _buildGroupAvatar(
-              StaticString.vintageFinds,
-              "https://i.pravatar.cc/150?u=vintage",
-            ),
-            _buildGroupAvatar(
-              StaticString.hikeSwap,
-              "https://i.pravatar.cc/150?u=hike",
-            ),
-            _buildAddGroupButton(),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildGroupAvatar(String name, String img) {
-    return Column(
-      children: [
-        CircleAvatar(radius: 25.r, backgroundImage: NetworkImage(img)),
-        SizedBox(height: 8.h),
-        Text(
-          name,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.7),
-            fontSize: 11.sp,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAddGroupButton() {
-    return Column(
-      children: [
-        Container(
-          width: 50.w,
-          height: 50.h,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: Colors.white.withOpacity(0.3),
-              style: BorderStyle.none,
-            ), // dashed placeholder
-          ),
-          child: Icon(Icons.add, color: Colors.white.withOpacity(0.5)),
-        ),
-        SizedBox(height: 8.h),
-        Text(
-          StaticString.joinMore,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.7),
-            fontSize: 11.sp,
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildActionButtons() {
     return Column(
       children: [
@@ -554,7 +639,7 @@ class SellScreen extends GetView<SellController> {
           width: double.infinity,
           height: 55.h,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () => controller.submitListing(isDraft: false),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.buttonColor,
               shape: RoundedRectangleBorder(
@@ -569,14 +654,14 @@ class SellScreen extends GetView<SellController> {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xffFFFFFF),
+                    color: const Color(0xffFFFFFF),
                   ),
                 ),
                 SizedBox(width: 10.w),
                 Icon(
                   Icons.arrow_forward,
                   size: 20.sp,
-                  color: Color(0xffFFFFFF),
+                  color: const Color(0xffFFFFFF),
                 ),
               ],
             ),
@@ -587,7 +672,7 @@ class SellScreen extends GetView<SellController> {
           width: double.infinity,
           height: 55.h,
           child: OutlinedButton(
-            onPressed: () {},
+            onPressed: () => controller.submitListing(isDraft: true),
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: Colors.white.withOpacity(0.3)),
               shape: RoundedRectangleBorder(

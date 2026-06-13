@@ -171,6 +171,9 @@ class StaticString {
   static String get hikeSwap => 'hikeSwap'.tr;
   static String get joinMore => 'joinMore'.tr;
   static String get saveAsDraft => 'saveAsDraft'.tr;
+  static String get transactionType => 'transactionType'.tr;
+  static String get sell => 'sell'.tr;
+  static String get tradeOrSell => 'tradeOrSell'.tr;
 
   // Success Screen
   static String get youreAllSet => 'youreAllSet'.tr;
