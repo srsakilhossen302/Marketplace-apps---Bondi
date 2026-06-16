@@ -25,7 +25,7 @@ class SellController extends GetxController {
   final shippingAvailable = false.obs;
   final availableForPickup = true.obs;
 
-  final categories = ['Electronics', 'Fashion', 'Home', 'Toys', 'Others'];
+  final RxList<String> categories = <String>['Electronics', 'Fashion', 'Home', 'Toys', 'Books', 'Sports', 'Vehicles', 'Others'].obs;
   final conditions = ['New', 'Used - Like New', 'Used - Good'];
   final transactionTypes = ['Trade', 'Sell', 'Trade or Sell'];
 
@@ -58,7 +58,12 @@ class SellController extends GetxController {
         final matched = categories.firstWhere(
           (c) => c.toLowerCase() == apiCategory.toLowerCase(),
           orElse: () {
-            categories.add(apiCategory);
+            final index = categories.indexOf('Others');
+            if (index != -1) {
+              categories.insert(index, apiCategory);
+            } else {
+              categories.add(apiCategory);
+            }
             return apiCategory;
           },
         );
@@ -130,7 +135,56 @@ class SellController extends GetxController {
   }
 
   void updateCategory(String? value) {
-    if (value != null) selectedCategory.value = value;
+    if (value == null) return;
+    if (value == 'Others') {
+      final textController = TextEditingController();
+      Get.dialog(
+        AlertDialog(
+          backgroundColor: const Color(0xFF1E3A8A),
+          title: const Text('Custom Category', style: TextStyle(color: Colors.white)),
+          content: TextField(
+            controller: textController,
+            autofocus: true,
+            style: const TextStyle(color: Colors.white),
+            decoration: const InputDecoration(
+              hintText: 'Enter category name',
+              hintStyle: TextStyle(color: Colors.white54),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white30),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final val = textController.text.trim();
+                if (val.isNotEmpty) {
+                  final index = categories.indexOf('Others');
+                  if (index != -1) {
+                    categories.insert(index, val);
+                  } else {
+                    categories.add(val);
+                  }
+                  selectedCategory.value = val;
+                }
+                Get.back();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF00D8F6)),
+              child: const Text('Add', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      );
+    } else {
+      selectedCategory.value = value;
+    }
   }
 
   void updateCondition(String value) {

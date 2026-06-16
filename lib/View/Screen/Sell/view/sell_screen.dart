@@ -379,20 +379,7 @@ class SellScreen extends StatelessWidget {
             items: controller.categories.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/Category-icons.svg',
-                      width: 18.w,
-                      colorFilter: const ColorFilter.mode(
-                        AppColors.accentColor,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Text(value, style: const TextStyle(color: Colors.white)),
-                  ],
-                ),
+                child: Text(value, style: const TextStyle(color: Colors.white)),
               );
             }).toList(),
             onChanged: controller.updateCategory,
