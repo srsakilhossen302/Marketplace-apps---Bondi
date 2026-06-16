@@ -85,6 +85,7 @@ class UserProfileController extends GetxController {
             'image': thumbnail.isNotEmpty
                 ? thumbnail
                 : 'https://randomuser.me/api/portraits/women/5.jpg',
+            'rawData': listing,
           });
         }
         print('Final listings count: ${myListings.length}');

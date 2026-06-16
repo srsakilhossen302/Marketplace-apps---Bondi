@@ -7,12 +7,15 @@ import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/sell_controller.dart';
 
-class SellScreen extends GetView<SellController> {
-  const SellScreen({super.key});
+class SellScreen extends StatelessWidget {
+  final String? tag;
+  const SellScreen({super.key, this.tag});
+
+  SellController get controller => Get.find<SellController>(tag: tag);
 
   @override
   Widget build(BuildContext context) {
-    Get.put(SellController());
+    Get.put(SellController(), tag: tag);
 
     return Scaffold(
       body: Container(
@@ -87,7 +90,7 @@ class SellScreen extends GetView<SellController> {
             ),
           ),
           Text(
-            StaticString.sellSomething,
+            controller.isEditMode ? 'Edit Listing' : StaticString.sellSomething,
             style: TextStyle(
               color: Colors.white,
               fontSize: 22.sp,
@@ -150,12 +153,19 @@ class SellScreen extends GetView<SellController> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12.r),
-                child: Image.file(
-                  File(image.path),
-                  width: 100.w,
-                  height: 100.h,
-                  fit: BoxFit.cover,
-                ),
+                child: image is String
+                    ? Image.network(
+                        image,
+                        width: 100.w,
+                        height: 100.h,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.file(
+                        File(image.path),
+                        width: 100.w,
+                        height: 100.h,
+                        fit: BoxFit.cover,
+                      ),
               ),
               Positioned(
                 top: 5,
@@ -650,7 +660,7 @@ class SellScreen extends GetView<SellController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StaticString.publishListing,
+                  controller.isEditMode ? 'Save Changes' : StaticString.publishListing,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
@@ -659,7 +669,7 @@ class SellScreen extends GetView<SellController> {
                 ),
                 SizedBox(width: 10.w),
                 Icon(
-                  Icons.arrow_forward,
+                  controller.isEditMode ? Icons.check : Icons.arrow_forward,
                   size: 20.sp,
                   color: const Color(0xffFFFFFF),
                 ),
@@ -667,24 +677,26 @@ class SellScreen extends GetView<SellController> {
             ),
           ),
         ),
-        SizedBox(height: 15.h),
-        SizedBox(
-          width: double.infinity,
-          height: 55.h,
-          child: OutlinedButton(
-            onPressed: () => controller.submitListing(isDraft: true),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.white.withOpacity(0.3)),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28.r),
+        if (!controller.isEditMode) ...[
+          SizedBox(height: 15.h),
+          SizedBox(
+            width: double.infinity,
+            height: 55.h,
+            child: OutlinedButton(
+              onPressed: () => controller.submitListing(isDraft: true),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Colors.white.withOpacity(0.3)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(28.r),
+                ),
+              ),
+              child: Text(
+                StaticString.saveAsDraft,
+                style: TextStyle(color: Colors.white, fontSize: 16.sp),
               ),
             ),
-            child: Text(
-              StaticString.saveAsDraft,
-              style: TextStyle(color: Colors.white, fontSize: 16.sp),
-            ),
           ),
-        ),
+        ],
       ],
     );
   }

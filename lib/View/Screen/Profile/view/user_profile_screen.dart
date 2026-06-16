@@ -5,7 +5,6 @@ import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/user_profile_controller.dart';
 import '../../Sell/view/sell_screen.dart';
-import 'edit_listing_screen.dart';
 import 'edit_profile_screen.dart';
 import 'friends_screen.dart';
 import '../../MyOrders/view/my_orders_screen.dart';
@@ -373,7 +372,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
         if (index < controller.myListings.length) {
           final item = controller.myListings[index];
           return GestureDetector(
-            onTap: () => Get.to(() => const EditListingScreen()),
+            onTap: () => Get.to(() => const SellScreen(tag: 'edit'), arguments: item['rawData']),
             child: _buildListingCard(item),
           );
         } else {

@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../../Trade/view/trade_screen.dart';
@@ -20,33 +22,46 @@ class EditListingScreen extends GetView<EditListingController> {
         height: double.infinity,
         color: AppColors.backgroundColor,
         child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      _buildPhotoManagement(),
-                      SizedBox(height: 30.h),
-                      _buildPrimaryInformation(),
-                      SizedBox(height: 25.h),
-                      _buildDescriptionSection(),
-                      SizedBox(height: 25.h),
-                      _buildStatusVisibility(),
-                      SizedBox(height: 25.h),
-                      _buildTradePreferences(),
-                      SizedBox(height: 30.h),
-                      _buildActionButtons(),
-                      SizedBox(height: 40.h),
-                    ],
-                  ),
+          child: Obx(
+            () => Stack(
+              children: [
+                Column(
+                  children: [
+                    _buildAppBar(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 20.h),
+                            _buildPhotoManagement(),
+                            SizedBox(height: 30.h),
+                            _buildPrimaryInformation(),
+                            SizedBox(height: 25.h),
+                            _buildDescriptionSection(),
+                            SizedBox(height: 25.h),
+                            _buildStatusVisibility(),
+                            SizedBox(height: 25.h),
+                            _buildTradePreferences(),
+                            SizedBox(height: 30.h),
+                            _buildActionButtons(),
+                            SizedBox(height: 40.h),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                if (controller.isLoading.value)
+                  Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -110,11 +125,13 @@ class EditListingScreen extends GetView<EditListingController> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              StaticString.threeOfTenPhotos,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.6),
-                fontSize: 11.sp,
+            Obx(
+              () => Text(
+                "${controller.images.length}/10 Photos",
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.6),
+                  fontSize: 11.sp,
+                ),
               ),
             ),
           ],
@@ -122,12 +139,18 @@ class EditListingScreen extends GetView<EditListingController> {
         SizedBox(height: 15.h),
         SizedBox(
           height: 110.h,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              _buildAddPhotoButton(),
-              ...controller.images.map((img) => _buildPhotoImage(img)),
-            ],
+          child: Obx(
+            () => ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: controller.images.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return _buildAddPhotoButton();
+                }
+                final img = controller.images[index - 1];
+                return _buildPhotoImage(img, index - 1);
+              },
+            ),
           ),
         ),
       ],
@@ -135,43 +158,46 @@ class EditListingScreen extends GetView<EditListingController> {
   }
 
   Widget _buildAddPhotoButton() {
-    return CustomPaint(
-      painter: DashedRectPainter(
-        color: Colors.white.withOpacity(0.3),
-        strokeWidth: 1,
-        gap: 5,
-        borderRadius: 20.r,
-      ),
-      child: Container(
-        width: 110.w,
-        margin: EdgeInsets.only(right: 12.w),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(20.r),
+    return GestureDetector(
+      onTap: controller.pickImages,
+      child: CustomPaint(
+        painter: DashedRectPainter(
+          color: Colors.white.withOpacity(0.3),
+          strokeWidth: 1,
+          gap: 5,
+          borderRadius: 20.r,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.add_circle_outline,
-              color: Colors.white.withOpacity(0.4),
-              size: 24.sp,
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              StaticString.addPhoto,
-              style: TextStyle(
+        child: Container(
+          width: 110.w,
+          margin: EdgeInsets.only(right: 12.w),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.add_circle_outline,
                 color: Colors.white.withOpacity(0.4),
-                fontSize: 11.sp,
+                size: 24.sp,
               ),
-            ),
-          ],
+              SizedBox(height: 8.h),
+              Text(
+                StaticString.addPhoto,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.4),
+                  fontSize: 11.sp,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildPhotoImage(String url) {
+  Widget _buildPhotoImage(dynamic img, int index) {
     return Container(
       width: 110.w,
       margin: EdgeInsets.only(right: 12.w),
@@ -180,19 +206,29 @@ class EditListingScreen extends GetView<EditListingController> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20.r),
-            child: Image.network(
-              url,
-              width: 110.w,
-              height: 110.h,
-              fit: BoxFit.cover,
-            ),
+            child: img is String
+                ? Image.network(
+                    img,
+                    width: 110.w,
+                    height: 110.h,
+                    fit: BoxFit.cover,
+                  )
+                : Image.file(
+                    File(img.path),
+                    width: 110.w,
+                    height: 110.h,
+                    fit: BoxFit.cover,
+                  ),
           ),
           Positioned(
             top: -5.h,
             right: -5.w,
-            child: SvgPicture.asset(
-              'assets/icons/Delete-icons.svg',
-              width: 24.w,
+            child: GestureDetector(
+              onTap: () => controller.removeImage(index),
+              child: SvgPicture.asset(
+                'assets/icons/Delete-icons.svg',
+                width: 24.w,
+              ),
             ),
           ),
         ],
@@ -293,64 +329,78 @@ class EditListingScreen extends GetView<EditListingController> {
             ),
           ),
           SizedBox(height: 20.h),
-          Row(
-            children: [
-              _buildStatusChip(
-                StaticString.available,
-                'assets/icons/Available.svg',
-                true,
-              ),
-              SizedBox(width: 10.w),
-              _buildStatusChip(
-                StaticString.pendingTrade,
-                'assets/icons/Pending Trade.svg',
-                false,
-              ),
-            ],
+          Obx(
+            () => Row(
+              children: [
+                _buildStatusChip(
+                  StaticString.available,
+                  'assets/icons/Available.svg',
+                  controller.status.value == 'Available',
+                  onTap: () => controller.status.value = 'Available',
+                ),
+                SizedBox(width: 10.w),
+                _buildStatusChip(
+                  StaticString.pendingTrade,
+                  'assets/icons/Pending Trade.svg',
+                  controller.status.value == 'Pending Trade',
+                  onTap: () => controller.status.value = 'Pending Trade',
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 10.h),
-          _buildStatusChip(StaticString.sold, 'assets/icons/Sold.svg', false),
+          Obx(
+            () => _buildStatusChip(
+              StaticString.sold,
+              'assets/icons/Sold.svg',
+              controller.status.value == 'Sold',
+              onTap: () => controller.status.value = 'Sold',
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildStatusChip(String label, String iconPath, bool isSelected) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-      decoration: BoxDecoration(
-        color: isSelected
-            ? AppColors.cardColor.withOpacity(0.5)
-            : Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
+  Widget _buildStatusChip(String label, String iconPath, bool isSelected, {required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+        decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.accentColor
-              : Colors.white.withOpacity(0.1),
+              ? AppColors.cardColor.withOpacity(0.5)
+              : Colors.white.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(
+            color: isSelected
+                ? AppColors.accentColor
+                : Colors.white.withOpacity(0.1),
+          ),
         ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            iconPath,
-            width: 16.w,
-            colorFilter: ColorFilter.mode(
-              isSelected
-                  ? AppColors.accentColor
-                  : Colors.white.withOpacity(0.4),
-              BlendMode.srcIn,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              iconPath,
+              width: 16.w,
+              colorFilter: ColorFilter.mode(
+                isSelected
+                    ? AppColors.accentColor
+                    : Colors.white.withOpacity(0.4),
+                BlendMode.srcIn,
+              ),
             ),
-          ),
-          SizedBox(width: 8.w),
-          Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.white : Colors.white.withOpacity(0.4),
-              fontSize: 12.sp,
+            SizedBox(width: 8.w),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.white.withOpacity(0.4),
+                fontSize: 12.sp,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -475,7 +525,7 @@ class EditListingScreen extends GetView<EditListingController> {
             ),
             child: Text(
               StaticString.saveChanges,
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.white),
             ),
           ),
         ),
@@ -484,7 +534,7 @@ class EditListingScreen extends GetView<EditListingController> {
           width: double.infinity,
           height: 55.h,
           child: OutlinedButton.icon(
-            onPressed: () {},
+            onPressed: controller.confirmDelete,
             icon: SvgPicture.asset(
               'assets/icons/Delete-icons.svg',
               width: 20.w,
@@ -540,24 +590,38 @@ class EditListingScreen extends GetView<EditListingController> {
   }
 
   Widget _buildDropdownField() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
-      decoration: BoxDecoration(
-        color: AppColors.cardColor.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            controller.category.value,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.4),
-              fontSize: 14.sp,
+    return Obx(
+      () => Container(
+        padding: EdgeInsets.symmetric(horizontal: 15.w),
+        decoration: BoxDecoration(
+          color: AppColors.cardColor.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            value: controller.category.value,
+            dropdownColor: const Color(0xFF1E3A8A),
+            icon: Icon(
+              Icons.keyboard_arrow_down,
+              color: Colors.white.withOpacity(0.2),
             ),
+            isExpanded: true,
+            items: controller.categories.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
+            }).toList(),
+            onChanged: (val) {
+              if (val != null) {
+                controller.category.value = val;
+              }
+            },
           ),
-          Icon(Icons.keyboard_arrow_down, color: Colors.white.withOpacity(0.2)),
-        ],
+        ),
       ),
     );
   }

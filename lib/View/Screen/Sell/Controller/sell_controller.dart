@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import '../../../../service/api_url.dart';
 import '../../../../service/api_client.dart';
 import '../../Main/Controller/main_controller.dart';
+import '../../Profile/Controller/user_profile_controller.dart';
 
 class SellController extends GetxController {
   final titleController = TextEditingController();
@@ -28,11 +29,95 @@ class SellController extends GetxController {
   final conditions = ['New', 'Used - Like New', 'Used - Good'];
   final transactionTypes = ['Trade', 'Sell', 'Trade or Sell'];
 
-  final RxList<XFile> selectedImages = <XFile>[].obs;
-  final RxList<XFile> selectedVideos = <XFile>[].obs;
+  final RxList<dynamic> selectedImages = <dynamic>[].obs;
+  final RxList<dynamic> selectedVideos = <dynamic>[].obs;
 
   final ImagePicker _imagePicker = ImagePicker();
   final RxBool isLoading = false.obs;
+
+  bool isEditMode = false;
+  String listingId = '';
+
+  @override
+  void onInit() {
+    super.onInit();
+    final dynamic listing = Get.arguments;
+    if (listing != null && listing is Map) {
+      isEditMode = true;
+      listingId = (listing['_id'] ?? listing['id'] ?? '').toString();
+
+      titleController.text = (listing['title'] ?? '').toString();
+      descriptionController.text = (listing['description'] ?? '').toString();
+      priceController.text = (listing['price'] ?? '').toString();
+      countryController.text = (listing['country'] ?? '').toString();
+      cityController.text = (listing['city'] ?? '').toString();
+
+      // Category handling (add if custom)
+      final apiCategory = (listing['category'] ?? '').toString();
+      if (apiCategory.isNotEmpty) {
+        final matched = categories.firstWhere(
+          (c) => c.toLowerCase() == apiCategory.toLowerCase(),
+          orElse: () {
+            categories.add(apiCategory);
+            return apiCategory;
+          },
+        );
+        selectedCategory.value = matched;
+      }
+
+      // Condition mapping: 'new' -> 'New', 'like_new' -> 'Used - Like New', 'good' -> 'Used - Good'
+      final apiCondition = (listing['condition'] ?? '').toString().toLowerCase();
+      if (apiCondition == 'new') {
+        selectedCondition.value = 'New';
+      } else if (apiCondition == 'like_new') {
+        selectedCondition.value = 'Used - Like New';
+      } else if (apiCondition == 'good') {
+        selectedCondition.value = 'Used - Good';
+      }
+
+      // Transaction type mapping: 'sale' -> 'Sell', 'trade' -> 'Trade', 'sale_and_trade' -> 'Trade or Sell'
+      final apiType = (listing['listingType'] ?? '').toString().toLowerCase();
+      if (apiType == 'sale') {
+        selectedTransactionType.value = 'Sell';
+      } else if (apiType == 'trade') {
+        selectedTransactionType.value = 'Trade';
+      } else {
+        selectedTransactionType.value = 'Trade or Sell';
+      }
+
+      // Switches
+      allowTradeOffers.value = listing['isOpenToAllTrades'] == true || listing['isOpenToAllTrades']?.toString().toLowerCase() == 'true';
+      shippingAvailable.value = listing['isAvailableForShipping'] == true || listing['isAvailableForShipping']?.toString().toLowerCase() == 'true';
+      availableForPickup.value = listing['isAvailableForPickup'] == true || listing['isAvailableForPickup']?.toString().toLowerCase() == 'true';
+
+      // Images (URLs and XFiles)
+      selectedImages.clear();
+      if (listing['images'] != null && listing['images'] is List) {
+        for (var img in listing['images']) {
+          final cleaned = img.toString().replaceAll('`', '').trim();
+          if (cleaned.isNotEmpty) {
+            selectedImages.add(cleaned);
+          }
+        }
+      } else if (listing['thumbnail'] != null) {
+        final cleaned = listing['thumbnail'].toString().replaceAll('`', '').trim();
+        if (cleaned.isNotEmpty) {
+          selectedImages.add(cleaned);
+        }
+      }
+
+      // Videos
+      selectedVideos.clear();
+      if (listing['videos'] != null && listing['videos'] is List) {
+        for (var vid in listing['videos']) {
+          final cleaned = vid.toString().replaceAll('`', '').trim();
+          if (cleaned.isNotEmpty) {
+            selectedVideos.add(cleaned);
+          }
+        }
+      }
+    }
+  }
 
   @override
   void onClose() {
@@ -197,49 +282,111 @@ class SellController extends GetxController {
       List<http.MultipartFile> files = [];
 
       // Add images
-      for (var image in selectedImages) {
-        files.add(await http.MultipartFile.fromPath('images', image.path));
+      for (var img in selectedImages) {
+        if (img is String) {
+          try {
+            final response = await http.get(Uri.parse(img));
+            if (response.statusCode == 200) {
+              final uri = Uri.parse(img);
+              String fileName = uri.pathSegments.isNotEmpty ? uri.pathSegments.last : 'image.jpg';
+              files.add(http.MultipartFile.fromBytes(
+                'images',
+                response.bodyBytes,
+                filename: fileName,
+              ));
+            }
+          } catch (e) {
+            print('Error downloading image $img: $e');
+          }
+        } else if (img is XFile) {
+          files.add(await http.MultipartFile.fromPath('images', img.path));
+        }
       }
 
       // Add videos
       for (var video in selectedVideos) {
-        files.add(await http.MultipartFile.fromPath('videos', video.path));
+        if (video is String) {
+          try {
+            final response = await http.get(Uri.parse(video));
+            if (response.statusCode == 200) {
+              final uri = Uri.parse(video);
+              String fileName = uri.pathSegments.isNotEmpty ? uri.pathSegments.last : 'video.mp4';
+              files.add(http.MultipartFile.fromBytes(
+                'videos',
+                response.bodyBytes,
+                filename: fileName,
+              ));
+            }
+          } catch (e) {
+            print('Error downloading video $video: $e');
+          }
+        } else if (video is XFile) {
+          files.add(await http.MultipartFile.fromPath('videos', video.path));
+        }
       }
 
       // Add thumbnail (first image if exists)
       if (selectedImages.isNotEmpty) {
-        files.add(
-          await http.MultipartFile.fromPath(
-            'thumbnail',
-            selectedImages.first.path,
-          ),
-        );
+        final firstImg = selectedImages.first;
+        if (firstImg is String) {
+          try {
+            final response = await http.get(Uri.parse(firstImg));
+            if (response.statusCode == 200) {
+              final uri = Uri.parse(firstImg);
+              String fileName = uri.pathSegments.isNotEmpty ? uri.pathSegments.last : 'thumbnail.jpg';
+              files.add(http.MultipartFile.fromBytes(
+                'thumbnail',
+                response.bodyBytes,
+                filename: fileName,
+              ));
+            }
+          } catch (e) {
+            print('Error downloading thumbnail: $e');
+          }
+        } else if (firstImg is XFile) {
+          files.add(await http.MultipartFile.fromPath('thumbnail', firstImg.path));
+        }
       }
 
-      final response = await ApiClient.multipartPost(
-        ApiUrl.listing,
-        fields,
-        files: files,
-      );
+      final response = isEditMode
+          ? await ApiClient.multipartPatch(
+              '${ApiUrl.listing}/$listingId',
+              fields,
+              files: files,
+            )
+          : await ApiClient.multipartPost(
+              ApiUrl.listing,
+              fields,
+              files: files,
+            );
 
       final responseData = await http.Response.fromStream(response);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // Go to home screen
-        final mainController = Get.find<MainController>();
-        mainController.changeIndex(0);
+        if (Get.isRegistered<UserProfileController>()) {
+          Get.find<UserProfileController>().fetchMyListings();
+        }
+        
+        if (!isEditMode) {
+          // Go to home screen
+          final mainController = Get.find<MainController>();
+          mainController.changeIndex(0);
+        }
+        
         Get.back();
         Get.snackbar(
           'Success',
-          isDraft
-              ? 'Listing saved as draft!'
-              : 'Listing published successfully!',
+          isEditMode
+              ? 'Listing updated successfully!'
+              : isDraft
+                  ? 'Listing saved as draft!'
+                  : 'Listing published successfully!',
           snackPosition: SnackPosition.BOTTOM,
         );
       } else {
         final errorData = json.decode(responseData.body);
         Get.snackbar(
           'Error',
-          errorData['message'] ?? 'Failed to create listing',
+          errorData['message'] ?? 'Failed to process listing',
           snackPosition: SnackPosition.BOTTOM,
         );
       }
