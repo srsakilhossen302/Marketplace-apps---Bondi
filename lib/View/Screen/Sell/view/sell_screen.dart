@@ -90,7 +90,7 @@ class SellScreen extends StatelessWidget {
             ),
           ),
           Text(
-            controller.isEditMode ? 'Edit Listing' : StaticString.sellSomething,
+            controller.isEditMode ? StaticString.editListing : StaticString.sellSomething,
             style: TextStyle(
               color: Colors.white,
               fontSize: 22.sp,
@@ -379,7 +379,7 @@ class SellScreen extends StatelessWidget {
             items: controller.categories.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value, style: const TextStyle(color: Colors.white)),
+                child: Text(value.tr, style: const TextStyle(color: Colors.white)),
               );
             }).toList(),
             onChanged: controller.updateCategory,
@@ -441,7 +441,7 @@ class SellScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(25.r),
                   ),
                   child: Text(
-                    condition,
+                    condition.tr,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: isSelected
@@ -510,7 +510,7 @@ class SellScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 8.h),
                           Text(
-                            type,
+                            type.tr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: isSelected
@@ -561,8 +561,8 @@ class SellScreen extends StatelessWidget {
               ),
               Divider(color: Colors.white.withOpacity(0.1), height: 30.h),
               _buildSwitchRow(
-                "Sell Directly",
-                "Free listing, cash on pickup",
+                StaticString.sellDirectly,
+                StaticString.freeListingCashOnPickup,
                 controller.availableForPickup,
               ),
             ],
@@ -647,7 +647,7 @@ class SellScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  controller.isEditMode ? 'Save Changes' : StaticString.publishListing,
+                  controller.isEditMode ? StaticString.saveChanges : StaticString.publishListing,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,

@@ -308,4 +308,11 @@ class StaticString {
   static String get hotDrop => 'hotDrop'.tr;
   static String get grandMaster5000 => 'grandMaster5000'.tr;
   static String get grandMasterPrice => 'grandMasterPrice'.tr;
+
+  // Bottom Navigation Bar
+  static String get homeTab => 'homeTab'.tr;
+  static String get discoverTab => 'discoverTab'.tr;
+  static String get communityTab => 'communityTab'.tr;
+  static String get profileTab => 'profileTab'.tr;
+  static String get sellTab => 'sellTab'.tr;
 }

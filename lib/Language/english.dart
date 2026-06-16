@@ -280,5 +280,34 @@ const Map<String, String> english = {
   'Sneakers': 'Sneakers',
   'Accessories': 'Accessories',
   'grandMaster5000': 'Grand Master 5000',
-  'grandMasterPrice': '\$12,400.00'
+  'grandMasterPrice': '\$12,400.00',
+
+  // Categories (Sell Screen)
+  'Electronics': 'Electronics',
+  'Fashion': 'Fashion',
+  'Home': 'Home',
+  'Toys': 'Toys',
+  'Books': 'Books',
+  'Sports': 'Sports',
+  'Vehicles': 'Vehicles',
+  'Others': 'Others',
+
+  // Conditions (Sell Screen)
+  'New': 'New',
+  'Used - Like New': 'Used - Like New',
+  'Used - Good': 'Used - Good',
+
+  // Transaction Types (Sell Screen)
+  'Trade': 'Trade',
+  'Sell': 'Sell',
+  'Trade or Sell': 'Trade or Sell',
+  'sell': 'Sell',
+  'tradeOrSell': 'Trade or Sell',
+
+  // Bottom Navigation Bar
+  'homeTab': 'Home',
+  'discoverTab': 'Discover',
+  'communityTab': 'Community',
+  'profileTab': 'Profile',
+  'sellTab': 'Sell'
 };

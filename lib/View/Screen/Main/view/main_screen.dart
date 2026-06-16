@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../../Community/view/community_screen.dart';
 import '../../Discover/view/discover_screen.dart';
 import '../../Home/view/home_screen.dart';
@@ -46,11 +47,11 @@ class MainScreen extends GetView<MainController> {
         () => Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildNavItem(0, 'Home', AppIcons.home),
-            _buildNavItem(1, 'Discover', AppIcons.discover),
+            _buildNavItem(0, StaticString.homeTab, AppIcons.home),
+            _buildNavItem(1, StaticString.discoverTab, AppIcons.discover),
             _buildSellItem(),
-            _buildNavItem(3, 'community', AppIcons.community),
-            _buildNavItem(4, 'Profile', AppIcons.profile),
+            _buildNavItem(3, StaticString.communityTab, AppIcons.community),
+            _buildNavItem(4, StaticString.profileTab, AppIcons.profile),
           ],
         ),
       ),
@@ -123,7 +124,7 @@ class MainScreen extends GetView<MainController> {
           ),
           SizedBox(height: 6.h),
           Text(
-            'Sell',
+            StaticString.sellTab,
             style: TextStyle(
               color: isSelected ? AppColors.accentColor : Colors.white,
               fontSize: 12.sp,
