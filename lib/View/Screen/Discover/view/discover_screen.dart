@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Model/home_models.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../../../Widgegt/CustomCard/custom_listing_card.dart';
 import '../Controller/discover_controller.dart';
 
@@ -32,21 +33,21 @@ class DiscoverScreen extends GetView<DiscoverController> {
                     children: [
                       SizedBox(height: 20.h),
                       _buildSearchBar(),
-                      SizedBox(height: 20.h),
-                      _buildCategories(),
+                      // SizedBox(height: 20.h),
+                      // _buildCategories(),
                       SizedBox(height: 30.h),
                       _buildSectionHeader(
-                        "Trending Products",
+                        StaticString.trendingProducts,
                         showViewAll: true,
                       ),
                       SizedBox(height: 15.h),
                       _buildTrendingCard(),
                       SizedBox(height: 30.h),
-                      _buildSectionHeader("Items You May Like"),
+                      _buildSectionHeader(StaticString.itemsYouMayLike),
                       SizedBox(height: 15.h),
                       _buildItemsGrid(controller.itemsYouMayLike),
                       SizedBox(height: 30.h),
-                      _buildSectionHeader("Recommended For You"),
+                      _buildSectionHeader(StaticString.recommendedForYouHome),
                       SizedBox(height: 15.h),
                       _buildItemsGrid(controller.recommendedForYou),
                       SizedBox(height: 100.h), // Extra space for bottom bar
@@ -92,7 +93,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
         controller: controller.searchController,
         style: TextStyle(color: Colors.white, fontSize: 15.sp),
         decoration: InputDecoration(
-          hintText: 'Search Trade & more',
+          hintText: StaticString.searchTradeMore,
           hintStyle: TextStyle(
             color: Colors.white.withOpacity(0.5),
             fontSize: 15.sp,
@@ -142,7 +143,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
                   ),
                 ),
                 child: Text(
-                  cat,
+                  cat.tr,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,
@@ -175,7 +176,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
           Row(
             children: [
               Text(
-                "See all",
+                StaticString.seeAllShort,
                 style: TextStyle(
                   color: AppColors.accentColor.withOpacity(0.6),
                   fontSize: 13.sp,
@@ -233,7 +234,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
-                    "HOT DROP",
+                    StaticString.hotDrop,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 10.sp,
@@ -243,7 +244,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  "Grand Master 5000",
+                  StaticString.grandMaster5000,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18.sp,
@@ -251,7 +252,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
                   ),
                 ),
                 Text(
-                  "\$12,400.00",
+                  StaticString.grandMasterPrice,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.8),
                     fontSize: 16.sp,

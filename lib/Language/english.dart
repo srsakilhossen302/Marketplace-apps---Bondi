@@ -258,5 +258,27 @@ const Map<String, String> english = {
   'createNewGroup': 'Create New Group',
   'all': 'All',
   'electronics': 'Electronics',
-  'fashion': 'Fashion'
+  'fashion': 'Fashion',
+
+  // Community Screen
+  'communities': 'Communities',
+  'featuredCommunities': 'Featured Communities',
+  'myGroups': 'My Groups',
+  'exploreAllCommunities': 'Explore All Communities',
+  'seeAll': 'See All',
+  'members': 'Members',
+  'open': 'Open',
+  'joinCommunity': 'Join Community',
+  'loadMoreCommunities': 'Load More Communities',
+
+  // Discover Screen
+  'trendingProducts': 'Trending Products',
+  'itemsYouMayLike': 'Items You May Like',
+  'hotDrop': 'HOT DROP',
+  'All Items': 'All Items',
+  'Watches': 'Watches',
+  'Sneakers': 'Sneakers',
+  'Accessories': 'Accessories',
+  'grandMaster5000': 'Grand Master 5000',
+  'grandMasterPrice': '\$12,400.00'
 };

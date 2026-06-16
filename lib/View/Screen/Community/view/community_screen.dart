@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/community_controller.dart';
 
 class CommunityScreen extends GetView<CommunityController> {
@@ -29,15 +30,15 @@ class CommunityScreen extends GetView<CommunityController> {
                       SizedBox(height: 20.h),
                       _buildSearchBar(),
                       SizedBox(height: 30.h),
-                      _buildSectionHeader("Featured Communities", showSeeAll: true),
+                      _buildSectionHeader(StaticString.featuredCommunities, showSeeAll: true),
                       SizedBox(height: 20.h),
                       _buildFeaturedList(),
                       SizedBox(height: 30.h),
-                      _buildSectionHeader("My Groups", showSeeAll: false),
+                      _buildSectionHeader(StaticString.myGroups, showSeeAll: false),
                       SizedBox(height: 15.h),
                       _buildMyGroupsList(),
                       SizedBox(height: 30.h),
-                      _buildSectionHeader("Explore All Communities", showSeeAll: false, showIcons: true),
+                      _buildSectionHeader(StaticString.exploreAllCommunities, showSeeAll: false, showIcons: true),
                       SizedBox(height: 20.h),
                       _buildExploreList(),
                       SizedBox(height: 30.h),
@@ -79,7 +80,7 @@ class CommunityScreen extends GetView<CommunityController> {
               Column(
                 children: [
                   Text(
-                    "Communities",
+                    StaticString.communities,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 22.sp,
@@ -132,7 +133,7 @@ class CommunityScreen extends GetView<CommunityController> {
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           icon: Icon(Icons.search, color: Colors.white.withOpacity(0.6), size: 20.sp),
-          hintText: "Search Trade & more",
+          hintText: StaticString.searchTradeMore,
           hintStyle: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14.sp),
           border: InputBorder.none,
           suffixIcon: Icon(Icons.tune, color: Colors.white.withOpacity(0.6), size: 20.sp),
@@ -155,7 +156,7 @@ class CommunityScreen extends GetView<CommunityController> {
         ),
         if (showSeeAll)
           Text(
-            "See All",
+            StaticString.seeAll,
             style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp),
           ),
         if (showIcons)
@@ -271,7 +272,7 @@ class CommunityScreen extends GetView<CommunityController> {
                                 style: TextStyle(color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                "Members",
+                                StaticString.members,
                                 style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11.sp),
                               ),
                             ],
@@ -283,7 +284,7 @@ class CommunityScreen extends GetView<CommunityController> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
                               padding: EdgeInsets.symmetric(horizontal: 15.w),
                             ),
-                            child: Text("Join Group", style: TextStyle(fontSize: 12.sp,  color: Color(0xffFFFFFF))),
+                            child: Text(StaticString.joinGroup, style: TextStyle(fontSize: 12.sp,  color: Color(0xffFFFFFF))),
                           ),
                         ],
                       ),
@@ -332,7 +333,7 @@ class CommunityScreen extends GetView<CommunityController> {
                 ),
               ),
               Text(
-                "Open",
+                StaticString.open,
                 style: TextStyle(color: AppColors.accentColor, fontSize: 13.sp),
               ),
             ],
@@ -413,7 +414,7 @@ class CommunityScreen extends GetView<CommunityController> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
                         ),
                         child: Text(
-                          "Join Community",
+                          StaticString.joinCommunity,
                           style: TextStyle(color: AppColors.accentColor, fontSize: 14.sp),
                         ),
                       ),
@@ -439,7 +440,7 @@ class CommunityScreen extends GetView<CommunityController> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
         ),
         child: Text(
-          "Load More Communities",
+          StaticString.loadMoreCommunities,
           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold,  color: Color(0xffFFFFFF)),
         ),
       ),

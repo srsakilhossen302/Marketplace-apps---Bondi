@@ -275,4 +275,26 @@ const Map<String, String> portuguese = {
   'all': 'Todos',
   'electronics': 'Eletrônicos',
   'fashion': 'Moda',
+
+  // Community Screen
+  'communities': 'Comunidades',
+  'featuredCommunities': 'Comunidades em Destaque',
+  'myGroups': 'Meus Grupos',
+  'exploreAllCommunities': 'Explorar Todas as Comunidades',
+  'seeAll': 'Ver Tudo',
+  'members': 'Membros',
+  'open': 'Aberto',
+  'joinCommunity': 'Participar da Comunidade',
+  'loadMoreCommunities': 'Carregar Mais Comunidades',
+
+  // Discover Screen
+  'trendingProducts': 'Produtos em Alta',
+  'itemsYouMayLike': 'Itens que Você Pode Gostar',
+  'hotDrop': 'LANÇAMENTO QUENTE',
+  'All Items': 'Todos os Itens',
+  'Watches': 'Relógios',
+  'Sneakers': 'Tênis',
+  'Accessories': 'Acessórios',
+  'grandMaster5000': 'Grand Master 5000',
+  'grandMasterPrice': '\$12.400,00'
 };

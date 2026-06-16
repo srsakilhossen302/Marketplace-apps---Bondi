@@ -290,4 +290,22 @@ class StaticString {
   static String get all => 'all'.tr;
   static String get electronics => 'electronics'.tr;
   static String get fashion => 'fashion'.tr;
+
+  // Community Screen
+  static String get communities => 'communities'.tr;
+  static String get featuredCommunities => 'featuredCommunities'.tr;
+  static String get myGroups => 'myGroups'.tr;
+  static String get exploreAllCommunities => 'exploreAllCommunities'.tr;
+  static String get seeAll => 'seeAll'.tr;
+  static String get members => 'members'.tr;
+  static String get open => 'open'.tr;
+  static String get joinCommunity => 'joinCommunity'.tr;
+  static String get loadMoreCommunities => 'loadMoreCommunities'.tr;
+
+  // Discover Screen
+  static String get trendingProducts => 'trendingProducts'.tr;
+  static String get itemsYouMayLike => 'itemsYouMayLike'.tr;
+  static String get hotDrop => 'hotDrop'.tr;
+  static String get grandMaster5000 => 'grandMaster5000'.tr;
+  static String get grandMasterPrice => 'grandMasterPrice'.tr;
 }
