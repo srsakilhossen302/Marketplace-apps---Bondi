@@ -313,5 +313,24 @@ const Map<String, String> english = {
   'discoverTab': 'Discover',
   'communityTab': 'Community',
   'profileTab': 'Profile',
-  'sellTab': 'Sell'
+  'sellTab': 'Sell',
+
+  // Create Group Screen
+  'groupName': 'Group Name',
+  'groupDescription': 'Group Description',
+  'uploadPhoto': 'Upload Photo',
+  'enterGroupName': 'Enter group name',
+  'whatIsGroupAbout': 'What is this group about?',
+  'inviteMembers': 'INVITE MEMBERS',
+  'searchFriendsHint': 'Search friends by name...',
+  'more': 'More',
+  'createGroup': 'Create Group',
+  'groupImageRequired': 'Please select a group image',
+  'groupNameRequired': 'Please enter a group name',
+  'groupCreatedSuccessfully': 'Group created successfully!',
+  'failedToCreateGroup': 'Failed to create group',
+  'inviteFriends': 'Invite Friends',
+  'search': 'Search',
+  'cancel': 'Cancel',
+  'done': 'Done'
 };

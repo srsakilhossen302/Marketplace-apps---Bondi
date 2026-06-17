@@ -319,4 +319,23 @@ class StaticString {
   static String get communityTab => 'communityTab'.tr;
   static String get profileTab => 'profileTab'.tr;
   static String get sellTab => 'sellTab'.tr;
+
+  // Create Group Screen
+  static String get groupName => 'groupName'.tr;
+  static String get groupDescription => 'groupDescription'.tr;
+  static String get uploadPhoto => 'uploadPhoto'.tr;
+  static String get enterGroupName => 'enterGroupName'.tr;
+  static String get whatIsGroupAbout => 'whatIsGroupAbout'.tr;
+  static String get inviteMembers => 'inviteMembers'.tr;
+  static String get searchFriendsHint => 'searchFriendsHint'.tr;
+  static String get more => 'more'.tr;
+  static String get createGroup => 'createGroup'.tr;
+  static String get groupImageRequired => 'groupImageRequired'.tr;
+  static String get groupNameRequired => 'groupNameRequired'.tr;
+  static String get groupCreatedSuccessfully => 'groupCreatedSuccessfully'.tr;
+  static String get failedToCreateGroup => 'failedToCreateGroup'.tr;
+  static String get inviteFriends => 'inviteFriends'.tr;
+  static String get search => 'search'.tr;
+  static String get cancel => 'cancel'.tr;
+  static String get done => 'done'.tr;
 }

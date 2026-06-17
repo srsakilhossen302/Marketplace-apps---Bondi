@@ -1,9 +1,10 @@
-import 'dart:ui';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/create_group_controller.dart';
 
 class CreateGroupScreen extends GetView<CreateGroupController> {
@@ -36,6 +37,8 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
                       _buildMainInfoCard(),
                       SizedBox(height: 25.h),
                       _buildInviteSection(),
+                      SizedBox(height: 35.h),
+                      _buildCreateButton(),
                       SizedBox(height: 40.h),
                     ],
                   ),
@@ -66,7 +69,7 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
             ),
           ),
           Text(
-            "Create New Group",
+            StaticString.createNewGroup,
             style: TextStyle(
               color: Colors.white,
               fontSize: 22.sp,
@@ -91,22 +94,43 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
       child: Column(
         children: [
           // Upload Photo Section
-          Column(
-            children: [
-              SvgPicture.asset(
-                'assets/icons/cemra icons.svg',
-                width: 100.w,
-                height: 100.h,
-              ),
-              SizedBox(height: 12.h),
-              Text(
-                "Upload Photo",
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.6),
-                  fontSize: 14.sp,
+          GestureDetector(
+            onTap: () => controller.pickGroupImage(),
+            behavior: HitTestBehavior.opaque,
+            child: Column(
+              children: [
+                Obx(() {
+                  final file = controller.selectedImage.value;
+                  if (file != null) {
+                    return Container(
+                      width: 100.w,
+                      height: 100.h,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: FileImage(file),
+                          fit: BoxFit.cover,
+                        ),
+                        border: Border.all(color: AppColors.accentColor, width: 2.w),
+                      ),
+                    );
+                  }
+                  return SvgPicture.asset(
+                    'assets/icons/cemra icons.svg',
+                    width: 100.w,
+                    height: 100.h,
+                  );
+                }),
+                SizedBox(height: 12.h),
+                Text(
+                  StaticString.uploadPhoto,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.6),
+                    fontSize: 14.sp,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           SizedBox(height: 35.h),
           // Input Fields Section
@@ -114,23 +138,23 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Group Name",
+                StaticString.groupName,
                 style: TextStyle(color: Colors.white, fontSize: 14.sp),
               ),
               SizedBox(height: 12.h),
               _buildTextField(
                 controller: controller.groupNameController,
-                hint: "Enter group name",
+                hint: StaticString.enterGroupName,
               ),
               SizedBox(height: 25.h),
               Text(
-                "Group Description",
+                StaticString.groupDescription,
                 style: TextStyle(color: Colors.white, fontSize: 14.sp),
               ),
               SizedBox(height: 12.h),
               _buildTextField(
                 controller: controller.groupDescriptionController,
-                hint: "What is this group about?",
+                hint: StaticString.whatIsGroupAbout,
                 maxLines: 4,
               ),
             ],
@@ -179,7 +203,7 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "INVITE MEMBERS",
+            StaticString.inviteMembers,
             style: TextStyle(
               color: Colors.white.withOpacity(0.6),
               fontSize: 12.sp,
@@ -198,7 +222,7 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
               controller: controller.searchFriendsController,
               style: TextStyle(color: Colors.white, fontSize: 14.sp),
               decoration: InputDecoration(
-                hintText: "Search friends by name...",
+                hintText: StaticString.searchFriendsHint,
                 hintStyle: TextStyle(
                   color: Colors.white.withOpacity(0.4),
                   fontSize: 14.sp,
@@ -213,9 +237,12 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
           ),
           SizedBox(height: 25.h),
           Obx(
-            () => Row(
+            () => Wrap(
+              spacing: 15.w,
+              runSpacing: 15.h,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                ...controller.invitedMembers.map(
+                ...controller.invitedFriendsList.take(5).map(
                   (member) => _buildMemberAvatar(member),
                 ),
                 _buildAddMoreButton(),
@@ -228,17 +255,22 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
   }
 
   Widget _buildMemberAvatar(Map<String, String> member) {
-    return Padding(
-      padding: EdgeInsets.only(right: 15.w),
+    final img = member['image'] ?? '';
+    final name = member['name'] ?? 'User';
+    return SizedBox(
+      width: 50.w,
       child: Column(
         children: [
           CircleAvatar(
             radius: 25.r,
-            backgroundImage: NetworkImage(member['image']!),
+            backgroundImage: NetworkImage(img.isNotEmpty ? img : 'https://i.pravatar.cc/150?u=$name'),
           ),
           SizedBox(height: 8.h),
           Text(
-            member['name']!,
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white.withOpacity(0.6),
               fontSize: 11.sp,
@@ -265,14 +297,59 @@ class CreateGroupScreen extends GetView<CreateGroupController> {
           ),
         ),
         SizedBox(height: 8.h),
-        Text(
-          "More",
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.6),
-            fontSize: 11.sp,
-          ),
-        ),
+        Obx(() {
+          final count = controller.invitedFriendsList.length;
+          final label = count > 5 ? '+${count - 5} ${StaticString.more}' : StaticString.more;
+          return Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.6),
+              fontSize: 11.sp,
+            ),
+          );
+        }),
       ],
     );
+  }
+
+  Widget _buildCreateButton() {
+    return Obx(() {
+      final isSubmitting = controller.isSubmitting.value;
+      return SizedBox(
+        width: double.infinity,
+        height: 55.h,
+        child: ElevatedButton(
+          onPressed: isSubmitting ? null : () => controller.createGroup(),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.buttonColor,
+            disabledBackgroundColor: AppColors.buttonColor.withOpacity(0.5),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(28.r),
+            ),
+          ),
+          child: isSubmitting
+              ? const CircularProgressIndicator(color: Colors.white)
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      StaticString.createGroup,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    Icon(
+                      Icons.arrow_forward,
+                      size: 20.sp,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+        ),
+      );
+    });
   }
 }

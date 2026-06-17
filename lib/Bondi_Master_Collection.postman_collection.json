@@ -1,0 +1,4124 @@
+{
+    "info": {
+        "_postman_id": "c1f77d33-4f8a-4a6c-9011-8dfc0a2cb1c0",
+        "name": "Bondi Master API Collection",
+        "description": "Unified API collection for Bondi Mobile App (Flutter/React Native) and Admin Dashboard (Web/Next.js). Organized for production-grade development.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{ACCESS_TOKEN}}",
+                "type": "string"
+            }
+        ]
+    },
+    "event": [
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    "const response = pm.response.json();",
+                    "if (response?.accessToken) {",
+                    "  pm.collectionVariables.set(\"ACCESS_TOKEN\", response.accessToken);",
+                    "}",
+                    "if (response?.refreshToken) {",
+                    "  pm.collectionVariables.set(\"REFRESH_TOKEN\", response.refreshToken);",
+                    "}",
+                    "if (response?.data?.accessToken) {",
+                    "  pm.collectionVariables.set(\"ACCESS_TOKEN\", response.data.accessToken);",
+                    "}",
+                    "if (response?.data?.refreshToken) {",
+                    "  pm.collectionVariables.set(\"REFRESH_TOKEN\", response.data.refreshToken);",
+                    "}",
+                    "if (pm.response.code === 401 && pm.collectionVariables.get(\"REFRESH_TOKEN\")) {",
+                    "  console.log(\"Access token expired. Requesting refresh...\");",
+                    "  const baseUrl = pm.collectionVariables.get(\"BASE_URL\");",
+                    "  pm.sendRequest({",
+                    "    url: `${baseUrl}/auth/refresh-token`,",
+                    "    method: 'POST',",
+                    "    header: { 'Content-Type': 'application/json' },",
+                    "    body: {",
+                    "      mode: 'raw',",
+                    "      raw: JSON.stringify({ refreshToken: pm.collectionVariables.get(\"REFRESH_TOKEN\") })",
+                    "    }",
+                    "  }, function (err, res) {",
+                    "    if (!err && res.code === 200) {",
+                    "      const data = res.json();",
+                    "      if (data?.data?.accessToken) {",
+                    "        pm.collectionVariables.set(\"ACCESS_TOKEN\", data.data.accessToken);",
+                    "        console.log(\"Token refreshed. Retrying original request...\");",
+                    "        const retryReq = pm.request;",
+                    "        retryReq.headers.add({ key: 'Authorization', value: `Bearer ${data.data.accessToken}` });",
+                    "        pm.sendRequest(retryReq, function(retryErr, retryRes) {});",
+                    "      }",
+                    "    }",
+                    "  });",
+                    "}"
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "BASE_URL",
+            "value": "http://localhost:5000/api/v1",
+            "type": "string"
+        },
+        {
+            "key": "ACCESS_TOKEN",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "REFRESH_TOKEN",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "USER_1_EMAIL",
+            "value": "buyer@bondi.com",
+            "type": "string"
+        },
+        {
+            "key": "USER_1_PASSWORD",
+            "value": "Password123!",
+            "type": "string"
+        },
+        {
+            "key": "USER_2_EMAIL",
+            "value": "seller@bondi.com",
+            "type": "string"
+        },
+        {
+            "key": "USER_2_PASSWORD",
+            "value": "Password123!",
+            "type": "string"
+        },
+        {
+            "key": "ADMIN_EMAIL",
+            "value": "admin@bondi.com",
+            "type": "string"
+        },
+        {
+            "key": "ADMIN_PASSWORD",
+            "value": "Password123!",
+            "type": "string"
+        },
+        {
+            "key": "USER_1_ID",
+            "value": "6a275b7d1354990e455b3b90",
+            "type": "string"
+        },
+        {
+            "key": "USER_2_ID",
+            "value": "6a275b7d1354990e455b3b9a",
+            "type": "string"
+        },
+        {
+            "key": "LISTING_ID",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "TRADE_ID",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "CONVERSATION_ID",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "SESSION_ID",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "REVIEW_ID",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "NOTIFICATION_ID",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "REPORT_ID",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "REQUEST_ID",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "📱 Mobile App (Flutter / React Native)",
+            "item": [
+                {
+                    "name": "01 Authentication",
+                    "item": [
+                        {
+                            "name": "Register",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"fullName\": \"Jane Doe\",\n  \"username\": \"janedoe\",\n  \"email\": \"{{USER_1_EMAIL}}\",\n  \"password\": \"{{USER_1_PASSWORD}}\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/register",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "register"
+                                    ]
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "Registration Success",
+                                    "status": "Created",
+                                    "code": 201,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n  \"success\": true,\n  \"message\": \"User registered successfully. Please verify your email.\",\n  \"data\": {\n    \"_id\": \"60d5ecb8627b4f53580e5101\",\n    \"name\": \"Jane Doe\",\n    \"username\": \"janedoe\",\n    \"email\": \"buyer@bondi.com\",\n    \"isEmailVerified\": false\n  }\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Verify Email OTP",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"email\": \"{{USER_1_EMAIL}}\",\n  \"otp\": \"123456\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/verify-otp",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "verify-otp"
+                                    ]
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "OTP Verification Success",
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n  \"success\": true,\n  \"message\": \"Email verified successfully\",\n  \"data\": null\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Resend OTP",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"email\": \"{{USER_1_EMAIL}}\",\n  \"type\": \"email_verification\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/resend-otp",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "resend-otp"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Forgot Password",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"email\": \"{{USER_1_EMAIL}}\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/forgot-password",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "forgot-password"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Reset Password",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"email\": \"{{USER_1_EMAIL}}\",\n  \"otp\": \"123456\",\n  \"newPassword\": \"NewPassword123!\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/reset-password",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "reset-password"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Login",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"email\": \"{{USER_1_EMAIL}}\",\n  \"password\": \"{{USER_1_PASSWORD}}\",\n  \"deviceId\": \"postman_device_1\",\n  \"deviceType\": \"desktop\",\n  \"platform\": \"postman\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/login",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "login"
+                                    ]
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "Login Success",
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n  \"success\": true,\n  \"message\": \"User logged in successfully\",\n  \"data\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n      \"_id\": \"60d5ecb8627b4f53580e5101\",\n      \"name\": \"Jane Doe\",\n      \"email\": \"buyer@bondi.com\",\n      \"role\": \"USER\"\n    }\n  }\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Refresh Token",
+                            "request": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"refreshToken\": \"{{REFRESH_TOKEN}}\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/refresh-token",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "refresh-token"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Logout",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/logout",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "logout"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Change Password",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"currentPassword\": \"{{USER_1_PASSWORD}}\",\n  \"newPassword\": \"NewPassword123!\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/change-password",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "change-password"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Me (Auth)",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/me",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "me"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Sessions",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/sessions",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "sessions"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Session",
+                            "request": {
+                                "method": "DELETE",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/session/{{SESSION_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "session",
+                                        "{{SESSION_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "02 Profile",
+                    "item": [
+                        {
+                            "name": "Get My Profile",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/profile/me",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "profile",
+                                        "me"
+                                    ]
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "Profile Retrieval Success",
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n  \"success\": true,\n  \"message\": \"Profile retrieved successfully\",\n  \"data\": {\n    \"_id\": \"60d5ecb8627b4f53580e5101\",\n    \"name\": \"Jane Doe\",\n    \"username\": \"janedoe\",\n    \"email\": \"buyer@bondi.com\",\n    \"bio\": \"Collector and trader of retro items.\",\n    \"avatar\": \"https://res.cloudinary.com/...\",\n    \"rating\": 4.8\n  }\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Update Profile",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "bio",
+                                            "value": "Collector and trader of retro items.",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "profileImage",
+                                            "type": "file",
+                                            "src": []
+                                        }
+                                    ]
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/profile/update",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "profile",
+                                        "update"
+                                    ]
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "Profile Update Success",
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n  \"success\": true,\n  \"message\": \"Profile updated successfully\",\n  \"data\": {\n    \"_id\": \"60d5ecb8627b4f53580e5101\",\n    \"bio\": \"Collector and trader of retro items.\"\n  }\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Search Profiles",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/profile/search?q=jane",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "profile",
+                                        "search"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "q",
+                                            "value": "jane"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Public Profile by User ID",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/profile/user/{{USER_2_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "profile",
+                                        "user",
+                                        "{{USER_2_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Public Profile by Username",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/profile/janedoe",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "profile",
+                                        "janedoe"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get me",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/user/me",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "user",
+                                        "me"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "03 Social",
+                    "item": [
+                        {
+                            "name": "Send Friend Request",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"recipientId\": \"{{USER_2_ID}}\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/friend-request",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "friend-request"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Accept Request",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/accept-request/{{REQUEST_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "accept-request",
+                                        "{{REQUEST_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Block User",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/block-user/{{USER_2_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "block-user",
+                                        "{{USER_2_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Reject Request",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/reject-request/{{REQUEST_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "reject-request",
+                                        "{{REQUEST_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Cancel Request",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/cancel-request/{{REQUEST_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "cancel-request",
+                                        "{{REQUEST_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Remove Friend",
+                            "request": {
+                                "method": "DELETE",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/remove-friend/{{USER_2_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "remove-friend",
+                                        "{{USER_2_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Unblock User",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/unblock-user/{{USER_2_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "unblock-user",
+                                        "{{USER_2_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Friends List",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/friends",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "friends"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Pending Requests",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/pending-requests",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "pending-requests"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Sent Requests",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/sent-requests",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "sent-requests"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Blocked Users",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/blocked-users",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "blocked-users"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Mutual Friends",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/mutual/{{USER_2_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "mutual",
+                                        "{{USER_2_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Sync Contacts",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/sync-contacts",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "sync-contacts"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"contacts\": [\n    \"+8801700000000\",\n    \"01800000000\"\n  ]\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Recommendations",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/social/recommendations",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "social",
+                                        "recommendations"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "04 Listings",
+                    "item": [
+                        {
+                            "name": "Create Listing",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "title",
+                                            "value": "Air Jordan Retro 4",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "description",
+                                            "value": "Brand new size 10 retro kicks.",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "price",
+                                            "value": "250",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "category",
+                                            "value": "sneakers",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "listingType",
+                                            "value": "sale_and_trade",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "visibility",
+                                            "value": "public",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "country",
+                                            "value": "Bangladesh",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "city",
+                                            "value": "Dhaka",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "thumbnail",
+                                            "type": "file",
+                                            "src": []
+                                        },
+                                        {
+                                            "key": "images",
+                                            "type": "file",
+                                            "src": []
+                                        }
+                                    ]
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/listing",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "listing"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Listing",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "price",
+                                            "value": "240",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "thumbnail",
+                                            "type": "file",
+                                            "src": []
+                                        },
+                                        {
+                                            "key": "images",
+                                            "type": "file",
+                                            "src": []
+                                        }
+                                    ]
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/listing/{{LISTING_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "listing",
+                                        "{{LISTING_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Public Listings Feed",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/listing",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "listing"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get My Listings",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/listing/me",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "listing",
+                                        "me"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Seller Listings",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/listing/seller/{{USER_2_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "listing",
+                                        "seller",
+                                        "{{USER_2_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Listing by Slug",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/listing/air-jordan-retro-4",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "listing",
+                                        "air-jordan-retro-4"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Listing",
+                            "request": {
+                                "method": "DELETE",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/listing/{{LISTING_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "listing",
+                                        "{{LISTING_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Archive Listing",
+                            "request": {
+                                "method": "PATCH",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/listing/archive/{{LISTING_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "listing",
+                                        "archive",
+                                        "{{LISTING_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "05 Search & Discovery",
+                    "item": [
+                        {
+                            "name": "Search Listings",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/search?q=Jordan&sortBy=createdAt&sortOrder=desc",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "search"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "q",
+                                            "value": "Jordan"
+                                        },
+                                        {
+                                            "key": "sortBy",
+                                            "value": "createdAt",
+                                            "description": "Field to sort by"
+                                        },
+                                        {
+                                            "key": "sortOrder",
+                                            "value": "desc",
+                                            "description": "Sort direction (asc, desc, dsc)"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Discovery Home",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/discovery/feed?sortBy=createdAt&sortOrder=desc",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "discovery",
+                                        "feed"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "sortBy",
+                                            "value": "createdAt",
+                                            "description": "Field to sort by"
+                                        },
+                                        {
+                                            "key": "sortOrder",
+                                            "value": "desc",
+                                            "description": "Sort direction (asc, desc, dsc)"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Search Sellers",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/search/sellers?q=jane",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "search",
+                                        "sellers"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "q",
+                                            "value": "jane"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Discovery Home Feed",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/discovery/home",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "discovery",
+                                        "home"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Discovery Featured",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/discovery/featured",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "discovery",
+                                        "featured"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Discovery Trending",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/discovery/trending",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "discovery",
+                                        "trending"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Discovery Explore",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/discovery/explore",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "discovery",
+                                        "explore"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Discovery Category",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/discovery/category/sneakers",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "discovery",
+                                        "category",
+                                        "sneakers"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get listings",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/search/listings",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "search",
+                                        "listings"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get category :category",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/discovery/category/sneakers",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "discovery",
+                                        "category",
+                                        "sneakers"
+                                    ],
+                                    "variable": [
+                                        {
+                                            "key": "category",
+                                            "value": "value_here"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "06 Wishlist",
+                    "item": [
+                        {
+                            "name": "Toggle Wishlist",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/wishlist/{{LISTING_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "wishlist",
+                                        "{{LISTING_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Remove Wishlist",
+                            "request": {
+                                "method": "DELETE",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/wishlist/{{LISTING_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "wishlist",
+                                        "{{LISTING_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get My Wishlist",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/wishlist/me",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "wishlist",
+                                        "me"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Check Wishlist Status",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/wishlist/check/{{LISTING_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "wishlist",
+                                        "check",
+                                        "{{LISTING_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "07 Trade Engine",
+                    "item": [
+                        {
+                            "name": "Create Offer",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"receiverId\": \"{{USER_2_ID}}\",\n  \"requesterListingId\": \"{{LISTING_ID}}\",\n  \"receiverListingId\": \"{{LISTING_ID}}\",\n  \"tradeType\": \"trade_plus_cash\",\n  \"offeredCashAmount\": 50\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/trade",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "trade"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Accept Trade",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/trade/accept/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "trade",
+                                        "accept",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Cancel Trade",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/trade/cancel/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "trade",
+                                        "cancel",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Counter Offer",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"offeredCashAmount\": 30,\n  \"message\": \"Counter offer: 30 extra cash\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/trade/counter/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "trade",
+                                        "counter",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Reject Trade",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/trade/reject/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "trade",
+                                        "reject",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Complete Trade",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/trade/complete/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "trade",
+                                        "complete",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Sent Offers",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/trade/sent",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "trade",
+                                        "sent"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Received Offers",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/trade/received",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "trade",
+                                        "received"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Trade History",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/trade/history",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "trade",
+                                        "history"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Trade Details",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/trade/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "trade",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get ",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/order",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "order"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "08 Payment & Escrow",
+                    "item": [
+                        {
+                            "name": "Create Payment Intent",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"provider\": \"stripe\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/payment/create-intent/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "payment",
+                                        "create-intent",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Verify Payment",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"payload\": {\n    \"providerTransactionId\": \"ch_test123\"\n  }\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/payment/verify/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "payment",
+                                        "verify",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get My Payments",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/payment/me",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "payment",
+                                        "me"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Trade Payment Details",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/payment/trade/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "payment",
+                                        "trade",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "09 Reviews",
+                    "item": [
+                        {
+                            "name": "Create Review",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"tradeId\": \"{{TRADE_ID}}\",\n  \"rating\": 5,\n  \"reviewText\": \"A+ transaction! Speedy delivery.\",\n  \"reviewTags\": [\"friendly\", \"fast_response\", \"trusted\"]\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/review",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "review"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Edit Review",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"rating\": 4,\n  \"reviewText\": \"Updated review text here.\",\n  \"reviewTags\": [\n    \"trusted\"\n  ]\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/review/{{REVIEW_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "review",
+                                        "{{REVIEW_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Review",
+                            "request": {
+                                "method": "DELETE",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/review/{{REVIEW_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "review",
+                                        "{{REVIEW_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get My Reviews",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/review/me",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "review",
+                                        "me"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get User Reviews",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/review/user/{{USER_2_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "review",
+                                        "user",
+                                        "{{USER_2_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Trade Reviews",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/review/trade/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "review",
+                                        "trade",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "10 Chat & Socket",
+                    "item": [
+                        {
+                            "name": "Create Conversation",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"recipientId\": \"{{USER_2_ID}}\",\n  \"conversationType\": \"direct\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/conversation",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "conversation"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Send Message",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "conversationId",
+                                            "value": "{{CONVERSATION_ID}}",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "text",
+                                            "value": "Hey, let's meet up for the trade!",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "media",
+                                            "type": "file",
+                                            "src": []
+                                        }
+                                    ]
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/message/send",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "message",
+                                        "send"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get My Conversations",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/conversation",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "conversation"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Conversation Details",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/conversation/{{CONVERSATION_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "conversation",
+                                        "{{CONVERSATION_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Mark Messages as Seen",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/message/seen/{{CONVERSATION_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "message",
+                                        "seen",
+                                        "{{CONVERSATION_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Messages",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/message/{{CONVERSATION_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "message",
+                                        "{{CONVERSATION_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Chat System Info",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/conversation/info",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "conversation",
+                                        "info"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Message For Me",
+                            "request": {
+                                "method": "DELETE",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/message/{{MESSAGE_ID}}/me",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "message",
+                                        "{{MESSAGE_ID}}",
+                                        "me"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Message For All",
+                            "request": {
+                                "method": "DELETE",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/message/{{MESSAGE_ID}}/all",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "message",
+                                        "{{MESSAGE_ID}}",
+                                        "all"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "11 Notifications",
+                    "item": [
+                        {
+                            "name": "Get Notifications",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/notification",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "notification"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Unread Count",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/notification/unread-count",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "notification",
+                                        "unread-count"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Mark All as Read",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/notification/read-all",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "notification",
+                                        "read-all"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Notification Settings",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/notification/settings",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "notification",
+                                        "settings"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Notification Settings",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"pushEnabled\": true,\n  \"emailEnabled\": false\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/notification/settings",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "notification",
+                                        "settings"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Mark Notification as Read",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/notification/read/{{NOTIFICATION_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "notification",
+                                        "read",
+                                        "{{NOTIFICATION_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Notification",
+                            "request": {
+                                "method": "DELETE",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/notification/{{NOTIFICATION_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "notification",
+                                        "{{NOTIFICATION_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "12 Moderation (User Side)",
+                    "item": [
+                        {
+                            "name": "Report Listing",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"targetUserId\": \"{{USER_2_ID}}\",\n  \"targetListingId\": \"{{LISTING_ID}}\",\n  \"reportType\": \"listing\",\n  \"reason\": \"scam\",\n  \"description\": \"Fake listing trying to charge shipping fees outside the app.\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/moderation/report",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "moderation",
+                                        "report"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Reports (Staff)",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/moderation/reports",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "moderation",
+                                        "reports"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Report Details",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/moderation/report/{{REPORT_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "moderation",
+                                        "report",
+                                        "{{REPORT_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Review Report",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"status\": \"resolved\",\n  \"resolutionNote\": \"Verified scam. Listing removed.\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/moderation/review/{{REPORT_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "moderation",
+                                        "review",
+                                        "{{REPORT_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Apply Moderation Action",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"targetUserId\": \"{{USER_2_ID}}\",\n  \"actionType\": \"warning\",\n  \"reason\": \"Policy violation\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/moderation/action",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "moderation",
+                                        "action"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Moderation History",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/moderation/history/{{USER_2_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "moderation",
+                                        "history",
+                                        "{{USER_2_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "13 Community",
+                    "item": [
+                        {
+                            "name": "Get ",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/community",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "community"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get details :idOrSlug",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/community/details/{{COMMUNITY_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "community",
+                                        "details",
+                                        "{{COMMUNITY_ID}}"
+                                    ],
+                                    "variable": [
+                                        {
+                                            "key": "idOrSlug",
+                                            "value": "value_here"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get members :communityId",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/community/members/{{COMMUNITY_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "community",
+                                        "members",
+                                        "{{COMMUNITY_ID}}"
+                                    ],
+                                    "variable": [
+                                        {
+                                            "key": "communityId",
+                                            "value": "value_here"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create/Action ",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/community",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "community"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get my-communities",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/community/my-communities",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "community",
+                                        "my-communities"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create/Action join :communityId",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/community/join/{{COMMUNITY_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "community",
+                                        "join",
+                                        "{{COMMUNITY_ID}}"
+                                    ],
+                                    "variable": [
+                                        {
+                                            "key": "communityId",
+                                            "value": "value_here"
+                                        }
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create/Action leave :communityId",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/community/leave/{{COMMUNITY_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "community",
+                                        "leave",
+                                        "{{COMMUNITY_ID}}"
+                                    ],
+                                    "variable": [
+                                        {
+                                            "key": "communityId",
+                                            "value": "value_here"
+                                        }
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "14 Referral",
+                    "item": [
+                        {
+                            "name": "Create/Action invite",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/referral/invite",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "referral",
+                                        "invite"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get stats",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/referral/stats",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "referral",
+                                        "stats"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "🔧 Admin Dashboard (Web / Next.js)",
+            "item": [
+                {
+                    "name": "01 Admin Auth",
+                    "item": [
+                        {
+                            "name": "Admin Login",
+                            "request": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"email\": \"{{ADMIN_EMAIL}}\",\n  \"password\": \"{{ADMIN_PASSWORD}}\",\n  \"deviceId\": \"postman_admin_device\",\n  \"deviceType\": \"desktop\",\n  \"platform\": \"postman\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/auth/login",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "login"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "02 Dashboard",
+                    "item": [
+                        {
+                            "name": "Dashboard Overview",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/dashboard",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "dashboard"
+                                    ]
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "Dashboard Data Success",
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n  \"success\": true,\n  \"data\": {\n    \"stats\": {\n      \"totalUsers\": 1250,\n      \"activeListings\": 450,\n      \"pendingReports\": 12,\n      \"dailyRevenue\": 2500\n    },\n    \"recentActivity\": [\n      { \"type\": \"new_user\", \"message\": \"User 'janedoe' joined\" },\n      { \"type\": \"report\", \"message\": \"Listing #456 reported for scam\" }\n    ]\n  }\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Analytics",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/analytics?period=daily",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "analytics"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "period",
+                                            "value": "daily"
+                                        }
+                                    ]
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "Analytics Data Success",
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n  \"success\": true,\n  \"data\": {\n    \"period\": \"daily\",\n    \"revenue\": [1200, 1500, 1100, 2500, 1800],\n    \"growth\": \"+15%\"\n  }\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "System Health",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/system-health",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "system-health"
+                                    ]
+                                }
+                            },
+                            "response": [
+                                {
+                                    "name": "System Health Success",
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n  \"success\": true,\n  \"data\": {\n    \"status\": \"healthy\",\n    \"database\": \"connected\",\n    \"redis\": \"connected\",\n    \"uptime\": \"48h 12m\"\n  }\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Get Dashboard Overview Metrics",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/dashboard",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "dashboard"
+                                    ]
+                                },
+                                "description": "Retrieve overview statistics, subscriptions, revenue, and community status metrics for the admin panel."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Get ",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/analytics",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "analytics"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "03 User Management",
+                    "item": [
+                        {
+                            "name": "Get All Users",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/users?page=1&limit=20",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "users"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "20"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get User Details",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/user/{{USER_1_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "user",
+                                        "{{USER_1_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Warn User",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"reason\": \"Violation of community guidelines\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/user/warn/{{USER_1_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "user",
+                                        "warn",
+                                        "{{USER_1_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Suspend User",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"reason\": \"Repeated low-quality listing violations\",\n  \"durationDays\": 3\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/user/suspend/{{USER_1_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "user",
+                                        "suspend",
+                                        "{{USER_1_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Ban User",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"reason\": \"Fraudulent escrow bypass attempt\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/user/ban/{{USER_1_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "user",
+                                        "ban",
+                                        "{{USER_1_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Unban User",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"reason\": \"Appeal accepted, user agreed to follow rules\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/user/unban/{{USER_1_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "user",
+                                        "unban",
+                                        "{{USER_1_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "04 Listing Moderation",
+                    "item": [
+                        {
+                            "name": "Get All Listings",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/listings?page=1&limit=20",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "listings"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "20"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Listing Details",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/listing/{{LISTING_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "listing",
+                                        "{{LISTING_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Feature Listing",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"isFeatured\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/listing/feature/{{LISTING_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "listing",
+                                        "feature",
+                                        "{{LISTING_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Remove Listing",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"reason\": \"Counterfeit items listing violation\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/listing/remove/{{LISTING_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "listing",
+                                        "remove",
+                                        "{{LISTING_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Restore Listing",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"reason\": \"Item verified genuine after review\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/listing/restore/{{LISTING_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "listing",
+                                        "restore",
+                                        "{{LISTING_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "05 Moderation Queue",
+                    "item": [
+                        {
+                            "name": "Get Reports",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/moderation/reports",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "moderation",
+                                        "reports"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "06 Trade Management",
+                    "item": [
+                        {
+                            "name": "Get All Trades",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/trades?page=1&limit=20",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "trades"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "20"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Trade Details",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/trade/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "trade",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Trade Freeze",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"reason\": \"Investigating buyer claim of empty box delivery\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/trade/freeze/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "trade",
+                                        "freeze",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Trade Release",
+                            "request": {
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"reason\": \"Investigation completed, released freeze\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/trade/release/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "trade",
+                                        "release",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "07 Escrow Management",
+                    "item": [
+                        {
+                            "name": "Release Escrow",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/payment/release/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "payment",
+                                        "release",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Refund Escrow",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/payment/refund/{{TRADE_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "payment",
+                                        "refund",
+                                        "{{TRADE_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "08 Global Search",
+                    "item": [
+                        {
+                            "name": "Search Users",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/search?q=jane&type=users&sortBy=createdAt&sortOrder=desc",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "search"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "q",
+                                            "value": "jane"
+                                        },
+                                        {
+                                            "key": "type",
+                                            "value": "users"
+                                        },
+                                        {
+                                            "key": "sortBy",
+                                            "value": "createdAt",
+                                            "description": "Field to sort by"
+                                        },
+                                        {
+                                            "key": "sortOrder",
+                                            "value": "desc",
+                                            "description": "Sort direction (asc, desc, dsc)"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Search Listings",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/search?q=retro&type=listings&sortBy=createdAt&sortOrder=desc",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "search"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "q",
+                                            "value": "retro"
+                                        },
+                                        {
+                                            "key": "type",
+                                            "value": "listings"
+                                        },
+                                        {
+                                            "key": "sortBy",
+                                            "value": "createdAt",
+                                            "description": "Field to sort by"
+                                        },
+                                        {
+                                            "key": "sortOrder",
+                                            "value": "desc",
+                                            "description": "Sort direction (asc, desc, dsc)"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "09 RBAC Testing",
+                    "item": [
+                        {
+                            "name": "SUPPORT_AGENT Restrictions",
+                            "request": {
+                                "method": "GET",
+                                "description": "Test access restriction of support agents to system health (Forbidden).",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/system-health",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "system-health"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "10 Chat Moderation",
+                    "item": [
+                        {
+                            "name": "Get All Conversations",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/conversations",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "conversations"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Conversation Messages",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/messages/{{CONVERSATION_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "messages",
+                                        "{{CONVERSATION_ID}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "11 Group Management",
+                    "item": [
+                        {
+                            "name": "Get Groups",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/groups?page=1&limit=10&status=active&search=retro&sortBy=createdAt&sortOrder=desc",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "groups"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "10"
+                                        },
+                                        {
+                                            "key": "status",
+                                            "value": "active",
+                                            "disabled": true
+                                        },
+                                        {
+                                            "key": "search",
+                                            "value": "retro",
+                                            "disabled": true
+                                        },
+                                        {
+                                            "key": "sortBy",
+                                            "value": "createdAt",
+                                            "description": "Field to sort by"
+                                        },
+                                        {
+                                            "key": "sortOrder",
+                                            "value": "desc",
+                                            "description": "Sort direction (asc, desc, dsc)"
+                                        }
+                                    ]
+                                },
+                                "description": "Get paginated groups list with optional search and status filter."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Update Group Status",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"status\": \"inactive\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/group/status/{{GROUP_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "group",
+                                        "status",
+                                        "{{GROUP_ID}}"
+                                    ]
+                                },
+                                "description": "Approve, pending, or suspend community groups."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Create Group",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"Retro Consoles Collectors\",\n  \"description\": \"A group for vintage hardware collectors.\",\n  \"category\": \"Hardware\",\n  \"isPrivate\": false\n}"
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/admin/groups",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "admin",
+                                        "groups"
+                                    ]
+                                },
+                                "description": "Create a new community group directly as admin."
+                            },
+                            "response": []
+                        }
+                    ]
+                },
+                {
+                    "name": "12 Subscription Plans",
+                    "item": [
+                        {
+                            "name": "Get Active Plans",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/subscription/plans",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "subscription",
+                                        "plans"
+                                    ]
+                                },
+                                "description": "List all active subscription plans for public users."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Get Admin Plans",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/subscription/admin/plans",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "subscription",
+                                        "admin",
+                                        "plans"
+                                    ]
+                                },
+                                "description": "Retrieve all plans along with active subscriber counts (Admin only)."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Create Subscription Plan",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"Pro Trader Plan\",\n  \"description\": \"Access to advanced groups and zero trade fees.\",\n  \"price\": 19.99,\n  \"duration\": \"monthly\",\n  \"features\": {\n    \"accessToTrading\": true,\n    \"accessToGroups\": true,\n    \"unlimitedListings\": true\n  }\n}"
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/subscription/plans",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "subscription",
+                                        "plans"
+                                    ]
+                                },
+                                "description": "Create a new subscription plan (Admin only)."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Update Subscription Plan",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"Premium Pro Trader Plan\",\n  \"price\": 24.99,\n  \"isActive\": true\n}"
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/subscription/plans/{{PLAN_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "subscription",
+                                        "plans",
+                                        "{{PLAN_ID}}"
+                                    ]
+                                },
+                                "description": "Update an existing subscription plan (Admin only)."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Subscribe to Plan",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"planId\": \"{{PLAN_ID}}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/subscription/subscribe",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "subscription",
+                                        "subscribe"
+                                    ]
+                                },
+                                "description": "Subscribe current authenticated user to a subscription plan."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Get plans :id",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/subscription/plans/{{PLAN_ID}}",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "subscription",
+                                        "plans",
+                                        "{{PLAN_ID}}"
+                                    ],
+                                    "variable": [
+                                        {
+                                            "key": "id",
+                                            "value": "value_here"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "13 Legal & Settings",
+                    "item": [
+                        {
+                            "name": "Get Legal Document",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/settings/legal/privacy_policy",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "settings",
+                                        "legal",
+                                        "privacy_policy"
+                                    ]
+                                },
+                                "description": "Retrieve Terms and Conditions or Privacy Policy."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Update Legal Document",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"title\": \"Privacy Policy\",\n  \"content\": \"# Privacy Policy\\n\\nWe care about your privacy...\",\n  \"publish\": true\n}"
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/settings/legal/privacy_policy",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "settings",
+                                        "legal",
+                                        "privacy_policy"
+                                    ]
+                                },
+                                "description": "Save or publish legal documentation (Admin only). Use 'publish: false' for Save Changes (draft) or 'publish: true' for Publish Changes."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Get General Settings",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/settings/general",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "settings",
+                                        "general"
+                                    ]
+                                },
+                                "description": "Get general platform metadata like platform name, support email, and contact info."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Update General Settings",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"platformName\": \"Bondi Platform\",\n  \"supportEmail\": \"support1@platform.com\",\n  \"contactPhone\": \"+1 (555) 123-4567\",\n  \"status\": \"active\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/settings/general",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "settings",
+                                        "general"
+                                    ]
+                                },
+                                "description": "Update general platform configuration (Admin only)."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Get legal :key",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/settings/legal/privacy_policy",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "settings",
+                                        "legal",
+                                        "privacy_policy"
+                                    ],
+                                    "variable": [
+                                        {
+                                            "key": "key",
+                                            "value": "value_here"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "14 Partner Applications",
+                    "item": [
+                        {
+                            "name": "Apply for Workshop Partner",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"businessName\": \"Vintage Repairs Ltd\",\n  \"contactName\": \"John Repairer\",\n  \"email\": \"repair@vintage.com\",\n  \"phone\": \"+55 11 99999-8888\",\n  \"website\": \"https://vintagerepairs.com\",\n  \"address\": \"São Paulo, SP\",\n  \"notes\": \"Experienced technician in retro hardware.\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/partner/apply",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "partner",
+                                        "apply"
+                                    ]
+                                },
+                                "description": "Public partner workshop application submission."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Get Partner Applications",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/partner/applications?page=1&limit=10&sortBy=createdAt&sortOrder=desc",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "partner",
+                                        "applications"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "10"
+                                        },
+                                        {
+                                            "key": "sortBy",
+                                            "value": "createdAt",
+                                            "description": "Field to sort by"
+                                        },
+                                        {
+                                            "key": "sortOrder",
+                                            "value": "desc",
+                                            "description": "Sort direction (asc, desc, dsc)"
+                                        }
+                                    ]
+                                },
+                                "description": "List all partner applications (Admin only)."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Update Partner Application Status",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{ACCESS_TOKEN}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"status\": \"approved\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/partner/applications/{{PARTNER_APP_ID}}/status",
+                                    "host": [
+                                        "{{BASE_URL}}"
+                                    ],
+                                    "path": [
+                                        "partner",
+                                        "applications",
+                                        "{{PARTNER_APP_ID}}",
+                                        "status"
+                                    ]
+                                },
+                                "description": "Approve or reject partner applications. If approved, user role is elevated/created as WORKSHOP_PARTNER."
+                            },
+                            "response": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "🛠️ Shared Utilities",
+            "item": [
+                {
+                    "name": "Health Status",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{BASE_URL}}/health",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Perform system health check and check DB & Redis latency."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Upload Single File",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{ACCESS_TOKEN}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "file",
+                                    "type": "file",
+                                    "src": []
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/upload/single?folder=profiles",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "upload",
+                                "single"
+                            ],
+                            "query": [
+                                {
+                                    "key": "folder",
+                                    "value": "profiles"
+                                }
+                            ]
+                        },
+                        "description": "Upload a single file to the active storage provider (Local, Cloudinary, S3, or DigitalOcean) based on the server environment variable."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Upload Multiple Files",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{ACCESS_TOKEN}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "files",
+                                    "type": "file",
+                                    "src": []
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/upload/multiple?folder=listings",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "upload",
+                                "multiple"
+                            ],
+                            "query": [
+                                {
+                                    "key": "folder",
+                                    "value": "listings"
+                                }
+                            ]
+                        },
+                        "description": "Upload multiple files (up to 10) to the active storage provider."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get ",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{BASE_URL}}/upload",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "upload"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

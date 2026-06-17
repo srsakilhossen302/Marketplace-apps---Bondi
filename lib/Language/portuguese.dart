@@ -329,5 +329,24 @@ const Map<String, String> portuguese = {
   'discoverTab': 'Descobrir',
   'communityTab': 'Comunidade',
   'profileTab': 'Perfil',
-  'sellTab': 'Vender'
+  'sellTab': 'Vender',
+
+  // Create Group Screen
+  'groupName': 'Nome do Grupo',
+  'groupDescription': 'Descrição do Grupo',
+  'uploadPhoto': 'Carregar Foto',
+  'enterGroupName': 'Digite o nome do grupo',
+  'whatIsGroupAbout': 'Sobre o que é este grupo?',
+  'inviteMembers': 'CONVIDAR MEMBROS',
+  'searchFriendsHint': 'Buscar amigos por nome...',
+  'more': 'Mais',
+  'createGroup': 'Criar Grupo',
+  'groupImageRequired': 'Por favor, selecione uma imagem para o grupo',
+  'groupNameRequired': 'Por favor, digite o nome do grupo',
+  'groupCreatedSuccessfully': 'Grupo criado com sucesso!',
+  'failedToCreateGroup': 'Falha ao criar o grupo',
+  'inviteFriends': 'Convidar Amigos',
+  'search': 'Buscar',
+  'cancel': 'Cancelar',
+  'done': 'Concluído'
 };
