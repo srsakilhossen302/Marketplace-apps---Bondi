@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -18,27 +19,29 @@ class EditProfileScreen extends GetView<EditProfileController> {
         height: double.infinity,
         color: AppColors.backgroundColor,
         child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      _buildCoverAndAvatar(),
-                      SizedBox(height: 25.h),
-                      _buildThemeSelector(),
-                      SizedBox(height: 30.h),
-                      _buildSectionHeader(StaticString.personalInformation),
-                      SizedBox(height: 20.h),
-                      _buildInputField(
-                        StaticString.username,
-                        controller.usernameController,
-                        icon: Icons.alternate_email,
-                      ),
+          child: Obx(
+            () => Stack(
+              children: [
+                Column(
+                  children: [
+                    _buildAppBar(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 20.h),
+                            _buildCoverAndAvatar(),
+                            SizedBox(height: 30.h),
+                            _buildSectionHeader(StaticString.personalInformation),
+                            SizedBox(height: 20.h),
+                            _buildInputField(
+                              StaticString.username,
+                              controller.usernameController,
+                              icon: Icons.alternate_email,
+                              readOnly: true,
+                            ),
                       SizedBox(height: 20.h),
                       _buildInputField(
                         StaticString.displayName,
@@ -87,10 +90,22 @@ class EditProfileScreen extends GetView<EditProfileController> {
               ),
             ],
           ),
-        ),
+          if (controller.isLoading.value)
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.accentColor,
+                ),
+              ),
+            ),
+        ],
       ),
-    );
-  }
+    ),
+  ),
+),
+);
+}
 
   Widget _buildAppBar() {
     return Column(
@@ -150,17 +165,27 @@ class EditProfileScreen extends GetView<EditProfileController> {
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Stack(
+      child: Center(
+        child: GestureDetector(
+          onTap: controller.pickProfileImage,
+          child: Stack(
             children: [
-              CircleAvatar(
-                radius: 50.r,
-                backgroundImage: const NetworkImage(
-                  'https://randomuser.me/api/portraits/men/1.jpg',
-                ),
-              ),
+              Obx(() {
+                ImageProvider imageProvider;
+                if (controller.selectedImage.value != null) {
+                  imageProvider = FileImage(File(controller.selectedImage.value!.path));
+                } else if (controller.currentImageUrl.value.isNotEmpty) {
+                  imageProvider = NetworkImage(controller.currentImageUrl.value);
+                } else {
+                  imageProvider = const NetworkImage(
+                    'https://randomuser.me/api/portraits/men/1.jpg',
+                  );
+                }
+                return CircleAvatar(
+                  radius: 50.r,
+                  backgroundImage: imageProvider,
+                );
+              }),
               Positioned(
                 bottom: 0,
                 right: 0,
@@ -179,93 +204,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
               ),
             ],
           ),
-          Positioned(
-            bottom: 15.h,
-            right: 15.w,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                color: AppColors.buttonColor,
-                borderRadius: BorderRadius.circular(15.r),
-              ),
-              child: Text(
-                StaticString.updateCover,
-                style: TextStyle(color: Colors.white, fontSize: 12.sp),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildThemeSelector() {
-    return Container(
-      padding: EdgeInsets.all(20.r),
-      decoration: BoxDecoration(
-        color: AppColors.cardColor.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(25.r),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            StaticString.headerThemeColor,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 15.h),
-          Row(
-            children: [
-              ...List.generate(controller.themeColors.length, (index) {
-                return Obx(
-                  () => GestureDetector(
-                    onTap: () => controller.selectedColorIndex.value = index,
-                    child: Container(
-                      margin: EdgeInsets.only(right: 12.w),
-                      width: 35.w,
-                      height: 35.w,
-                      decoration: BoxDecoration(
-                        color: controller.themeColors[index],
-                        shape: BoxShape.circle,
-                        border: controller.selectedColorIndex.value == index
-                            ? Border.all(color: Colors.white, width: 2.w)
-                            : null,
-                      ),
-                    ),
-                  ),
-                );
-              }),
-              Container(
-                width: 35.w,
-                height: 35.w,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Color(0xffFFFFFF)),
-                ),
-                child: Icon(
-                  Icons.colorize,
-                  color: Color(0xffFFFFFF),
-                  size: 18.sp,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                StaticString.electricBlue,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.accentColor.withOpacity(0.6),
-                  fontSize: 10.sp,
-                ),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -285,6 +224,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
     String label,
     TextEditingController textController, {
     IconData? icon,
+    bool readOnly = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -299,10 +239,17 @@ class EditProfileScreen extends GetView<EditProfileController> {
         SizedBox(height: 10.h),
         TextField(
           controller: textController,
-          style: const TextStyle(color: Colors.white),
+          readOnly: readOnly,
+          style: TextStyle(
+            color: readOnly ? Colors.white.withOpacity(0.5) : Colors.white,
+          ),
           decoration: InputDecoration(
             prefixIcon: icon != null
-                ? Icon(icon, color: AppColors.accentColor, size: 20.sp)
+                ? Icon(
+                    icon,
+                    color: readOnly ? AppColors.accentColor.withOpacity(0.5) : AppColors.accentColor,
+                    size: 20.sp,
+                  )
                 : null,
             filled: true,
             fillColor: AppColors.cardColor.withOpacity(0.3),
@@ -379,6 +326,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
             StaticString.phoneNumber,
             controller.phoneNumberController,
             icon: Icons.phone_outlined,
+            readOnly: true,
           ),
           SizedBox(height: 20.h),
           Container(
