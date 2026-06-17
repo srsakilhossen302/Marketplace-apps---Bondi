@@ -1,6 +1,34 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../service/api_client.dart';
+import '../../../../service/api_url.dart';
 
 class MessagesController extends GetxController {
+  final isDirectChat = false.obs;
+  final directChatUserId = ''.obs;
+  final directChatUserName = ''.obs;
+  final directChatUserImage = ''.obs;
+  final messageTextController = TextEditingController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    final args = Get.arguments;
+    if (args != null && args is Map && args.containsKey('userId')) {
+      isDirectChat.value = true;
+      directChatUserId.value = args['userId'] ?? '';
+      directChatUserName.value = args['name'] ?? 'Seller';
+      directChatUserImage.value = args['image'] ?? '';
+      groupMessages.clear();
+    }
+  }
+
+  @override
+  void onClose() {
+    messageTextController.dispose();
+    super.onClose();
+  }
+
   final recentChats = [
     {'name': 'Marcus', 'image': 'https://i.pravatar.cc/150?u=marcus', 'online': true},
     {'name': 'Elena', 'image': 'https://i.pravatar.cc/150?u=elena', 'online': true},
@@ -87,4 +115,50 @@ class MessagesController extends GetxController {
       'time': '10:42 AM',
     },
   ].obs;
+
+  Future<void> sendMessageAction() async {
+    final text = messageTextController.text.trim();
+    if (text.isEmpty) return;
+
+    messageTextController.clear();
+
+    if (isDirectChat.value) {
+      try {
+        groupMessages.add({
+          'sender': 'Me',
+          'text': text,
+          'isMe': true,
+          'time': 'Just now',
+        });
+
+        final fields = {
+          'receiverId': directChatUserId.value,
+          'content': text,
+        };
+        final response = await ApiClient.multipartPost(
+          ApiUrl.sendMessage,
+          fields,
+          requireAuth: true,
+        );
+        if (response.statusCode != 200 && response.statusCode != 201) {
+          Get.snackbar(
+            'Error',
+            'Failed to deliver message.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.redAccent.withOpacity(0.9),
+            colorText: Colors.white,
+          );
+        }
+      } catch (e) {
+        print('Error sending message: $e');
+      }
+    } else {
+      groupMessages.add({
+        'sender': 'Me',
+        'text': text,
+        'isMe': true,
+        'time': 'Just now',
+      });
+    }
+  }
 }

@@ -9,6 +9,7 @@ import '../../Login/view/login_screen.dart';
 import '../../ProductDetails/view/product_details_screen.dart';
 import '../../../../Model/home_models.dart';
 import 'seller_all_listings_screen.dart';
+import '../../Messages/view/chat_detail_screen.dart';
 
 
 class SellerProfileScreen extends StatefulWidget {
@@ -228,36 +229,91 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
   }
 
   Widget _buildActionButtons() {
-    return Row(
-      children: [
-        Expanded(child: _buildButton("Add Friend", isPrimary: true)),
-        SizedBox(width: 10.w),
-        Expanded(child: _buildButton("Follow")),
-        SizedBox(width: 10.w),
-        Expanded(child: _buildButton("Text")),
-      ],
-    );
+    return Obx(() {
+      final status = controller.relationshipStatus.value;
+      final sentByMe = controller.isFriendRequestSentByMe.value;
+
+      String connectionLabel = "Add Friend";
+      VoidCallback connectionAction = () => controller.sendFriendRequest();
+      bool isPrimary = true;
+
+      if (status == 'pending') {
+        if (sentByMe) {
+          connectionLabel = "Cancel Request";
+          connectionAction = () => controller.cancelFriendRequest();
+          isPrimary = false;
+        } else {
+          connectionLabel = "Accept Request";
+          connectionAction = () => controller.acceptFriendRequest();
+          isPrimary = true;
+        }
+      } else if (status == 'accepted') {
+        connectionLabel = "Unfriend";
+        connectionAction = () => controller.removeFriend();
+        isPrimary = false;
+      }
+
+      return Row(
+        children: [
+          Expanded(
+            child: controller.isConnectionActionLoading.value
+                ? Center(
+                    child: SizedBox(
+                      height: 50.h,
+                      width: 50.w,
+                      child: const CircularProgressIndicator(color: AppColors.accentColor),
+                    ),
+                  )
+                : _buildButton(
+                    connectionLabel,
+                    isPrimary: isPrimary,
+                    onTap: connectionAction,
+                  ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: _buildButton(
+              "Message",
+              isPrimary: false,
+              onTap: () {
+                Get.to(
+                  () => const ChatDetailScreen(),
+                  arguments: {
+                    'userId': controller.userId.value,
+                    'name': controller.sellerName.value,
+                    'image': controller.sellerImage.value,
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      );
+    });
   }
 
-  Widget _buildButton(String label, {bool isPrimary = false}) {
-    return Container(
-      height: 50.h,
-      decoration: BoxDecoration(
-        color: isPrimary
-            ? AppColors.buttonColor
-            : Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(25.r),
-        border: isPrimary
-            ? null
-            : Border.all(color: Colors.white.withOpacity(0.1)),
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        label,
-        style: TextStyle(
-          color: isPrimary ? Colors.white : AppColors.accentColor,
-          fontSize: 14.sp,
-          fontWeight: FontWeight.bold,
+  Widget _buildButton(String label, {bool isPrimary = false, VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 50.h,
+        decoration: BoxDecoration(
+          color: isPrimary
+              ? AppColors.buttonColor
+              : Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(25.r),
+          border: isPrimary
+              ? null
+              : Border.all(color: Colors.white.withOpacity(0.1)),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isPrimary ? Colors.white : AppColors.accentColor,
+            fontSize: 14.sp,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

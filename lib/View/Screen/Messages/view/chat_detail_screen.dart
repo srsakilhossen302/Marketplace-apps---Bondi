@@ -10,6 +10,9 @@ class ChatDetailScreen extends GetView<MessagesController> {
 
   @override
   Widget build(BuildContext context) {
+    if (!Get.isRegistered<MessagesController>()) {
+      Get.put(MessagesController());
+    }
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -49,70 +52,79 @@ class ChatDetailScreen extends GetView<MessagesController> {
   }
 
   Widget _buildAppBar() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => Get.back(),
-            child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp),
-          ),
-          SizedBox(width: 15.w),
-          Stack(
-            children: [
-              CircleAvatar(
-                radius: 20.r,
-                backgroundImage: const NetworkImage(
-                  'https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=200',
-                ),
-              ),
-              Positioned(
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  width: 10.w,
-                  height: 10.h,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppColors.backgroundColor,
-                      width: 1.5,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Obx(() {
+      final isDirect = controller.isDirectChat.value;
+      final title = isDirect ? controller.directChatUserName.value : StaticString.sneakerTraders;
+      final subtitle = isDirect ? "Online" : StaticString.oneTwoFourKMembersTwoOneKOnline;
+      final image = isDirect && controller.directChatUserImage.value.isNotEmpty
+          ? controller.directChatUserImage.value
+          : (isDirect
+              ? 'https://i.pravatar.cc/150?u=${controller.directChatUserName.value.hashCode}'
+              : 'https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=200');
+
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () => Get.back(),
+              child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp),
+            ),
+            SizedBox(width: 15.w),
+            Stack(
               children: [
-                Text(
-                  StaticString.sneakerTraders,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
+                CircleAvatar(
+                  radius: 20.r,
+                  backgroundImage: NetworkImage(image),
                 ),
-                Text(
-                  StaticString.oneTwoFourKMembersTwoOneKOnline,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 11.sp,
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: 10.w,
+                    height: 10.h,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.backgroundColor,
+                        width: 1.5,
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          Icon(Icons.search, color: Colors.white, size: 24.sp),
-          SizedBox(width: 15.w),
-          Icon(Icons.more_vert, color: Colors.white, size: 24.sp),
-        ],
-      ),
-    );
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.6),
+                      fontSize: 11.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.search, color: Colors.white, size: 24.sp),
+            SizedBox(width: 15.w),
+            Icon(Icons.more_vert, color: Colors.white, size: 24.sp),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildSystemMessage(String text) {
@@ -406,16 +418,18 @@ class ChatDetailScreen extends GetView<MessagesController> {
               child: Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: Obx(() => TextField(
+                      controller: controller.messageTextController,
+                      style: const TextStyle(color: Colors.black),
                       decoration: InputDecoration(
-                        hintText: StaticString.messageGroup,
+                        hintText: controller.isDirectChat.value ? "Message..." : StaticString.messageGroup,
                         hintStyle: TextStyle(
                           color: Colors.black.withOpacity(0.3),
                           fontSize: 14.sp,
                         ),
                         border: InputBorder.none,
                       ),
-                    ),
+                    )),
                   ),
                   Icon(
                     Icons.sentiment_satisfied_alt,
@@ -426,13 +440,16 @@ class ChatDetailScreen extends GetView<MessagesController> {
             ),
           ),
           SizedBox(width: 12.w),
-          Container(
-            padding: EdgeInsets.all(10.r),
-            decoration: const BoxDecoration(
-              color: AppColors.buttonColor,
-              shape: BoxShape.circle,
+          GestureDetector(
+            onTap: () => controller.sendMessageAction(),
+            child: Container(
+              padding: EdgeInsets.all(10.r),
+              decoration: const BoxDecoration(
+                color: AppColors.buttonColor,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.send, color: Colors.white, size: 24.sp),
             ),
-            child: Icon(Icons.send, color: Colors.white, size: 24.sp),
           ),
         ],
       ),

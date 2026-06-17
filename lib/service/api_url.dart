@@ -11,7 +11,12 @@ class ApiUrl {
   static const String listing = "$baseUrl/listing";
   static const String profile = "$baseUrl/profile/me";
   static const String updateProfile = "$baseUrl/profile/update";
-  static const String publicProfile = "$baseUrl/profile/user";
+  static const String publicProfile = "$baseUrl/profile/public/id";
   static const String sellerListings = "$baseUrl/listing/seller";
   static const String myListings = "$baseUrl/listing/me";
+  static const String friendRequest = "$baseUrl/social/friend-request";
+  static const String cancelRequest = "$baseUrl/social/cancel-request";
+  static const String acceptRequest = "$baseUrl/social/accept-request";
+  static const String removeFriend = "$baseUrl/social/remove-friend";
+  static const String sendMessage = "$baseUrl/message/send";
 }

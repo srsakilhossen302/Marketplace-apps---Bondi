@@ -1,12 +1,16 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../service/api_url.dart';
 import '../../../../service/api_client.dart';
 import '../../../../Utils/StaticString/static_string.dart';
+import '../../../../helper/shared_prefe/shared_prefe.dart';
+import '../../Login/view/login_screen.dart';
 
 class SellerProfileController extends GetxController {
   final userId = ''.obs;
   final isLoading = false.obs;
+  final isConnectionActionLoading = false.obs;
 
   final sellerName = 'Jane Doe'.obs;
   final sellerImage = ''.obs;
@@ -23,6 +27,10 @@ class SellerProfileController extends GetxController {
   final mutualFriends = <String>[].obs;
   final mutualFriendsCount = 0.obs;
   final sharedGroups = <String>[].obs;
+
+  // Connection states
+  final relationshipStatus = 'none'.obs; // 'none', 'pending', 'accepted'
+  final isFriendRequestSentByMe = false.obs;
 
   @override
   void onInit() {
@@ -69,6 +77,38 @@ class SellerProfileController extends GetxController {
             rating.value = resData['averageRating']?.toString() ?? '0.0';
             followersCount.value = resData['totalFriends']?.toString() ?? '0';
 
+            // Parse relationship status
+            String status = 'none';
+            String senderId = '';
+            
+            if (resData['relationshipStatus'] != null) {
+              status = resData['relationshipStatus'].toString().toLowerCase();
+            } else if (resData['relationship'] != null && resData['relationship'] is Map) {
+              status = (resData['relationship']['status'] ?? 'none').toString().toLowerCase();
+              senderId = (resData['relationship']['senderId'] ?? resData['relationship']['sender'] ?? '').toString();
+            }
+            
+            if (resData['relationshipSenderId'] != null) {
+              senderId = resData['relationshipSenderId'].toString();
+            }
+            
+            relationshipStatus.value = status;
+            
+            final currentUserId = await SharedPrefsHelper.getUserId() ?? '';
+            if (senderId.isNotEmpty && currentUserId.isNotEmpty) {
+              isFriendRequestSentByMe.value = (senderId == currentUserId);
+            } else {
+              if (status == 'pending_sent' || status == 'sent_pending' || status == 'sent') {
+                relationshipStatus.value = 'pending';
+                isFriendRequestSentByMe.value = true;
+              } else if (status == 'pending_received' || status == 'received_pending' || status == 'received') {
+                relationshipStatus.value = 'pending';
+                isFriendRequestSentByMe.value = false;
+              } else if (status == 'pending') {
+                isFriendRequestSentByMe.value = true;
+              }
+            }
+
             // Mutual Friends
             final List<dynamic> friendsList = resData['mutualFriends']?['data'] ?? [];
             final List<String> friendImgs = [];
@@ -113,29 +153,26 @@ class SellerProfileController extends GetxController {
   Future<void> fetchSellerListings() async {
     if (userId.isEmpty) return;
     try {
-      final response = await ApiClient.get(ApiUrl.listing, requireAuth: false);
+      final response = await ApiClient.get('${ApiUrl.sellerListings}/${userId.value}', requireAuth: false);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final listingsJson = data['data'] as List<dynamic>;
         
         final List<Map<String, String>> loadedListings = [];
         for (var json in listingsJson) {
-          final sId = json['sellerId']?.toString() ?? '';
-          if (sId == userId.value) {
-            String thumbnail = json['thumbnail']?.toString().replaceAll('`', '').trim() ?? '';
-            if (thumbnail.isEmpty && json['images'] != null && (json['images'] as List).isNotEmpty) {
-              thumbnail = json['images'][0].toString().replaceAll('`', '').trim();
-            }
-            if (thumbnail.isEmpty) {
-              thumbnail = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop';
-            }
-            loadedListings.add({
-              'title': json['title'] ?? 'No Title',
-              'price': '\$${json['price']?.toString() ?? '0'}',
-              'image': thumbnail,
-              'slug': json['slug']?.toString() ?? '',
-            });
+          String thumbnail = json['thumbnail']?.toString().replaceAll('`', '').trim() ?? '';
+          if (thumbnail.isEmpty && json['images'] != null && (json['images'] as List).isNotEmpty) {
+            thumbnail = json['images'][0].toString().replaceAll('`', '').trim();
           }
+          if (thumbnail.isEmpty) {
+            thumbnail = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop';
+          }
+          loadedListings.add({
+            'title': json['title'] ?? 'No Title',
+            'price': '\$${json['price']?.toString() ?? '0'}',
+            'image': thumbnail,
+            'slug': json['slug']?.toString() ?? '',
+          });
         }
         if (loadedListings.isNotEmpty) {
           activeListings.assignAll(loadedListings);
@@ -156,6 +193,194 @@ class SellerProfileController extends GetxController {
       }
     } catch (e) {
       print('Error fetching seller listings: $e');
+    }
+  }
+
+  // Connection API Actions
+  Future<void> sendFriendRequest() async {
+    final token = await SharedPrefsHelper.getToken();
+    if (token == null || token.isEmpty) {
+      Get.to(() => const LoginScreen());
+      return;
+    }
+
+    isConnectionActionLoading.value = true;
+    try {
+      final response = await ApiClient.post(
+        ApiUrl.friendRequest,
+        {'recipientId': userId.value},
+        requireAuth: true,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        relationshipStatus.value = 'pending';
+        isFriendRequestSentByMe.value = true;
+        Get.snackbar(
+          'Success',
+          'Friend request sent successfully.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      } else {
+        final errorData = jsonDecode(response.body);
+        Get.snackbar(
+          'Error',
+          errorData['message'] ?? 'Failed to send friend request.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.9),
+        colorText: Colors.white,
+      );
+    } finally {
+      isConnectionActionLoading.value = false;
+    }
+  }
+
+  Future<void> cancelFriendRequest() async {
+    final token = await SharedPrefsHelper.getToken();
+    if (token == null || token.isEmpty) {
+      Get.to(() => const LoginScreen());
+      return;
+    }
+
+    isConnectionActionLoading.value = true;
+    try {
+      final response = await ApiClient.post(
+        '${ApiUrl.cancelRequest}/${userId.value}',
+        {},
+        requireAuth: true,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        relationshipStatus.value = 'none';
+        isFriendRequestSentByMe.value = false;
+        Get.snackbar(
+          'Success',
+          'Friend request cancelled successfully.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      } else {
+        final errorData = jsonDecode(response.body);
+        Get.snackbar(
+          'Error',
+          errorData['message'] ?? 'Failed to cancel friend request.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.9),
+        colorText: Colors.white,
+      );
+    } finally {
+      isConnectionActionLoading.value = false;
+    }
+  }
+
+  Future<void> acceptFriendRequest() async {
+    final token = await SharedPrefsHelper.getToken();
+    if (token == null || token.isEmpty) {
+      Get.to(() => const LoginScreen());
+      return;
+    }
+
+    isConnectionActionLoading.value = true;
+    try {
+      final response = await ApiClient.post(
+        '${ApiUrl.acceptRequest}/${userId.value}',
+        {},
+        requireAuth: true,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        relationshipStatus.value = 'accepted';
+        isFriendRequestSentByMe.value = false;
+        Get.snackbar(
+          'Success',
+          'Friend request accepted successfully.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      } else {
+        final errorData = jsonDecode(response.body);
+        Get.snackbar(
+          'Error',
+          errorData['message'] ?? 'Failed to accept friend request.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.9),
+        colorText: Colors.white,
+      );
+    } finally {
+      isConnectionActionLoading.value = false;
+    }
+  }
+
+  Future<void> removeFriend() async {
+    final token = await SharedPrefsHelper.getToken();
+    if (token == null || token.isEmpty) {
+      Get.to(() => const LoginScreen());
+      return;
+    }
+
+    isConnectionActionLoading.value = true;
+    try {
+      final response = await ApiClient.delete(
+        '${ApiUrl.removeFriend}/${userId.value}',
+        requireAuth: true,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        relationshipStatus.value = 'none';
+        isFriendRequestSentByMe.value = false;
+        Get.snackbar(
+          'Success',
+          'Friend removed successfully.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      } else {
+        final errorData = jsonDecode(response.body);
+        Get.snackbar(
+          'Error',
+          errorData['message'] ?? 'Failed to remove friend.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.9),
+        colorText: Colors.white,
+      );
+    } finally {
+      isConnectionActionLoading.value = false;
     }
   }
 }
