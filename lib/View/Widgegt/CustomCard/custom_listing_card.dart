@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../Model/home_models.dart';
+import '../../../helper/network_img/image_helper.dart';
 
 class CustomListingCard extends StatelessWidget {
   final ListingModel item;
@@ -41,7 +42,7 @@ class CustomListingCard extends StatelessWidget {
                     top: Radius.circular(20.r),
                   ),
                   child: Image.network(
-                    item.image,
+                    ImageHelper.formatImageUrl(item.image),
                     height: 105.90914154052734.h, // Exact height from user
                     width: double.infinity,
                     fit: BoxFit.cover,

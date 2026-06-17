@@ -4,6 +4,8 @@ import '../../../../Model/home_models.dart';
 import '../../../../service/api_client.dart';
 import '../../../../service/api_url.dart';
 import '../../../../helper/shared_prefe/shared_prefe.dart';
+import '../../../../helper/network_img/image_helper.dart';
+import '../../Login/view/login_screen.dart';
 
 class ProductDetailsController extends GetxController {
   final ListingModel product = Get.arguments;
@@ -20,7 +22,16 @@ class ProductDetailsController extends GetxController {
   void onInit() {
     super.onInit();
     // Default fallback to initial product image
-    productImages.assign(product.image);
+    productImages.assign(ImageHelper.formatImageUrl(product.image));
+    checkAuthAndInit();
+  }
+
+  Future<void> checkAuthAndInit() async {
+    final token = await SharedPrefsHelper.getToken();
+    if (token == null || token.isEmpty) {
+      Get.off(() => const LoginScreen());
+      return;
+    }
     fetchListingDetails();
   }
 
@@ -33,10 +44,9 @@ class ProductDetailsController extends GetxController {
     
     isLoading.value = true;
     try {
-      final token = await SharedPrefsHelper.getToken();
       final response = await ApiClient.get(
         '${ApiUrl.listing}/${product.slug}',
-        requireAuth: token != null && token.isNotEmpty,
+        requireAuth: true,
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -48,9 +58,9 @@ class ProductDetailsController extends GetxController {
           // Populate productImages with images from listing data
           final List<dynamic> images = resData['listing']?['images'] ?? [];
           if (images.isNotEmpty) {
-            productImages.assignAll(images.map((img) => img.toString()).toList());
+            productImages.assignAll(images.map((img) => ImageHelper.formatImageUrl(img.toString())).toList());
           } else {
-            productImages.assign(product.image);
+            productImages.assign(ImageHelper.formatImageUrl(product.image));
           }
           
           // Populate similarListings
@@ -72,7 +82,7 @@ class ProductDetailsController extends GetxController {
               title: item['title'] ?? '',
               price: '\$${item['price']?.toString() ?? '0'}',
               seller: sellerName,
-              image: thumbnail,
+              image: ImageHelper.formatImageUrl(thumbnail),
               isNew: item['condition']?.toString().toLowerCase() == 'new',
               isTrade: item['listingType']?.toString().toLowerCase() == 'trade' || item['listingType']?.toString().toLowerCase() == 'sale_and_trade',
               slug: item['slug']?.toString() ?? '',

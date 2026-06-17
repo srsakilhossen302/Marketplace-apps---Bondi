@@ -120,6 +120,42 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Obx(() {
+                  final status = controller.relationshipStatus.value;
+                  if (status == 'blocked') {
+                    return const SizedBox.shrink();
+                  }
+                  return PopupMenuButton<String>(
+                    icon: Icon(Icons.more_vert, color: Colors.white, size: 24.sp),
+                    color: AppColors.cardColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                    onSelected: (value) {
+                      if (value == 'block') {
+                        controller.blockUser();
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem<String>(
+                        value: 'block',
+                        child: Row(
+                          children: [
+                            Icon(Icons.block, color: Colors.redAccent, size: 18.sp),
+                            SizedBox(width: 8.w),
+                            Text(
+                              'Block User',
+                              style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ),
             ],
           ),
         ),
@@ -230,23 +266,71 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
   Widget _buildActionButtons() {
     return Obx(() {
       final status = controller.relationshipStatus.value;
-      final sentByMe = controller.isFriendRequestSentByMe.value;
 
+      if (controller.isConnectionActionLoading.value) {
+        return Center(
+          child: SizedBox(
+            height: 50.h,
+            width: 50.w,
+            child: const CircularProgressIndicator(color: AppColors.accentColor),
+          ),
+        );
+      }
+
+      if (status == 'blocked') {
+        return Row(
+          children: [
+            Expanded(
+              child: _buildButton(
+                "Unblock",
+                isPrimary: true,
+                onTap: () => controller.unblockUser(),
+              ),
+            ),
+          ],
+        );
+      }
+
+      if (status == 'pending_received') {
+        return Row(
+          children: [
+            Expanded(
+              child: _buildButton(
+                "Accept",
+                isPrimary: true,
+                onTap: () => controller.acceptFriendRequest(),
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: _buildButton(
+                "Decline",
+                isPrimary: false,
+                onTap: () => controller.declineFriendRequest(),
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: _buildButton(
+                "Message",
+                isPrimary: false,
+                onTap: () => controller.startChat(),
+              ),
+            ),
+          ],
+        );
+      }
+
+      // Default states: 'none', 'pending_sent', 'friend' (or accepted)
       String connectionLabel = "Add Friend";
       VoidCallback connectionAction = () => controller.sendFriendRequest();
       bool isPrimary = true;
 
-      if (status == 'pending') {
-        if (sentByMe) {
-          connectionLabel = "Cancel Request";
-          connectionAction = () => controller.cancelFriendRequest();
-          isPrimary = false;
-        } else {
-          connectionLabel = "Accept Request";
-          connectionAction = () => controller.acceptFriendRequest();
-          isPrimary = true;
-        }
-      } else if (status == 'accepted') {
+      if (status == 'pending_sent') {
+        connectionLabel = "Cancel Request";
+        connectionAction = () => controller.cancelFriendRequest();
+        isPrimary = false;
+      } else if (status == 'friend' || status == 'accepted') {
         connectionLabel = "Unfriend";
         connectionAction = () => controller.removeFriend();
         isPrimary = false;
@@ -255,19 +339,11 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
       return Row(
         children: [
           Expanded(
-            child: controller.isConnectionActionLoading.value
-                ? Center(
-                    child: SizedBox(
-                      height: 50.h,
-                      width: 50.w,
-                      child: const CircularProgressIndicator(color: AppColors.accentColor),
-                    ),
-                  )
-                : _buildButton(
-                    connectionLabel,
-                    isPrimary: isPrimary,
-                    onTap: connectionAction,
-                  ),
+            child: _buildButton(
+              connectionLabel,
+              isPrimary: isPrimary,
+              onTap: connectionAction,
+            ),
           ),
           SizedBox(width: 10.w),
           Expanded(

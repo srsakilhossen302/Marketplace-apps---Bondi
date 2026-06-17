@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import '../../../../service/api_client.dart';
 import '../../../../service/api_url.dart';
+import '../../../../helper/shared_prefe/shared_prefe.dart';
+import '../../../../helper/network_img/image_helper.dart';
 import 'profile_controller.dart';
 import 'user_profile_controller.dart';
 
@@ -58,10 +60,7 @@ class EditProfileController extends GetxController {
             }
           }
 
-          if (profileData['profileImage'] != null &&
-              profileData['profileImage'].toString().isNotEmpty) {
-            currentImageUrl.value = profileData['profileImage'];
-          }
+            currentImageUrl.value = ImageHelper.formatImageUrl(profileData['profileImage']?.toString());
         }
       }
     } catch (e) {

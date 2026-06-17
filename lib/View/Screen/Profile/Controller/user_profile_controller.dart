@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import '../../../../service/api_url.dart';
 import '../../../../service/api_client.dart';
+import '../../../../helper/network_img/image_helper.dart';
 
 class UserProfileController extends GetxController {
   final userName = 'Alex Rivers'.obs;
@@ -43,7 +44,7 @@ class UserProfileController extends GetxController {
 
           if (profileData['profileImage'] != null &&
               profileData['profileImage'].toString().isNotEmpty) {
-            userImage.value = profileData['profileImage'];
+            userImage.value = ImageHelper.formatImageUrl(profileData['profileImage'].toString());
           }
         }
       }
@@ -83,7 +84,7 @@ class UserProfileController extends GetxController {
             'price': '\$${listing['price']?.toString() ?? '0'}',
             'status': (listing['status'] ?? 'ACTIVE').toString().toUpperCase(),
             'image': thumbnail.isNotEmpty
-                ? thumbnail
+                ? ImageHelper.formatImageUrl(thumbnail)
                 : 'https://randomuser.me/api/portraits/women/5.jpg',
             'rawData': listing,
           });

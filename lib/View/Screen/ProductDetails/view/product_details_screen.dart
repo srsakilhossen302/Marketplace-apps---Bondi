@@ -6,11 +6,11 @@ import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../../../Widgegt/CustomCard/custom_listing_card.dart';
+import '../../Profile/view/seller_profile_screen.dart';
 import '../../Trade/view/trade_screen.dart';
 import '../Controller/product_details_controller.dart';
-import '../../Profile/view/seller_profile_screen.dart';
-
 import '../../../../Model/home_models.dart';
+import '../../../../helper/network_img/image_helper.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key});
@@ -431,11 +431,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         final sellerName = controller.sellerData['displayName']?.toString() ?? controller.product.seller;
         final profileImage = controller.sellerData['profileImage']?.toString() ?? '';
         final displayImage = profileImage.isNotEmpty 
-            ? profileImage 
+            ? ImageHelper.formatImageUrl(profileImage) 
             : 'https://i.pravatar.cc/150?u=${sellerName.hashCode}';
             
         final mutualFriends = controller.sellerData['mutualFriendsCount']?.toString() ?? '0';
         final groupsCount = controller.sellerData['joinedGroupsCount']?.toString() ?? '0';
+
+        final String sId = (controller.sellerData['userId'] ?? controller.listingData['sellerId'] ?? '').toString();
 
         return Container(
           padding: EdgeInsets.all(20.r),
@@ -445,29 +447,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           child: Column(
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 25.r,
-                    backgroundImage: NetworkImage(displayImage),
-                  ),
-                  SizedBox(width: 15.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          sellerName,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+              GestureDetector(
+                onTap: () {
+                  if (sId.isNotEmpty) {
+                    Get.to(() => const SellerProfileScreen(), arguments: sId);
+                  }
+                },
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 25.r,
+                      backgroundImage: NetworkImage(displayImage),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 15.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            sellerName,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 20.h),
               _buildSellerStat(
@@ -485,7 +494,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 height: 48.h,
                 child: OutlinedButton(
                   onPressed: () {
-                    final sId = controller.sellerData['userId'] ?? controller.listingData['sellerId'] ?? '';
                     if (sId.isNotEmpty) {
                       Get.to(() => const SellerProfileScreen(), arguments: sId);
                     }
