@@ -9,7 +9,6 @@ import '../../Login/view/login_screen.dart';
 import '../../ProductDetails/view/product_details_screen.dart';
 import '../../../../Model/home_models.dart';
 import 'seller_all_listings_screen.dart';
-import '../../Messages/view/chat_detail_screen.dart';
 
 
 class SellerProfileScreen extends StatefulWidget {
@@ -275,16 +274,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
             child: _buildButton(
               "Message",
               isPrimary: false,
-              onTap: () {
-                Get.to(
-                  () => const ChatDetailScreen(),
-                  arguments: {
-                    'userId': controller.userId.value,
-                    'name': controller.sellerName.value,
-                    'image': controller.sellerImage.value,
-                  },
-                );
-              },
+              onTap: () => controller.startChat(),
             ),
           ),
         ],

@@ -6,6 +6,7 @@ import '../../../../service/api_client.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../../../../helper/shared_prefe/shared_prefe.dart';
 import '../../Login/view/login_screen.dart';
+import '../../Messages/view/chat_detail_screen.dart';
 
 class SellerProfileController extends GetxController {
   final userId = ''.obs;
@@ -371,6 +372,65 @@ class SellerProfileController extends GetxController {
           colorText: Colors.white,
         );
       }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.9),
+        colorText: Colors.white,
+      );
+    } finally {
+      isConnectionActionLoading.value = false;
+    }
+  }
+
+  Future<void> startChat() async {
+    final token = await SharedPrefsHelper.getToken();
+    if (token == null || token.isEmpty) {
+      Get.to(() => const LoginScreen());
+      return;
+    }
+
+    isConnectionActionLoading.value = true;
+    try {
+      final response = await ApiClient.post(
+        ApiUrl.conversation,
+        {
+          'recipientId': userId.value,
+          'conversationType': 'direct',
+        },
+        requireAuth: true,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          final conversationId = data['data']['_id'] ?? '';
+          if (conversationId.isNotEmpty) {
+            Get.to(
+              () => const ChatDetailScreen(),
+              arguments: {
+                'conversationId': conversationId,
+                'userId': userId.value,
+                'name': sellerName.value,
+                'image': sellerImage.value,
+              },
+            );
+            return;
+          }
+        }
+      }
+      
+      final errorMsg = response.statusCode != 200 && response.statusCode != 201
+          ? jsonDecode(response.body)['message']
+          : 'Failed to start conversation.';
+      Get.snackbar(
+        'Error',
+        errorMsg ?? 'Failed to start conversation.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.9),
+        colorText: Colors.white,
+      );
     } catch (e) {
       Get.snackbar(
         'Error',

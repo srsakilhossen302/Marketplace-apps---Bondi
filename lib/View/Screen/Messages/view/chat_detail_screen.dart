@@ -13,6 +13,14 @@ class ChatDetailScreen extends GetView<MessagesController> {
     if (!Get.isRegistered<MessagesController>()) {
       Get.put(MessagesController());
     }
+    final messagesController = Get.find<MessagesController>();
+    final args = Get.arguments;
+    if (args != null && args is Map && args.containsKey('userId')) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        messagesController.loadChatDetails(args);
+      });
+    }
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -24,23 +32,45 @@ class ChatDetailScreen extends GetView<MessagesController> {
               _buildAppBar(),
               Expanded(
                 child: Obx(
-                  () => ListView.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 10.h,
-                    ),
-                    itemCount: controller.groupMessages.length,
-                    itemBuilder: (context, index) {
-                      final msg = controller.groupMessages[index];
-                      if (msg['isSystem'] == true) {
-                        return _buildSystemMessage(msg['text'] as String);
-                      } else if (msg['isCard'] == true) {
-                        return _buildProductCard(msg);
-                      } else {
-                        return _buildMessageBubble(msg);
-                      }
-                    },
-                  ),
+                  () {
+                    if (controller.isMessagesLoading.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.accentColor,
+                        ),
+                      );
+                    }
+                    if (controller.groupMessages.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No messages yet. Say hello!',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.6),
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.w,
+                        vertical: 10.h,
+                      ),
+                      itemCount: controller.groupMessages.length,
+                      itemBuilder: (context, index) {
+                        final msg = controller.groupMessages[index];
+                        if (msg['isSystem'] == true) {
+                          return _buildSystemMessage(msg['text'] as String);
+                        } else if (msg['isCard'] == true) {
+                          return _buildProductCard(msg);
+                        } else if (msg['messageType'] == 'image') {
+                          return _buildImageMessageBubble(msg);
+                        } else {
+                          return _buildMessageBubble(msg);
+                        }
+                      },
+                    );
+                  },
                 ),
               ),
               _buildInputArea(),
@@ -55,7 +85,9 @@ class ChatDetailScreen extends GetView<MessagesController> {
     return Obx(() {
       final isDirect = controller.isDirectChat.value;
       final title = isDirect ? controller.directChatUserName.value : StaticString.sneakerTraders;
-      final subtitle = isDirect ? "Online" : StaticString.oneTwoFourKMembersTwoOneKOnline;
+      final subtitle = isDirect 
+          ? (controller.directChatUserOnline.value ? "Online" : "Offline") 
+          : StaticString.oneTwoFourKMembersTwoOneKOnline;
       final image = isDirect && controller.directChatUserImage.value.isNotEmpty
           ? controller.directChatUserImage.value
           : (isDirect
@@ -84,7 +116,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
                     width: 10.w,
                     height: 10.h,
                     decoration: BoxDecoration(
-                      color: Colors.green,
+                      color: (!isDirect || controller.directChatUserOnline.value) ? Colors.green : Colors.grey,
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: AppColors.backgroundColor,
@@ -186,7 +218,11 @@ class ChatDetailScreen extends GetView<MessagesController> {
               if (!isMe)
                 CircleAvatar(
                   radius: 18.r,
-                  backgroundImage: NetworkImage(msg['image'] as String),
+                  backgroundImage: NetworkImage(
+                    (msg['image'] != null && (msg['image'] as String).isNotEmpty)
+                        ? msg['image'] as String
+                        : 'https://i.pravatar.cc/150?u=${(msg['sender'] ?? 'User').hashCode}',
+                  ),
                 ),
               if (!isMe) SizedBox(width: 10.w),
               Flexible(
@@ -398,29 +434,32 @@ class ChatDetailScreen extends GetView<MessagesController> {
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
       child: Row(
         children: [
-          Container(
-            padding: EdgeInsets.all(10.r),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
+          GestureDetector(
+            onTap: () => controller.pickAndSendImage(),
+            child: Container(
+              padding: EdgeInsets.all(10.r),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.add, color: AppColors.cardColor, size: 24.sp),
             ),
-            child: Icon(Icons.add, color: AppColors.cardColor, size: 24.sp),
           ),
           SizedBox(width: 12.w),
           Expanded(
             child: Container(
-              height: 50.h,
               padding: EdgeInsets.symmetric(horizontal: 15.w),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25.r),
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Obx(() => TextField(
                       controller: controller.messageTextController,
-                      style: const TextStyle(color: Colors.black),
+                      style: TextStyle(color: Colors.black, fontSize: 14.sp),
                       decoration: InputDecoration(
                         hintText: controller.isDirectChat.value ? "Message..." : StaticString.messageGroup,
                         hintStyle: TextStyle(
@@ -428,6 +467,8 @@ class ChatDetailScreen extends GetView<MessagesController> {
                           fontSize: 14.sp,
                         ),
                         border: InputBorder.none,
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: 12.h),
                       ),
                     )),
                   ),
@@ -451,6 +492,142 @@ class ChatDetailScreen extends GetView<MessagesController> {
               child: Icon(Icons.send, color: Colors.white, size: 24.sp),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageMessageBubble(Map<String, dynamic> msg) {
+    bool isMe = msg['isMe'] == true;
+    final List<dynamic> mediaUrls = msg['mediaUrls'] ?? [];
+    final text = msg['text'] as String? ?? '';
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20.h),
+      child: Column(
+        crossAxisAlignment: isMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
+        children: [
+          if (!isMe)
+            Padding(
+              padding: EdgeInsets.only(left: 45.w, bottom: 4.h),
+              child: Text(
+                msg['sender'] as String? ?? 'User',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.8),
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          Row(
+            mainAxisAlignment: isMe
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!isMe)
+                CircleAvatar(
+                  radius: 18.r,
+                  backgroundImage: NetworkImage(
+                    (msg['image'] != null && (msg['image'] as String).isNotEmpty)
+                        ? msg['image'] as String
+                        : 'https://i.pravatar.cc/150?u=${(msg['sender'] ?? 'User').hashCode}',
+                  ),
+                ),
+              if (!isMe) SizedBox(width: 10.w),
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.all(8.r),
+                  decoration: BoxDecoration(
+                    color: isMe
+                        ? Colors.white.withOpacity(0.1)
+                        : Colors.white.withOpacity(0.15),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.r),
+                      topRight: Radius.circular(20.r),
+                      bottomLeft: isMe
+                          ? Radius.circular(20.r)
+                          : Radius.circular(0),
+                      bottomRight: isMe
+                          ? Radius.circular(0)
+                          : Radius.circular(20.r),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (mediaUrls.isNotEmpty)
+                        Column(
+                          children: mediaUrls.map((url) {
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: mediaUrls.last == url ? 0.h : 6.h),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15.r),
+                                child: Image.network(
+                                  url.toString(),
+                                  width: 200.w,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Container(
+                                      width: 200.w,
+                                      height: 150.h,
+                                      color: Colors.white.withOpacity(0.05),
+                                      child: const Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.accentColor,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      width: 200.w,
+                                      height: 100.h,
+                                      color: Colors.white.withOpacity(0.05),
+                                      child: const Icon(
+                                        Icons.broken_image,
+                                        color: Colors.white38,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      if (text.isNotEmpty)
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.h, left: 8.w, right: 8.w, bottom: 4.h),
+                          child: Text(
+                            text,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14.sp,
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (msg['time'] != null)
+            Padding(
+              padding: EdgeInsets.only(top: 4.h),
+              child: Text(
+                msg['time'] as String,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.4),
+                  fontSize: 10.sp,
+                ),
+              ),
+            ),
         ],
       ),
     );

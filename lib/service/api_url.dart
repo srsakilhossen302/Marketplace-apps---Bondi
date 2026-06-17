@@ -19,4 +19,7 @@ class ApiUrl {
   static const String acceptRequest = "$baseUrl/social/accept-request";
   static const String removeFriend = "$baseUrl/social/remove-friend";
   static const String sendMessage = "$baseUrl/message/send";
+  static const String conversation = "$baseUrl/conversation";
+  static const String message = "$baseUrl/message";
+  static const String messageSeen = "$baseUrl/message/seen";
 }

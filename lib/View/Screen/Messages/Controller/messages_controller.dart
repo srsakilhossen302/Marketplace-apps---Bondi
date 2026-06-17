@@ -1,25 +1,44 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 import '../../../../service/api_client.dart';
 import '../../../../service/api_url.dart';
+import '../../../../helper/shared_prefe/shared_prefe.dart';
 
 class MessagesController extends GetxController {
   final isDirectChat = false.obs;
   final directChatUserId = ''.obs;
   final directChatUserName = ''.obs;
   final directChatUserImage = ''.obs;
+  final directConversationId = ''.obs;
   final messageTextController = TextEditingController();
+  final isMessagesLoading = false.obs;
+  final directChatUserOnline = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     final args = Get.arguments;
     if (args != null && args is Map && args.containsKey('userId')) {
-      isDirectChat.value = true;
-      directChatUserId.value = args['userId'] ?? '';
-      directChatUserName.value = args['name'] ?? 'Seller';
-      directChatUserImage.value = args['image'] ?? '';
-      groupMessages.clear();
+      loadChatDetails(args);
+    }
+  }
+
+  void loadChatDetails(Map<dynamic, dynamic> args) {
+    isDirectChat.value = true;
+    directChatUserId.value = args['userId'] ?? '';
+    directChatUserName.value = args['name'] ?? 'Seller';
+    directChatUserImage.value = args['image'] ?? '';
+    final newConvId = args['conversationId'] ?? '';
+
+    directConversationId.value = newConvId;
+    groupMessages.clear();
+
+    if (newConvId.isNotEmpty) {
+      fetchMessages(newConvId);
+      markMessagesAsSeen(newConvId);
     }
   }
 
@@ -29,92 +48,11 @@ class MessagesController extends GetxController {
     super.onClose();
   }
 
-  final recentChats = [
-    {'name': 'Marcus', 'image': 'https://i.pravatar.cc/150?u=marcus', 'online': true},
-    {'name': 'Elena', 'image': 'https://i.pravatar.cc/150?u=elena', 'online': true},
-    {'name': 'Julian', 'image': 'https://i.pravatar.cc/150?u=julian', 'online': false},
-    {'name': 'Sarah', 'image': 'https://i.pravatar.cc/150?u=sarah', 'online': true},
-    {'name': 'Clara', 'image': 'https://i.pravatar.cc/150?u=clara', 'online': false},
-  ].obs;
+  final recentChats = <Map<String, dynamic>>[].obs;
 
-  final chatList = [
-    {
-      'title': 'Trade: Rolex Datejust vs iPhone 15 Pro',
-      'lastMsg': 'Alex: "The condition is mint, I have all',
-      'time': '12:45 PM',
-      'status': 'TRADE PENDING',
-      'images': ['https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=200', 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?q=80&w=200'],
-      'isGroup': false,
-    },
-    {
-      'title': 'Vintage Chronograph',
-      'lastMsg': 'You: "Is the leather strap original to',
-      'time': 'Yesterday',
-      'status': 'Read',
-      'image': 'https://i.pravatar.cc/150?u=vintage_seller',
-      'itemImage': 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=200',
-      'isGroup': false,
-    },
-    {
-      'title': 'Sneakerheads LA 👟',
-      'lastMsg': 'Jordan: "Just copped the new...',
-      'time': '2:14 PM',
-      'status': '8 online',
-      'isGroup': true,
-      'groupImage': 'https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=200',
-    },
-    {
-      'title': 'David Chen',
-      'lastMsg': 'Voice note 0:12',
-      'time': '3:50 PM',
-      'status': 'online',
-      'image': 'https://i.pravatar.cc/150?u=david',
-      'isGroup': false,
-      'isVoiceNote': true,
-    },
-    {
-      'title': 'Sofia Vergara',
-      'lastMsg': 'Shared an image',
-      'time': 'Wed',
-      'status': 'online',
-      'image': 'https://i.pravatar.cc/150?u=sofia',
-      'isGroup': false,
-      'isImage': true,
-    },
-  ].obs;
+  final chatList = <Map<String, dynamic>>[].obs;
 
-  final groupMessages = [
-    {
-      'sender': 'MarcusKicks',
-      'text': 'Anyone got the new Travis Scott\'s in a size 10?',
-      'isMe': false,
-      'image': 'https://i.pravatar.cc/150?u=marcus',
-    },
-    {
-      'isSystem': true,
-      'text': 'Sarah Miller joined the group.',
-    },
-    {
-      'sender': 'Me',
-      'text': 'Just listed a pair of Bred 4s if anyone is interested! Check my profile.',
-      'isMe': true,
-    },
-    {
-      'isCard': true,
-      'title': 'Jordan 4 Retro \'Bred\'',
-      'price': '\$450',
-      'image': 'https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=500',
-      'details': 'Size 10.5 • Deadstock',
-      'isMe': false, // Card seems to be from someone else in the image context
-      'senderImage': 'https://i.pravatar.cc/150?u=jordan',
-    },
-    {
-      'sender': 'Me',
-      'text': 'I might be interested in those Bred 4s. Are you open to trades or just cash?',
-      'isMe': true,
-      'time': '10:42 AM',
-    },
-  ].obs;
+  final groupMessages = <Map<String, dynamic>>[].obs;
 
   Future<void> sendMessageAction() async {
     final text = messageTextController.text.trim();
@@ -132,8 +70,8 @@ class MessagesController extends GetxController {
         });
 
         final fields = {
-          'receiverId': directChatUserId.value,
-          'content': text,
+          'conversationId': directConversationId.value,
+          'text': text,
         };
         final response = await ApiClient.multipartPost(
           ApiUrl.sendMessage,
@@ -159,6 +97,284 @@ class MessagesController extends GetxController {
         'isMe': true,
         'time': 'Just now',
       });
+    }
+  }
+
+  Future<void> fetchMessages(String conversationId) async {
+    isMessagesLoading.value = true;
+    try {
+      final response = await ApiClient.get(
+        '${ApiUrl.message}/$conversationId',
+        requireAuth: true,
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          final resData = data['data'];
+
+          // Update receiver info if present
+          if (resData is Map && resData.containsKey('receiverInfo')) {
+            final recInfo = resData['receiverInfo'];
+            if (recInfo != null && recInfo is Map) {
+              directChatUserName.value = recInfo['fullName'] ?? recInfo['username'] ?? directChatUserName.value;
+              directChatUserImage.value = recInfo['profileImage'] ?? recInfo['picture'] ?? directChatUserImage.value;
+              directChatUserOnline.value = recInfo['isOnline'] ?? false;
+            }
+          }
+
+          // Parse list of messages (can be a direct list, nested under 'data', or nested under 'messages')
+          List<dynamic> list = [];
+          if (resData is List) {
+            list = resData;
+          } else if (resData is Map) {
+            list = resData['data'] ?? resData['messages'] ?? [];
+          }
+
+          final currentUserId = await SharedPrefsHelper.getUserId() ?? '';
+          final parsedMessages = list.map((msg) {
+            final senderObj = msg['senderId'] ?? msg['sender'];
+            String msgSenderId = '';
+            String senderName = '';
+            String senderImage = '';
+            if (senderObj != null) {
+              if (senderObj is Map) {
+                msgSenderId = (senderObj['_id'] ?? senderObj['id'] ?? '').toString();
+                senderName = (senderObj['fullName'] ?? senderObj['displayName'] ?? senderObj['username'] ?? '').toString();
+                senderImage = (senderObj['profileImage'] ?? senderObj['picture'] ?? '').toString();
+              } else {
+                msgSenderId = senderObj.toString();
+              }
+            }
+            if (msgSenderId.isEmpty && msg['senderId'] != null && msg['senderId'] is! Map) {
+              msgSenderId = msg['senderId'].toString();
+            }
+            
+            // Check msg['isMe'] first, then fallback to currentUserId comparison
+            final isMe = msg['isMe'] ?? (msgSenderId.isNotEmpty && msgSenderId == currentUserId);
+            if (senderImage.isEmpty && !isMe) {
+              senderImage = directChatUserImage.value;
+            }
+            if (senderImage.isEmpty) {
+              senderImage = 'https://i.pravatar.cc/150?u=${senderName.hashCode}';
+            }
+
+            return {
+              'sender': senderName,
+              'text': msg['text'] ?? msg['content'] ?? '',
+              'isMe': isMe,
+              'image': senderImage,
+              'messageType': msg['messageType'] ?? 'text',
+              'mediaUrls': msg['mediaUrls'] != null ? List<String>.from(msg['mediaUrls']) : <String>[],
+              'time': msg['createdAt'] != null 
+                  ? DateTime.parse(msg['createdAt']).toLocal().toString().substring(11, 16) 
+                  : '',
+            };
+          }).toList();
+
+          // Reverse messages list to display chronologically (oldest at top, newest at bottom)
+          groupMessages.assignAll(parsedMessages.reversed.toList());
+        }
+      }
+    } catch (e) {
+      print('Error fetching messages: $e');
+    } finally {
+      isMessagesLoading.value = false;
+    }
+  }
+
+  Future<void> markMessagesAsSeen(String conversationId) async {
+    try {
+      await ApiClient.post(
+        '${ApiUrl.messageSeen}/$conversationId',
+        {},
+        requireAuth: true,
+      );
+    } catch (e) {
+      print('Error marking messages as seen: $e');
+    }
+  }
+
+  final ImagePicker _imagePicker = ImagePicker();
+
+  Future<void> pickAndSendImage() async {
+    try {
+      List<XFile>? pickedFiles = await _imagePicker.pickMultiImage(
+        imageQuality: 70,
+      );
+      if (pickedFiles != null && pickedFiles.isNotEmpty) {
+        if (pickedFiles.length > 5) {
+          pickedFiles = pickedFiles.sublist(0, 5);
+          Get.snackbar(
+            'Limit Exceeded',
+            'Only the first 5 images will be sent.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.orangeAccent.withOpacity(0.9),
+            colorText: Colors.white,
+          );
+        }
+        await uploadImageMessages(pickedFiles);
+      }
+    } catch (e) {
+      print('Error picking images: $e');
+    }
+  }
+
+  Future<void> uploadImageMessages(List<XFile> filesList) async {
+    if (!isDirectChat.value || directConversationId.value.isEmpty) return;
+
+    try {
+      groupMessages.add({
+        'sender': 'Me',
+        'text': '[Sending ${filesList.length} image(s)...]',
+        'isMe': true,
+        'time': 'Just now',
+      });
+
+      final fields = {
+        'conversationId': directConversationId.value,
+        'text': '',
+      };
+
+      List<http.MultipartFile> files = [];
+      for (var file in filesList) {
+        files.add(await http.MultipartFile.fromPath(
+          'media',
+          file.path,
+        ));
+      }
+
+      final response = await ApiClient.multipartPost(
+        ApiUrl.sendMessage,
+        fields,
+        files: files,
+        requireAuth: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        fetchMessages(directConversationId.value);
+      } else {
+        Get.snackbar(
+          'Error',
+          'Failed to send image(s).',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      print('Error sending image messages: $e');
+    }
+  }
+
+  final isConversationsLoading = false.obs;
+
+  Future<void> fetchConversations() async {
+    isConversationsLoading.value = true;
+    try {
+      final response = await ApiClient.get(ApiUrl.conversation, requireAuth: true);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          final List<dynamic> list = data['data'];
+          final currentUserId = await SharedPrefsHelper.getUserId() ?? '';
+          
+          final List<Map<String, dynamic>> parsedChats = [];
+          for (var conv in list) {
+            if (conv is! Map) continue;
+            
+            final conversationId = conv['_id'] ?? '';
+            final conversationType = conv['conversationType'] ?? 'direct';
+            
+            // Extract other participant details
+            final participants = conv['participants'] as List<dynamic>? ?? [];
+            Map<String, dynamic> otherParticipant = {};
+            for (var p in participants) {
+              if (p is Map) {
+                final pId = (p['_id'] ?? p['id'] ?? '').toString();
+                if (pId != currentUserId) {
+                  otherParticipant = Map<String, dynamic>.from(p);
+                  break;
+                }
+              }
+            }
+            if (otherParticipant.isEmpty && participants.isNotEmpty) {
+              otherParticipant = Map<String, dynamic>.from(participants[0]);
+            }
+            
+            final otherUserId = otherParticipant['_id'] ?? otherParticipant['id'] ?? '';
+            final otherUserName = otherParticipant['fullName'] ?? otherParticipant['displayName'] ?? otherParticipant['username'] ?? 'User';
+            final otherUserImage = otherParticipant['profileImage'] ?? otherParticipant['picture'] ?? '';
+            final isOnline = otherParticipant['status'] == 'active';
+
+            // Extract last message info
+            final lastMessageId = conv['lastMessageId'];
+            String lastMsgText = '';
+            bool isSeen = true;
+            if (lastMessageId != null && lastMessageId is Map) {
+              lastMsgText = lastMessageId['content'] ?? '';
+              isSeen = lastMessageId['isSeen'] ?? true;
+              if (lastMsgText.isEmpty) {
+                final msgType = lastMessageId['messageType'] ?? '';
+                if (msgType == 'text') {
+                  lastMsgText = 'Message';
+                } else if (msgType.isNotEmpty) {
+                  lastMsgText = '[Media]';
+                }
+              }
+            }
+            if (lastMsgText.isEmpty) {
+              lastMsgText = 'Tap to chat';
+            }
+
+            // Extract time
+            String lastMsgTime = '';
+            final timeStr = conv['lastActivity'] ?? conv['updatedAt'] ?? (lastMessageId is Map ? lastMessageId['createdAt'] : null);
+            if (timeStr != null) {
+              try {
+                final date = DateTime.parse(timeStr.toString()).toLocal();
+                lastMsgTime = "${date.hour}:${date.minute.toString().padLeft(2, '0')}";
+              } catch (e) {
+                lastMsgTime = '';
+              }
+            }
+
+            parsedChats.add({
+              'conversationId': conversationId,
+              'userId': otherUserId,
+              'title': conversationType == 'direct' ? otherUserName : (conv['groupName'] ?? otherUserName),
+              'lastMsg': lastMsgText,
+              'time': lastMsgTime,
+              'status': isSeen ? 'Read' : 'Unread',
+              'image': otherUserImage,
+              'isGroup': conversationType == 'group' || conversationType == 'trade',
+              'online': isOnline,
+              'otherParticipant': otherParticipant,
+            });
+          }
+          
+          chatList.assignAll(parsedChats);
+
+          // Build dynamic recentChats list (taking up to 10 most recent)
+          final List<Map<String, dynamic>> parsedRecent = parsedChats.map((chat) {
+            final title = chat['title'] ?? 'User';
+            final img = (chat['image'] != null && (chat['image'] as String).isNotEmpty)
+                ? chat['image'] as String
+                : 'https://i.pravatar.cc/150?u=${title.hashCode}';
+            return {
+              'conversationId': chat['conversationId'],
+              'userId': chat['userId'],
+              'name': title,
+              'image': img,
+              'online': chat['online'] ?? false,
+            };
+          }).take(10).toList();
+          recentChats.assignAll(parsedRecent);
+        }
+      }
+    } catch (e) {
+      print('Error fetching conversations: $e');
+    } finally {
+      isConversationsLoading.value = false;
     }
   }
 }

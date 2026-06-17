@@ -12,7 +12,10 @@ class MessagesScreen extends GetView<MessagesController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(MessagesController());
+    final controller = Get.put(MessagesController());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchConversations();
+    });
 
     return Scaffold(
       body: Container(
@@ -130,68 +133,127 @@ class MessagesScreen extends GetView<MessagesController> {
   }
 
   Widget _buildRecentChats() {
-    return SizedBox(
-      height: 100.h,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: controller.recentChats.length,
-        itemBuilder: (context, index) {
-          final chat = controller.recentChats[index];
-          return Container(
-            margin: EdgeInsets.only(right: 20.w),
-            child: Column(
-              children: [
-                Stack(
+    return Obx(() {
+      if (controller.recentChats.isEmpty) {
+        return SizedBox(
+          height: 100.h,
+          child: Center(
+            child: Text(
+              'No recent chats',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.4),
+                fontSize: 12.sp,
+              ),
+            ),
+          ),
+        );
+      }
+      return SizedBox(
+        height: 100.h,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: controller.recentChats.length,
+          itemBuilder: (context, index) {
+            final chat = controller.recentChats[index];
+            return GestureDetector(
+              onTap: () => Get.to(
+                () => const ChatDetailScreen(),
+                arguments: {
+                  'conversationId': chat['conversationId'] ?? '',
+                  'userId': chat['userId'] ?? '',
+                  'name': chat['name'] ?? '',
+                  'image': chat['image'] ?? '',
+                },
+              ),
+              child: Container(
+                margin: EdgeInsets.only(right: 20.w),
+                child: Column(
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(2.r),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.cyanAccent, width: 2),
-                      ),
-                      child: CircleAvatar(
-                        radius: 30.r,
-                        backgroundImage: NetworkImage(chat['image'] as String),
-                      ),
-                    ),
-                    if (chat['online'] as bool)
-                      Positioned(
-                        right: 2.w,
-                        bottom: 2.h,
-                        child: Container(
-                          width: 14.w,
-                          height: 14.h,
+                    Stack(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(2.r),
                           decoration: BoxDecoration(
-                            color: Colors.cyanAccent,
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppColors.backgroundColor,
-                              width: 2,
-                            ),
+                            border: Border.all(color: Colors.cyanAccent, width: 2),
+                          ),
+                          child: CircleAvatar(
+                            radius: 30.r,
+                            backgroundImage: NetworkImage(chat['image'] as String),
                           ),
                         ),
-                      ),
+                        if (chat['online'] as bool)
+                          Positioned(
+                            right: 2.w,
+                            bottom: 2.h,
+                            child: Container(
+                              width: 14.w,
+                              height: 14.h,
+                              decoration: BoxDecoration(
+                                color: Colors.cyanAccent,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColors.backgroundColor,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      chat['name'] as String,
+                      style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                    ),
                   ],
                 ),
-                SizedBox(height: 8.h),
-                Text(
-                  chat['name'] as String,
-                  style: TextStyle(color: Colors.white, fontSize: 12.sp),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+              ),
+            );
+          },
+        ),
+      );
+    });
   }
 
   Widget _buildChatList() {
-    return Obx(
-      () => Column(
+    return Obx(() {
+      if (controller.isConversationsLoading.value) {
+        return Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 40.h),
+            child: const CircularProgressIndicator(
+              color: AppColors.accentColor,
+            ),
+          ),
+        );
+      }
+      if (controller.chatList.isEmpty) {
+        return Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 40.h),
+            child: Text(
+              'No conversations yet.',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.6),
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+        );
+      }
+      return Column(
         children: controller.chatList.map((chat) {
           return GestureDetector(
-            onTap: () => Get.to(() => const ChatDetailScreen()),
+            onTap: () => Get.to(
+              () => const ChatDetailScreen(),
+              arguments: {
+                'conversationId': chat['conversationId'] ?? '',
+                'userId': chat['userId'] ?? '',
+                'name': chat['title'] ?? '',
+                'image': chat['image'] ?? '',
+              },
+            ),
             child: Container(
               margin: EdgeInsets.only(bottom: 15.h),
               padding: EdgeInsets.all(15.r),
@@ -304,19 +366,26 @@ class MessagesScreen extends GetView<MessagesController> {
             ),
           );
         }).toList(),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildChatAvatar(Map<String, dynamic> chat) {
+    final title = chat['title'] ?? 'User';
+    final fallbackUrl = 'https://i.pravatar.cc/150?u=${title.hashCode}';
+    final groupFallbackUrl = 'https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=200';
+
     if (chat['isGroup'] == true) {
+      final grpImage = (chat['groupImage'] != null && (chat['groupImage'] as String).isNotEmpty)
+          ? chat['groupImage'] as String
+          : groupFallbackUrl;
       return Container(
         width: 60.w,
         height: 60.h,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           image: DecorationImage(
-            image: NetworkImage(chat['groupImage'] as String),
+            image: NetworkImage(grpImage),
             fit: BoxFit.cover,
           ),
         ),
@@ -349,20 +418,23 @@ class MessagesScreen extends GetView<MessagesController> {
           children: [
             CircleAvatar(
               radius: 20.r,
-              backgroundImage: NetworkImage(images[0] as String),
+              backgroundImage: NetworkImage(images.isNotEmpty ? images[0] as String : fallbackUrl),
             ),
             Positioned(
               right: 0,
               bottom: 0,
               child: CircleAvatar(
                 radius: 20.r,
-                backgroundImage: NetworkImage(images[1] as String),
+                backgroundImage: NetworkImage(images.length > 1 ? images[1] as String : fallbackUrl),
               ),
             ),
           ],
         ),
       );
     } else if (chat['itemImage'] != null) {
+      final img = (chat['image'] != null && (chat['image'] as String).isNotEmpty)
+          ? chat['image'] as String
+          : fallbackUrl;
       return SizedBox(
         width: 60.w,
         height: 60.h,
@@ -370,7 +442,7 @@ class MessagesScreen extends GetView<MessagesController> {
           children: [
             CircleAvatar(
               radius: 25.r,
-              backgroundImage: NetworkImage(chat['image'] as String),
+              backgroundImage: NetworkImage(img),
             ),
             Positioned(
               right: 0,
@@ -389,11 +461,14 @@ class MessagesScreen extends GetView<MessagesController> {
         ),
       );
     } else {
+      final img = (chat['image'] != null && (chat['image'] as String).isNotEmpty)
+          ? chat['image'] as String
+          : fallbackUrl;
       return Stack(
         children: [
           CircleAvatar(
             radius: 30.r,
-            backgroundImage: NetworkImage(chat['image'] as String),
+            backgroundImage: NetworkImage(img),
           ),
           if (chat['status'] == 'online')
             Positioned(
