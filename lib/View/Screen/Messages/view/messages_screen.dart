@@ -156,15 +156,20 @@ class MessagesScreen extends GetView<MessagesController> {
           itemBuilder: (context, index) {
             final chat = controller.recentChats[index];
             return GestureDetector(
-              onTap: () => Get.to(
-                () => const ChatDetailScreen(),
-                arguments: {
-                  'conversationId': chat['conversationId'] ?? '',
-                  'userId': chat['userId'] ?? '',
-                  'name': chat['name'] ?? '',
-                  'image': chat['image'] ?? '',
-                },
-              ),
+              onTap: () {
+                print('Recent Chat Tapped: index=$index, name=${chat['name']}, conversationId=${chat['_id']}, conversationType=${chat['conversationType']}, isGroup=${chat['isGroup']}');
+                Get.to(
+                  () => const ChatDetailScreen(),
+                  arguments: {
+                    'conversationId': chat['_id'] ?? '',
+                    'userId': chat['userId'] ?? '',
+                    'name': chat['name'] ?? '',
+                    'image': chat['image'] ?? '',
+                    'conversationType': chat['conversationType'] ?? 'direct',
+                    'isGroup': chat['isGroup'] ?? false,
+                  },
+                );
+              },
               child: Container(
                 margin: EdgeInsets.only(right: 20.w),
                 child: Column(
@@ -245,15 +250,20 @@ class MessagesScreen extends GetView<MessagesController> {
       return Column(
         children: controller.chatList.map((chat) {
           return GestureDetector(
-            onTap: () => Get.to(
-              () => const ChatDetailScreen(),
-              arguments: {
-                'conversationId': chat['conversationId'] ?? '',
-                'userId': chat['userId'] ?? '',
-                'name': chat['title'] ?? '',
-                'image': chat['image'] ?? '',
-              },
-            ),
+            onTap: () {
+              print('Chat List Item Tapped: title=${chat['title']}, conversationId=${chat['_id']}, conversationType=${chat['conversationType']}, isGroup=${chat['isGroup']}');
+              Get.to(
+                () => const ChatDetailScreen(),
+                arguments: {
+                  'conversationId': chat['_id'] ?? '',
+                  'userId': chat['userId'] ?? '',
+                  'name': chat['title'] ?? '',
+                  'image': chat['image'] ?? '',
+                  'conversationType': chat['conversationType'] ?? 'direct',
+                  'isGroup': chat['isGroup'] ?? false,
+                },
+              );
+            },
             child: Container(
               margin: EdgeInsets.only(bottom: 15.h),
               padding: EdgeInsets.all(15.r),

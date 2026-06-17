@@ -28,6 +28,7 @@ class MessagesController extends GetxController {
   }
 
   void loadChatDetails(Map<dynamic, dynamic> args) {
+    print('loadChatDetails arguments received: $args');
     isDirectChat.value = args['conversationType'] != 'group' && args['isGroup'] != true;
     directChatUserId.value = args['userId'] ?? '';
     directChatUserName.value = args['name'] ?? 'Seller';
@@ -38,6 +39,7 @@ class MessagesController extends GetxController {
     groupMessages.clear();
 
     if (newConvId.isNotEmpty) {
+      print('loadChatDetails loading conversation messages with ID: $newConvId');
       fetchMessages(newConvId);
       markMessagesAsSeen(newConvId);
     }
@@ -344,7 +346,7 @@ class MessagesController extends GetxController {
             final grpName = conv['groupName']?.toString() ?? '';
 
             parsedChats.add({
-              'conversationId': conversationId,
+              '_id': conversationId,
               'userId': otherUserId,
               'title': isGroup ? (grpName.isNotEmpty ? grpName : 'Group Chat') : otherUserName,
               'lastMsg': lastMsgText,
@@ -356,13 +358,14 @@ class MessagesController extends GetxController {
               'groupImage': ImageHelper.formatImageUrl(grpImage),
               'groupName': grpName,
               'isGroup': isGroup,
+              'conversationType': conversationType,
               'online': isOnline,
               'otherParticipant': otherParticipant,
             });
           }
           
           chatList.assignAll(parsedChats);
-
+ 
           // Build dynamic recentChats list (taking up to 10 most recent)
           final List<Map<String, dynamic>> parsedRecent = parsedChats.map((chat) {
             final title = chat['title'] ?? 'User';
@@ -370,11 +373,13 @@ class MessagesController extends GetxController {
                 ? chat['image'] as String
                 : 'https://i.pravatar.cc/150?u=${title.hashCode}';
             return {
-              'conversationId': chat['conversationId'],
+              '_id': chat['_id'],
               'userId': chat['userId'],
               'name': title,
               'image': img,
               'online': chat['online'] ?? false,
+              'isGroup': chat['isGroup'] ?? false,
+              'conversationType': chat['conversationType'] ?? 'direct',
             };
           }).take(10).toList();
           recentChats.assignAll(parsedRecent);
