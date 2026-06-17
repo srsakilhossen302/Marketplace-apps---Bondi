@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import '../../../../service/api_client.dart';
 import '../../../../service/api_url.dart';
 import '../../../../helper/shared_prefe/shared_prefe.dart';
+import '../../../../helper/network_img/image_helper.dart';
 
 class MessagesController extends GetxController {
   final isDirectChat = false.obs;
@@ -338,15 +339,23 @@ class MessagesController extends GetxController {
               }
             }
 
+            final isGroup = conversationType == 'group' || conversationType == 'trade';
+            final grpImage = conv['groupImage']?.toString() ?? '';
+            final grpName = conv['groupName']?.toString() ?? '';
+
             parsedChats.add({
               'conversationId': conversationId,
               'userId': otherUserId,
-              'title': conversationType == 'direct' ? otherUserName : (conv['groupName'] ?? otherUserName),
+              'title': isGroup ? (grpName.isNotEmpty ? grpName : 'Group Chat') : otherUserName,
               'lastMsg': lastMsgText,
               'time': lastMsgTime,
               'status': isSeen ? 'Read' : 'Unread',
-              'image': otherUserImage,
-              'isGroup': conversationType == 'group' || conversationType == 'trade',
+              'image': isGroup 
+                  ? ImageHelper.formatImageUrl(grpImage) 
+                  : ImageHelper.formatImageUrl(otherUserImage),
+              'groupImage': ImageHelper.formatImageUrl(grpImage),
+              'groupName': grpName,
+              'isGroup': isGroup,
               'online': isOnline,
               'otherParticipant': otherParticipant,
             });
