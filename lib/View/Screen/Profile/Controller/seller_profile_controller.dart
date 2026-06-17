@@ -227,8 +227,8 @@ class SellerProfileController extends GetxController {
     isConnectionActionLoading.value = true;
     try {
       final response = await ApiClient.post(
-        '${ApiUrl.social}/friend-request',
-        {'recipientId': userId.value},
+        '${ApiUrl.social}/request/${userId.value}',
+        {},
         requireAuth: true,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -273,9 +273,8 @@ class SellerProfileController extends GetxController {
 
     isConnectionActionLoading.value = true;
     try {
-      final response = await ApiClient.post(
-        '${ApiUrl.social}/cancel-request/${userId.value}',
-        {},
+      final response = await ApiClient.delete(
+        '${ApiUrl.social}/cancel/${userId.value}',
         requireAuth: true,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -321,7 +320,7 @@ class SellerProfileController extends GetxController {
     isConnectionActionLoading.value = true;
     try {
       final response = await ApiClient.post(
-        '${ApiUrl.social}/accept-request/${userId.value}',
+        '${ApiUrl.social}/accept/${userId.value}',
         {},
         requireAuth: true,
       );
@@ -368,7 +367,7 @@ class SellerProfileController extends GetxController {
     isConnectionActionLoading.value = true;
     try {
       final response = await ApiClient.post(
-        '${ApiUrl.social}/reject-request/${userId.value}',
+        '${ApiUrl.social}/reject/${userId.value}',
         {},
         requireAuth: true,
       );
@@ -414,7 +413,7 @@ class SellerProfileController extends GetxController {
     isConnectionActionLoading.value = true;
     try {
       final response = await ApiClient.delete(
-        '${ApiUrl.social}/remove-friend/${userId.value}',
+        '${ApiUrl.social}/remove/${userId.value}',
         requireAuth: true,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {

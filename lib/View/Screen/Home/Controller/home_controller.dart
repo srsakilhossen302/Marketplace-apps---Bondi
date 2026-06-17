@@ -79,6 +79,7 @@ class HomeController extends GetxController {
     
     try {
       final token = await SharedPrefsHelper.getToken();
+      final currentUserId = await SharedPrefsHelper.getUserId() ?? '';
       final response = await ApiClient.get(ApiUrl.discoveryHome, requireAuth: token != null && token.isNotEmpty);
       
       if (response.statusCode == 200) {
@@ -96,7 +97,7 @@ class HomeController extends GetxController {
           
           // 3. Trending Groups
           final List<dynamic> groupsJson = data['trendingGroups'] ?? [];
-          trendingGroups.assignAll(groupsJson.map((j) => parseGroup(j)).toList());
+          trendingGroups.assignAll(groupsJson.map((j) => parseGroup(j, currentUserId)).toList());
           
           // 4. Recommended Listings
           final List<dynamic> recommendedJson = data['recommendedListings'] ?? [];
@@ -222,16 +223,75 @@ class HomeController extends GetxController {
     );
   }
 
-  GroupModel parseGroup(dynamic json) {
-    final memberCount = json['membersCount'] ?? json['totalMembers'] ?? '0';
-    final postsCount = json['postsCount'] ?? json['newPosts'] ?? '0';
+  GroupModel parseGroup(dynamic json, String currentUserId) {
+    final String groupId = json['_id']?.toString() ?? '';
+    final String groupName = json['groupName']?.toString() ?? json['name']?.toString() ?? 'Group';
+    final String groupImage = ImageHelper.formatImageUrl(json['groupImage']?.toString() ?? '');
+    
+    final List<dynamic> participantsList = json['participants'] ?? [];
+    final int memberCount = participantsList.length;
+    
+    // Check if current user is in participants
+    bool isJoined = false;
+    if (currentUserId.isNotEmpty) {
+      isJoined = participantsList.any((p) {
+        if (p is Map) {
+          final pId = (p['_id'] ?? p['id'] ?? '').toString();
+          return pId == currentUserId;
+        }
+        return p.toString() == currentUserId;
+      });
+    }
     
     return GroupModel(
-      name: json['name']?.toString() ?? 'Group',
+      id: groupId,
+      name: groupName,
       members: '$memberCount members',
-      posts: '$postsCount new posts',
-      icon: json['icon']?.toString() ?? 'assets/icons/Vintage Lens Club.svg',
+      posts: '0 new posts',
+      icon: groupImage.isNotEmpty ? groupImage : 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=500&auto=format&fit=crop',
+      isJoined: isJoined,
+      description: json['description']?.toString() ?? '',
     );
+  }
+
+  Future<void> joinGroup(GroupModel group) async {
+    isLoading.value = true;
+    try {
+      final response = await ApiClient.post(
+        '${ApiUrl.baseUrl}/conversations/join/${group.id}',
+        {},
+        requireAuth: true,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar(
+          'Success',
+          'Joined ${group.name} successfully!',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+        await refreshData();
+      } else {
+        final errorData = jsonDecode(response.body);
+        Get.snackbar(
+          'Error',
+          errorData['message'] ?? 'Failed to join group.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.9),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   @override

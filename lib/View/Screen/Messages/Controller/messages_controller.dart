@@ -21,13 +21,13 @@ class MessagesController extends GetxController {
   void onInit() {
     super.onInit();
     final args = Get.arguments;
-    if (args != null && args is Map && args.containsKey('userId')) {
+    if (args != null && args is Map && (args.containsKey('userId') || args.containsKey('conversationId'))) {
       loadChatDetails(args);
     }
   }
 
   void loadChatDetails(Map<dynamic, dynamic> args) {
-    isDirectChat.value = true;
+    isDirectChat.value = args['conversationType'] != 'group' && args['isGroup'] != true;
     directChatUserId.value = args['userId'] ?? '';
     directChatUserName.value = args['name'] ?? 'Seller';
     directChatUserImage.value = args['image'] ?? '';
@@ -60,7 +60,7 @@ class MessagesController extends GetxController {
 
     messageTextController.clear();
 
-    if (isDirectChat.value) {
+    if (directConversationId.value.isNotEmpty) {
       try {
         groupMessages.add({
           'sender': 'Me',
@@ -220,7 +220,7 @@ class MessagesController extends GetxController {
   }
 
   Future<void> uploadImageMessages(List<XFile> filesList) async {
-    if (!isDirectChat.value || directConversationId.value.isEmpty) return;
+    if (directConversationId.value.isEmpty) return;
 
     try {
       groupMessages.add({

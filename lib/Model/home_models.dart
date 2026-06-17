@@ -54,24 +54,35 @@ class SellerModel {
 }
 
 class GroupModel {
+  final String id;
   final String name;
   final String members;
   final String posts;
   final String icon;
+  final bool isJoined;
+  final String description;
 
   GroupModel({
+    this.id = '',
     required this.name,
     required this.members,
     required this.posts,
     required this.icon,
+    this.isJoined = false,
+    this.description = '',
   });
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
     return GroupModel(
-      name: json['name'] ?? '',
-      members: json['members'] ?? '',
-      posts: json['posts'] ?? '',
-      icon: json['icon'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
+      name: json['groupName'] ?? json['name'] ?? '',
+      members: json['participants'] != null && json['participants'] is List 
+          ? '${(json['participants'] as List).length} members'
+          : '0 members',
+      posts: '0 new posts',
+      icon: json['groupImage'] ?? json['icon'] ?? '',
+      isJoined: json['isJoined'] ?? false,
+      description: json['description'] ?? '',
     );
   }
 }

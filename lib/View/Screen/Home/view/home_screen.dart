@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
+import '../../Messages/view/chat_detail_screen.dart';
 import '../../Notification/view/notification_screen.dart';
 import '../../Messages/view/messages_screen.dart';
 import '../Controller/home_controller.dart';
@@ -438,59 +439,107 @@ class HomeScreen extends GetView<HomeController> {
     return Obx(
       () => Column(
         children: controller.trendingGroups.map((group) {
-          return Container(
-            margin: EdgeInsets.only(bottom: 12.h),
-            padding: EdgeInsets.all(15.r),
-            decoration: BoxDecoration(
-              color: AppColors.cardColor.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(10.r),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: SvgPicture.asset(
-                    group.icon,
-                    width: 20.w,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.accentColor,
-                      BlendMode.srcIn,
+          return GestureDetector(
+            onTap: () {
+              if (group.isJoined) {
+                Get.to(
+                  () => const ChatDetailScreen(),
+                  arguments: {
+                    'conversationId': group.id,
+                    'conversationType': 'group',
+                    'isGroup': true,
+                    'name': group.name,
+                    'image': group.icon,
+                  },
+                );
+              } else {
+                controller.joinGroup(group);
+              }
+            },
+            child: Container(
+              margin: EdgeInsets.only(bottom: 12.h),
+              padding: EdgeInsets.all(15.r),
+              decoration: BoxDecoration(
+                color: AppColors.cardColor.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40.w,
+                    height: 40.h,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.r),
+                      child: group.icon.startsWith('http')
+                          ? Image.network(
+                              group.icon,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                color: Colors.white.withOpacity(0.1),
+                                child: const Icon(Icons.group, color: Colors.white),
+                              ),
+                            )
+                          : SvgPicture.asset(
+                              group.icon,
+                              fit: BoxFit.cover,
+                              colorFilter: const ColorFilter.mode(
+                                AppColors.accentColor,
+                                BlendMode.srcIn,
+                              ),
+                            ),
                     ),
                   ),
-                ),
-                SizedBox(width: 15.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        group.name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15.sp,
+                  SizedBox(width: 15.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          group.name,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.sp,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "${group.members} • ${group.posts}",
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontSize: 12.sp,
+                        Text(
+                          "${group.members} • ${group.posts}",
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.5),
+                            fontSize: 12.sp,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Icon(
-                  Icons.add_circle_outline,
-                  color: Colors.white.withOpacity(0.3),
-                  size: 20.sp,
-                ),
-              ],
+                  GestureDetector(
+                    onTap: () {
+                      if (group.isJoined) {
+                        Get.to(
+                          () => const ChatDetailScreen(),
+                          arguments: {
+                            'conversationId': group.id,
+                            'conversationType': 'group',
+                            'isGroup': true,
+                            'name': group.name,
+                            'image': group.icon,
+                          },
+                        );
+                      } else {
+                        controller.joinGroup(group);
+                      }
+                    },
+                    child: Icon(
+                      group.isJoined ? Icons.chat_bubble_outline : Icons.add_circle_outline,
+                      color: group.isJoined ? AppColors.accentColor : Colors.white.withOpacity(0.3),
+                      size: 24.sp,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }).toList(),

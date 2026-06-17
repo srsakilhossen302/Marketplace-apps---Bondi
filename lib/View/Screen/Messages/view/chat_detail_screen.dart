@@ -15,7 +15,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
     }
     final messagesController = Get.find<MessagesController>();
     final args = Get.arguments;
-    if (args != null && args is Map && args.containsKey('userId')) {
+    if (args != null && args is Map && (args.containsKey('userId') || args.containsKey('conversationId'))) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         messagesController.loadChatDetails(args);
       });
@@ -84,11 +84,13 @@ class ChatDetailScreen extends GetView<MessagesController> {
   Widget _buildAppBar() {
     return Obx(() {
       final isDirect = controller.isDirectChat.value;
-      final title = isDirect ? controller.directChatUserName.value : StaticString.sneakerTraders;
+      final title = controller.directChatUserName.value.isNotEmpty
+          ? controller.directChatUserName.value
+          : (isDirect ? 'Chat' : StaticString.sneakerTraders);
       final subtitle = isDirect 
           ? (controller.directChatUserOnline.value ? "Online" : "Offline") 
           : StaticString.oneTwoFourKMembersTwoOneKOnline;
-      final image = isDirect && controller.directChatUserImage.value.isNotEmpty
+      final image = controller.directChatUserImage.value.isNotEmpty
           ? controller.directChatUserImage.value
           : (isDirect
               ? 'https://i.pravatar.cc/150?u=${controller.directChatUserName.value.hashCode}'
