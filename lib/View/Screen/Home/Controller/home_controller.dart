@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../Model/home_models.dart';
+import '../../../../service/api_client.dart';
+import '../../../../service/api_url.dart';
 
 class HomeController extends GetxController {
   final searchController = TextEditingController();
@@ -25,6 +28,7 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     loadMockData();
+    fetchPublicListings();
   }
 
   void loadMockData() {
@@ -158,6 +162,51 @@ class HomeController extends GetxController {
 
   void onCategorySelected(String category) {
     selectedCategory.value = category;
+  }
+
+  Future<void> fetchPublicListings() async {
+    try {
+      print('Fetching public listings...');
+      final response = await ApiClient.get(ApiUrl.listing, requireAuth: false);
+      print('Public listings response status: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final listingsJson = data['data'] as List<dynamic>;
+        print('Loaded ${listingsJson.length} public listings');
+        
+        List<ListingModel> loadedListings = [];
+        for (var json in listingsJson) {
+          String thumbnail = json['thumbnail']?.toString().replaceAll('`', '').trim() ?? '';
+          if (thumbnail.isEmpty && json['images'] != null && (json['images'] as List).isNotEmpty) {
+            thumbnail = json['images'][0].toString().replaceAll('`', '').trim();
+          }
+          if (thumbnail.isEmpty) {
+            thumbnail = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop';
+          }
+          
+          final sellerName = json['sellerProfileId'] != null 
+              ? (json['sellerProfileId']['displayName'] ?? 'Jane Doe').toString()
+              : 'Jane Doe';
+              
+          loadedListings.add(ListingModel(
+            title: json['title'] ?? '',
+            price: '\$${json['price']?.toString() ?? '0'}',
+            seller: sellerName,
+            image: thumbnail,
+            isNew: json['condition']?.toString().toLowerCase() == 'new',
+            isTrade: json['listingType']?.toString().toLowerCase() == 'trade' || json['listingType']?.toString().toLowerCase() == 'sale_and_trade',
+            slug: json['slug']?.toString() ?? '',
+          ));
+        }
+        
+        if (loadedListings.isNotEmpty) {
+          newListings.assignAll(loadedListings);
+          recommendedListings.assignAll(loadedListings);
+        }
+      }
+    } catch (e) {
+      print('Error fetching public listings: $e');
+    }
   }
 
   @override

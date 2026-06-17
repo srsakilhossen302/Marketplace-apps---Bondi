@@ -10,5 +10,7 @@ class ApiUrl {
   static const String resendOtp = "$baseUrl/auth/resend-otp";
   static const String listing = "$baseUrl/listing";
   static const String profile = "$baseUrl/profile/me";
+  static const String publicProfile = "$baseUrl/profile/user";
+  static const String sellerListings = "$baseUrl/listing/seller";
   static const String myListings = "$baseUrl/listing/me";
 }

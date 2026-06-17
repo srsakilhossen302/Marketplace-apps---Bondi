@@ -4,14 +4,41 @@ import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/seller_profile_controller.dart';
+import '../../../../helper/shared_prefe/shared_prefe.dart';
+import '../../Login/view/login_screen.dart';
+import '../../ProductDetails/view/product_details_screen.dart';
+import '../../../../Model/home_models.dart';
+import 'seller_all_listings_screen.dart';
 
-class SellerProfileScreen extends GetView<SellerProfileController> {
+
+class SellerProfileScreen extends StatefulWidget {
   const SellerProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    Get.put(SellerProfileController());
+  State<SellerProfileScreen> createState() => _SellerProfileScreenState();
+}
 
+class _SellerProfileScreenState extends State<SellerProfileScreen> {
+  late final String _controllerTag;
+
+  @override
+  void initState() {
+    super.initState();
+    final String sellerId = Get.arguments ?? '';
+    _controllerTag = identityHashCode(sellerId).toString();
+    Get.put(SellerProfileController(), tag: _controllerTag);
+  }
+
+  @override
+  void dispose() {
+    Get.delete<SellerProfileController>(tag: _controllerTag);
+    super.dispose();
+  }
+
+  SellerProfileController get controller => Get.find<SellerProfileController>(tag: _controllerTag);
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -22,27 +49,38 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
             children: [
               _buildAppBar(),
               Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20.h),
-                      _buildSellerHeader(),
-                      SizedBox(height: 25.h),
-                      _buildActionButtons(),
-                      SizedBox(height: 30.h),
-                      _buildStatsRow(),
-                      SizedBox(height: 40.h),
-                      _buildAboutSection(),
-                      SizedBox(height: 40.h),
-                      _buildActiveListingsSection(),
-                      SizedBox(height: 40.h),
-                      _buildMutualFriendsSection(),
-                      SizedBox(height: 40.h),
-                      _buildSharedGroupsSection(),
-                      SizedBox(height: 40.h),
-                    ],
-                  ),
+                child: Obx(
+                  () {
+                    if (controller.isLoading.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.accentColor,
+                        ),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 20.h),
+                          _buildSellerHeader(),
+                          SizedBox(height: 25.h),
+                          _buildActionButtons(),
+                          SizedBox(height: 30.h),
+                          _buildStatsRow(),
+                          SizedBox(height: 40.h),
+                          _buildAboutSection(),
+                          SizedBox(height: 40.h),
+                          _buildActiveListingsSection(),
+                          SizedBox(height: 40.h),
+                          _buildMutualFriendsSection(),
+                          SizedBox(height: 40.h),
+                          _buildSharedGroupsSection(),
+                          SizedBox(height: 40.h),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -95,6 +133,10 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
   }
 
   Widget _buildSellerHeader() {
+    final image = controller.sellerImage.value.isNotEmpty
+        ? controller.sellerImage.value
+        : 'https://i.pravatar.cc/150?u=${controller.sellerName.value.hashCode}';
+
     return Column(
       children: [
         Stack(
@@ -107,21 +149,22 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
               ),
               child: CircleAvatar(
                 radius: 60.r,
-                backgroundImage: NetworkImage(controller.sellerImage.value),
+                backgroundImage: NetworkImage(image),
               ),
             ),
-            Positioned(
-              bottom: 5.h,
-              right: 5.w,
-              child: Container(
-                padding: EdgeInsets.all(4.r),
-                decoration: const BoxDecoration(
-                  color: AppColors.cardColor,
-                  shape: BoxShape.circle,
+            if (controller.isVerifiedSeller.value)
+              Positioned(
+                bottom: 5.h,
+                right: 5.w,
+                child: Container(
+                  padding: EdgeInsets.all(4.r),
+                  decoration: const BoxDecoration(
+                    color: AppColors.cardColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.verified, color: Colors.blue, size: 18.sp),
                 ),
-                child: Icon(Icons.verified, color: Colors.white, size: 18.sp),
               ),
-            ),
           ],
         ),
         SizedBox(height: 15.h),
@@ -137,8 +180,10 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildBadge(Icons.verified_user, StaticString.verifiedSeller),
-            SizedBox(width: 10.w),
+            if (controller.isVerifiedSeller.value) ...[
+              _buildBadge(Icons.verified_user, StaticString.verifiedSeller),
+              SizedBox(width: 10.w),
+            ],
             _buildBadge(Icons.bolt, StaticString.topTrader),
           ],
         ),
@@ -317,6 +362,9 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
   }
 
   Widget _buildActiveListingsSection() {
+    if (controller.activeListings.isEmpty) {
+      return const SizedBox.shrink();
+    }
     return Column(
       children: [
         Row(
@@ -330,63 +378,83 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              StaticString.viewAll,
-              style: TextStyle(color: AppColors.accentColor, fontSize: 12.sp),
+            GestureDetector(
+              onTap: () => Get.to(() => SellerAllListingsScreen(controllerTag: _controllerTag)),
+              child: Text(
+                StaticString.viewAll,
+                style: TextStyle(color: AppColors.accentColor, fontSize: 12.sp),
+              ),
             ),
           ],
         ),
         SizedBox(height: 15.h),
         Row(
-          children: controller.activeListings.map((item) {
+          children: controller.activeListings.take(3).map((item) {
+            final listingModel = ListingModel(
+              title: item['title'] ?? '',
+              price: item['price'] ?? '',
+              seller: controller.sellerName.value,
+              image: item['image'] ?? '',
+              slug: item['slug'] ?? '',
+            );
             return Expanded(
-              child: Container(
-                margin: EdgeInsets.only(right: 10.w),
-                decoration: BoxDecoration(
-                  color: AppColors.cardColor.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20.r),
+              child: GestureDetector(
+                onTap: () async {
+                  final token = await SharedPrefsHelper.getToken();
+                  if (token != null && token.isNotEmpty) {
+                    Get.to(() => const ProductDetailsScreen(), arguments: listingModel);
+                  } else {
+                    Get.to(() => const LoginScreen());
+                  }
+                },
+                child: Container(
+                  margin: EdgeInsets.only(right: 10.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardColor.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20.r),
+                        ),
+                        child: Image.network(
+                          item['image']!,
+                          height: 120.h,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      child: Image.network(
-                        item['image']!,
-                        height: 120.h,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(12.r),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item['title']!,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.bold,
+                      Padding(
+                        padding: EdgeInsets.all(12.r),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item['title']!,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
                             ),
-                            maxLines: 1,
-                          ),
-                          SizedBox(height: 5.h),
-                          Text(
-                            item['price']!,
-                            style: TextStyle(
-                              color: AppColors.accentColor,
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.bold,
+                            SizedBox(height: 5.h),
+                            Text(
+                              item['price']!,
+                              style: TextStyle(
+                                color: AppColors.accentColor,
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
@@ -448,7 +516,7 @@ class SellerProfileScreen extends GetView<SellerProfileController> {
               SizedBox(width: 10.w),
               Expanded(
                 child: Text(
-                  StaticString.oneSevenMutualFriendsIncludingSarahW,
+                  "${controller.mutualFriendsCount.value} Mutual Friends",
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.8),
                     fontSize: 12.sp,

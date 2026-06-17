@@ -5,6 +5,7 @@ class ListingModel {
   final String image;
   final bool isNew;
   final bool isTrade;
+  final String slug;
 
   ListingModel({
     required this.title,
@@ -13,6 +14,7 @@ class ListingModel {
     required this.image,
     this.isNew = false,
     this.isTrade = false,
+    this.slug = '',
   });
 
   factory ListingModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class ListingModel {
       image: json['image'] ?? '',
       isNew: json['isNew'] ?? false,
       isTrade: json['isTrade'] ?? false,
+      slug: json['slug'] ?? '',
     );
   }
 }

@@ -10,6 +10,11 @@ import '../../../../Utils/StaticString/static_string.dart';
 import '../../Notification/view/notification_screen.dart';
 import '../../Messages/view/messages_screen.dart';
 import '../Controller/home_controller.dart';
+import '../../../../helper/shared_prefe/shared_prefe.dart';
+import '../../Login/view/login_screen.dart';
+import '../../ProductDetails/view/product_details_screen.dart';
+import '../../../../Model/home_models.dart';
+import 'all_listings_screen.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
@@ -40,7 +45,7 @@ class HomeScreen extends GetView<HomeController> {
                       SizedBox(height: 30.h),
                       _buildSectionHeader(
                         StaticString.newListings,
-                        onAction: () {},
+                        onAction: () => Get.to(() => const AllListingsScreen()),
                       ),
                       SizedBox(height: 4.h),
                       Text(
@@ -280,10 +285,14 @@ class HomeScreen extends GetView<HomeController> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: controller.newListings
+              .take(3)
               .map(
                 (item) => Padding(
                   padding: EdgeInsets.only(right: 15.w),
-                  child: CustomListingCard(item: item),
+                  child: CustomListingCard(
+                    item: item,
+                    onTap: () => _handleListingTap(item),
+                  ),
                 ),
               )
               .toList(),
@@ -416,7 +425,10 @@ class HomeScreen extends GetView<HomeController> {
         spacing: 15.w,
         runSpacing: 15.h,
         children: controller.recommendedListings
-            .map((item) => CustomListingCard(item: item))
+            .map((item) => CustomListingCard(
+                  item: item,
+                  onTap: () => _handleListingTap(item),
+                ))
             .toList(),
       ),
     );
@@ -486,5 +498,14 @@ class HomeScreen extends GetView<HomeController> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleListingTap(ListingModel item) async {
+    final token = await SharedPrefsHelper.getToken();
+    if (token != null && token.isNotEmpty) {
+      Get.to(() => const ProductDetailsScreen(), arguments: item);
+    } else {
+      Get.to(() => const LoginScreen());
+    }
   }
 }
