@@ -17,6 +17,7 @@ class MessagesController extends GetxController {
   final messageTextController = TextEditingController();
   final isMessagesLoading = false.obs;
   final directChatUserOnline = false.obs;
+  final groupParticipantsCount = 0.obs;
 
   @override
   void onInit() {
@@ -115,13 +116,23 @@ class MessagesController extends GetxController {
         if (data['success'] == true && data['data'] != null) {
           final resData = data['data'];
 
-          // Update receiver info if present
-          if (resData is Map && resData.containsKey('receiverInfo')) {
-            final recInfo = resData['receiverInfo'];
-            if (recInfo != null && recInfo is Map) {
+          // Update receiver or group info
+          if (resData is Map) {
+            final hasReceiverInfo = resData.containsKey('receiverInfo') && resData['receiverInfo'] != null;
+            if (hasReceiverInfo) {
+              final recInfo = resData['receiverInfo'];
+              isDirectChat.value = true;
               directChatUserName.value = recInfo['fullName'] ?? recInfo['username'] ?? directChatUserName.value;
-              directChatUserImage.value = recInfo['profileImage'] ?? recInfo['picture'] ?? directChatUserImage.value;
+              directChatUserImage.value = ImageHelper.formatImageUrl(recInfo['profileImage'] ?? recInfo['picture']);
               directChatUserOnline.value = recInfo['isOnline'] ?? false;
+            } else {
+              isDirectChat.value = false;
+              if (resData.containsKey('groupInfo') && resData['groupInfo'] != null) {
+                final grpInfo = resData['groupInfo'];
+                directChatUserName.value = grpInfo['groupName'] ?? directChatUserName.value;
+                directChatUserImage.value = ImageHelper.formatImageUrl(grpInfo['groupImage']);
+                groupParticipantsCount.value = grpInfo['participantsCount'] ?? 0;
+              }
             }
           }
 
@@ -137,13 +148,14 @@ class MessagesController extends GetxController {
           final parsedMessages = list.map((msg) {
             final senderObj = msg['senderId'] ?? msg['sender'];
             String msgSenderId = '';
-            String senderName = '';
+            String senderName = 'User';
             String senderImage = '';
+            
             if (senderObj != null) {
               if (senderObj is Map) {
                 msgSenderId = (senderObj['_id'] ?? senderObj['id'] ?? '').toString();
-                senderName = (senderObj['fullName'] ?? senderObj['displayName'] ?? senderObj['username'] ?? '').toString();
-                senderImage = (senderObj['profileImage'] ?? senderObj['picture'] ?? '').toString();
+                senderName = (senderObj['fullName'] ?? senderObj['displayName'] ?? senderObj['username'] ?? 'User').toString();
+                senderImage = ImageHelper.formatImageUrl(senderObj['profileImage']?.toString() ?? senderObj['picture']?.toString() ?? '');
               } else {
                 msgSenderId = senderObj.toString();
               }

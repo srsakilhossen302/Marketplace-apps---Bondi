@@ -89,7 +89,7 @@ class ChatDetailScreen extends GetView<MessagesController> {
           : (isDirect ? 'Chat' : StaticString.sneakerTraders);
       final subtitle = isDirect 
           ? (controller.directChatUserOnline.value ? "Online" : "Offline") 
-          : StaticString.oneTwoFourKMembersTwoOneKOnline;
+          : "${controller.groupParticipantsCount.value} Members";
       final image = controller.directChatUserImage.value.isNotEmpty
           ? controller.directChatUserImage.value
           : (isDirect
