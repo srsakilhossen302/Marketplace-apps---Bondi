@@ -19,4 +19,8 @@ class ApiUrl {
   static const String conversation = "$baseUrl/conversation";
   static const String message = "$baseUrl/message";
   static const String messageSeen = "$baseUrl/message/seen";
+  static const String discoveryHome = "$baseUrl/discovery/home";
+  static const String discoveryFeed = "$baseUrl/discovery/feed";
+  static const String discoveryCategories = "$baseUrl/discovery/categories";
+  static const String discoveryCategory = "$baseUrl/discovery/category";
 }

@@ -8,6 +8,10 @@ import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../../../Widgegt/CustomCard/custom_listing_card.dart';
 import '../Controller/discover_controller.dart';
+import '../../Notification/view/notification_screen.dart';
+import '../../Login/view/login_screen.dart';
+import '../../ProductDetails/view/product_details_screen.dart';
+import '../../../../helper/shared_prefe/shared_prefe.dart';
 
 class DiscoverScreen extends GetView<DiscoverController> {
   const DiscoverScreen({super.key});
@@ -26,34 +30,114 @@ class DiscoverScreen extends GetView<DiscoverController> {
             children: [
               _buildHeader(),
               Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      _buildSearchBar(),
-                      // SizedBox(height: 20.h),
-                      // _buildCategories(),
-                      SizedBox(height: 30.h),
-                      _buildSectionHeader(
-                        StaticString.trendingProducts,
-                        showViewAll: true,
+                child: Obx(() {
+                  if (controller.isLoading.value && 
+                      controller.trendingProducts.isEmpty && 
+                      controller.filteredListings.isEmpty) {
+                    return const Center(
+                      child: CircularProgressIndicator(color: AppColors.accentColor),
+                    );
+                  }
+
+                  if (controller.isError.value && 
+                      controller.trendingProducts.isEmpty && 
+                      controller.filteredListings.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 40.w),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.error_outline, color: Colors.redAccent, size: 48.sp),
+                            SizedBox(height: 16.h),
+                            Text(
+                              controller.errorMessage.value,
+                              style: TextStyle(color: Colors.white, fontSize: 15.sp),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 20.h),
+                            ElevatedButton(
+                              onPressed: () => controller.refreshData(),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.buttonColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                              ),
+                              child: const Text('Retry'),
+                            ),
+                          ],
+                        ),
                       ),
-                      SizedBox(height: 15.h),
-                      _buildTrendingCard(),
-                      SizedBox(height: 30.h),
-                      _buildSectionHeader(StaticString.itemsYouMayLike),
-                      SizedBox(height: 15.h),
-                      _buildItemsGrid(controller.itemsYouMayLike),
-                      SizedBox(height: 30.h),
-                      _buildSectionHeader(StaticString.recommendedForYouHome),
-                      SizedBox(height: 15.h),
-                      _buildItemsGrid(controller.recommendedForYou),
-                      SizedBox(height: 100.h), // Extra space for bottom bar
-                    ],
-                  ),
-                ),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: () => controller.refreshData(),
+                    color: AppColors.accentColor,
+                    backgroundColor: AppColors.cardColor,
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 20.h),
+                          _buildSearchBar(),
+                          SizedBox(height: 20.h),
+                          _buildCategories(),
+                          SizedBox(height: 30.h),
+
+                          if (controller.isFilterMode.value) ...[
+                            _buildSectionHeader(
+                              "${controller.selectedCategory.value} Listings",
+                            ),
+                            SizedBox(height: 15.h),
+                            if (controller.isLoading.value)
+                              Container(
+                                height: 200.h,
+                                alignment: Alignment.center,
+                                child: const CircularProgressIndicator(color: AppColors.accentColor),
+                              )
+                            else if (controller.filteredListings.isEmpty)
+                              Container(
+                                height: 200.h,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'No listings found in this category.',
+                                  style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 14.sp),
+                                ),
+                              )
+                            else
+                              _buildItemsGrid(controller.filteredListings),
+                          ] else ...[
+                            _buildSectionHeader(
+                              StaticString.trendingProducts,
+                              showViewAll: true,
+                            ),
+                            SizedBox(height: 15.h),
+                            if (controller.trendingProducts.isNotEmpty) ...[
+                              _buildTrendingCard(controller.trendingProducts[0]),
+                              if (controller.trendingProducts.length > 1) ...[
+                                SizedBox(height: 15.h),
+                                _buildItemsGrid(controller.trendingProducts.skip(1).toList()),
+                              ],
+                            ],
+                            SizedBox(height: 30.h),
+                            _buildSectionHeader(StaticString.itemsYouMayLike),
+                            SizedBox(height: 15.h),
+                            _buildItemsGrid(controller.itemsYouMayLike),
+                            SizedBox(height: 30.h),
+                            _buildSectionHeader(StaticString.recommendedForYouHome),
+                            SizedBox(height: 15.h),
+                            _buildItemsGrid(controller.recommendedForYou),
+                          ],
+                          SizedBox(height: 100.h), // Extra space for bottom bar
+                        ],
+                      ),
+                    ),
+                  );
+                }),
               ),
             ],
           ),
@@ -69,12 +153,15 @@ class DiscoverScreen extends GetView<DiscoverController> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SvgPicture.asset('assets/icons/horizontal logo light bg 1.svg', width: 120.w),
-          SvgPicture.asset(
-            'assets/icons/Notification-Icons.svg',
-            width: 24.w,
-            colorFilter: const ColorFilter.mode(
-              AppColors.accentColor,
-              BlendMode.srcIn,
+          GestureDetector(
+            onTap: () => Get.to(() => const NotificationScreen()),
+            child: SvgPicture.asset(
+              'assets/icons/Notification-Icons.svg',
+              width: 24.w,
+              colorFilter: const ColorFilter.mode(
+                AppColors.accentColor,
+                BlendMode.srcIn,
+              ),
             ),
           ),
         ],
@@ -142,15 +229,25 @@ class DiscoverScreen extends GetView<DiscoverController> {
                         : Colors.white.withOpacity(0.1),
                   ),
                 ),
-                child: Text(
-                  cat.tr,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.sp,
-                    fontWeight: isSelected
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
+                child: Row(
+                  children: [
+                    Icon(
+                      _getCategoryIcon(cat),
+                      color: isSelected ? Colors.white : AppColors.accentColor,
+                      size: 16.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      _getCategoryText(cat),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
@@ -158,6 +255,30 @@ class DiscoverScreen extends GetView<DiscoverController> {
         ),
       ),
     );
+  }
+
+  IconData _getCategoryIcon(String cat) {
+    final lowercase = cat.toLowerCase();
+    if (lowercase == 'all') return Icons.grid_view_rounded;
+    if (lowercase.contains('electronics') || lowercase.contains('gadget') || lowercase.contains('tech')) return Icons.laptop_mac;
+    if (lowercase.contains('fashion') || lowercase.contains('apparel') || lowercase.contains('clothing')) return Icons.checkroom;
+    if (lowercase.contains('sneaker') || lowercase.contains('shoe')) return Icons.shopping_bag;
+    if (lowercase.contains('watch') || lowercase.contains('time')) return Icons.watch;
+    if (lowercase.contains('accessory') || lowercase.contains('jewelry')) return Icons.sell_outlined;
+    return Icons.sell_outlined;
+  }
+
+  String _getCategoryText(String cat) {
+    switch (cat) {
+      case 'All':
+        return StaticString.all;
+      case 'Electronics':
+        return StaticString.electronics;
+      case 'Fashion':
+        return StaticString.fashion;
+      default:
+        return cat;
+    }
   }
 
   Widget _buildSectionHeader(String title, {bool showViewAll = false}) {
@@ -193,86 +314,107 @@ class DiscoverScreen extends GetView<DiscoverController> {
     );
   }
 
-  Widget _buildTrendingCard() {
-    return Container(
-      width: double.infinity,
-      height: 250.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.r),
-        image: const DecorationImage(
-          image: NetworkImage(
-            'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop',
+  Widget _buildTrendingCard(ListingModel item) {
+    return GestureDetector(
+      onTap: () => _handleListingTap(item),
+      child: Container(
+        width: double.infinity,
+        height: 250.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30.r),
+          image: DecorationImage(
+            image: NetworkImage(item.image),
+            fit: BoxFit.cover,
           ),
-          fit: BoxFit.cover,
         ),
-      ),
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30.r),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30.r),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(20.r),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 6.h,
+            Padding(
+              padding: EdgeInsets.all(20.r),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.buttonColor,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Text(
+                      StaticString.hotDrop,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    color: AppColors.buttonColor,
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Text(
-                    StaticString.hotDrop,
+                  SizedBox(height: 10.h),
+                  Text(
+                    item.title,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 10.sp,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  StaticString.grandMaster5000,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
+                  Text(
+                    item.price,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.8),
+                      fontSize: 16.sp,
+                    ),
                   ),
-                ),
-                Text(
-                  StaticString.grandMasterPrice,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 16.sp,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildItemsGrid(List<ListingModel> items) {
-    return Obx(
-      () => Wrap(
-        spacing: 15.w,
-        runSpacing: 15.h,
-        children: items.map((item) => CustomListingCard(item: item)).toList(),
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 15.w,
+        mainAxisSpacing: 15.h,
+        childAspectRatio: 0.75,
       ),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+        return CustomListingCard(
+          item: item,
+          onTap: () => _handleListingTap(item),
+        );
+      },
     );
+  }
+
+  Future<void> _handleListingTap(ListingModel item) async {
+    final token = await SharedPrefsHelper.getToken();
+    if (token != null && token.isNotEmpty) {
+      Get.to(() => const ProductDetailsScreen(), arguments: item);
+    } else {
+      Get.to(() => const LoginScreen());
+    }
   }
 }

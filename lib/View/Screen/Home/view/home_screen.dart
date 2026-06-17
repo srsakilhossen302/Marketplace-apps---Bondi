@@ -33,48 +33,122 @@ class HomeScreen extends GetView<HomeController> {
             children: [
               _buildHeader(),
               Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      _buildSearchBar(),
-                      SizedBox(height: 20.h),
-                      _buildCategories(),
-                      SizedBox(height: 30.h),
-                      _buildSectionHeader(
-                        StaticString.newListings,
-                        onAction: () => Get.to(() => const AllListingsScreen()),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        StaticString.freshArrivalsFromYourNetwork,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
-                          fontSize: 13.sp,
+                child: Obx(() {
+                  if (controller.isLoading.value && 
+                      controller.newListings.isEmpty && 
+                      controller.filteredListings.isEmpty) {
+                    return const Center(
+                      child: CircularProgressIndicator(color: AppColors.accentColor),
+                    );
+                  }
+                  
+                  if (controller.isError.value && 
+                      controller.newListings.isEmpty && 
+                      controller.filteredListings.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 40.w),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.error_outline, color: Colors.redAccent, size: 48.sp),
+                            SizedBox(height: 16.h),
+                            Text(
+                              controller.errorMessage.value,
+                              style: TextStyle(color: Colors.white, fontSize: 15.sp),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 20.h),
+                            ElevatedButton(
+                              onPressed: () => controller.refreshData(),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.buttonColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                              ),
+                              child: const Text('Retry'),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 15.h),
-                      _buildNewListings(),
-                      SizedBox(height: 30.h),
-                      _buildSectionHeader(StaticString.suggestedSellers),
-                      SizedBox(height: 20.h),
-                      _buildSuggestedSellers(),
-                      SizedBox(height: 30.h),
-                      _buildSectionHeader(StaticString.trendingGroups),
-                      SizedBox(height: 15.h),
-                      _buildTrendingGroups(),
-                      SizedBox(height: 30.h),
-                      _buildSectionHeader(StaticString.recommendedForYouHome),
-                      SizedBox(height: 15.h),
-                      _buildRecommendedList(),
-                      SizedBox(height: 30.h),
-                      _buildCreateGroupCard(),
-                      SizedBox(height: 40.h),
-                    ],
-                  ),
-                ),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: () => controller.refreshData(),
+                    color: AppColors.accentColor,
+                    backgroundColor: AppColors.cardColor,
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 20.h),
+                          _buildSearchBar(),
+                          SizedBox(height: 20.h),
+                          _buildCategories(),
+                          SizedBox(height: 30.h),
+                          
+                          if (controller.isFilterMode.value) ...[
+                            _buildSectionHeader(
+                              "${controller.selectedCategory.value} Listings",
+                            ),
+                            SizedBox(height: 15.h),
+                            if (controller.isLoading.value)
+                              Container(
+                                height: 200.h,
+                                alignment: Alignment.center,
+                                child: const CircularProgressIndicator(color: AppColors.accentColor),
+                              )
+                            else if (controller.filteredListings.isEmpty)
+                              Container(
+                                height: 200.h,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'No listings found in this category.',
+                                  style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 14.sp),
+                                ),
+                              )
+                            else
+                              _buildFilteredGrid(),
+                          ] else ...[
+                            _buildSectionHeader(
+                              StaticString.newListings,
+                              onAction: () => Get.to(() => const AllListingsScreen()),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              StaticString.freshArrivalsFromYourNetwork,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.6),
+                                fontSize: 13.sp,
+                              ),
+                            ),
+                            SizedBox(height: 15.h),
+                            _buildNewListings(),
+                            SizedBox(height: 30.h),
+                            _buildSectionHeader(StaticString.suggestedSellers),
+                            SizedBox(height: 20.h),
+                            _buildSuggestedSellers(),
+                            SizedBox(height: 30.h),
+                            _buildSectionHeader(StaticString.trendingGroups),
+                            SizedBox(height: 15.h),
+                            _buildTrendingGroups(),
+                            SizedBox(height: 30.h),
+                            _buildSectionHeader(StaticString.recommendedForYouHome),
+                            SizedBox(height: 15.h),
+                            _buildRecommendedList(),
+                          ],
+                          SizedBox(height: 30.h),
+                          _buildCreateGroupCard(),
+                          SizedBox(height: 40.h),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
               ),
             ],
           ),
@@ -206,22 +280,12 @@ class HomeScreen extends GetView<HomeController> {
                 ),
                 child: Row(
                   children: [
-                    if (cat == 'All') ...[
-                      Icon(
-                        Icons.grid_view_rounded,
-                        color: AppColors.accentColor,
-                        size: 16.sp,
-                      ),
-                      SizedBox(width: 8.w),
-                    ],
-                    if (cat == 'Electronics') ...[
-                      Icon(Icons.laptop_mac, color: Colors.white, size: 16.sp),
-                      SizedBox(width: 8.w),
-                    ],
-                    if (cat == 'Fashion') ...[
-                      Icon(Icons.checkroom, color: Colors.white, size: 16.sp),
-                      SizedBox(width: 8.w),
-                    ],
+                    Icon(
+                      _getCategoryIcon(cat),
+                      color: isSelected ? Colors.white : AppColors.accentColor,
+                      size: 16.sp,
+                    ),
+                    SizedBox(width: 8.w),
                     Text(
                       _getCategoryText(cat),
                       style: TextStyle(
@@ -240,6 +304,17 @@ class HomeScreen extends GetView<HomeController> {
         ),
       ),
     );
+  }
+
+  IconData _getCategoryIcon(String cat) {
+    final lowercase = cat.toLowerCase();
+    if (lowercase == 'all') return Icons.grid_view_rounded;
+    if (lowercase.contains('electronics') || lowercase.contains('gadget') || lowercase.contains('tech')) return Icons.laptop_mac;
+    if (lowercase.contains('fashion') || lowercase.contains('apparel') || lowercase.contains('clothing')) return Icons.checkroom;
+    if (lowercase.contains('sneaker') || lowercase.contains('shoe')) return Icons.shopping_bag;
+    if (lowercase.contains('watch') || lowercase.contains('time')) return Icons.watch;
+    if (lowercase.contains('accessory') || lowercase.contains('jewelry')) return Icons.sell_outlined;
+    return Icons.sell_outlined;
   }
 
   String _getCategoryText(String cat) {
@@ -285,7 +360,6 @@ class HomeScreen extends GetView<HomeController> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: controller.newListings
-              .take(3)
               .map(
                 (item) => Padding(
                   padding: EdgeInsets.only(right: 15.w),
@@ -303,54 +377,59 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildSuggestedSellers() {
     return Obx(
-      () => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: controller.suggestedSellers.map((seller) {
-          return Column(
-            children: [
-              Stack(
-                alignment: Alignment.bottomRight,
+      () => SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: controller.suggestedSellers.map((seller) {
+            return Padding(
+              padding: EdgeInsets.only(right: 20.w),
+              child: Column(
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(2.r),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.accentColor,
-                        width: 2.w,
+                  Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(2.r),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.accentColor,
+                            width: 2.w,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          radius: 35.r,
+                          backgroundImage: NetworkImage(seller.image),
+                        ),
                       ),
-                    ),
-                    child: CircleAvatar(
-                      radius: 35.r,
-                      backgroundImage: NetworkImage(seller.image),
+                      if (seller.isVerified)
+                        SvgPicture.asset(
+                          'assets/icons/Verify-icons.svg',
+                          width: 20.w,
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                  Text(
+                    seller.name,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
                     ),
                   ),
-                  if (seller.isVerified)
-                    SvgPicture.asset(
-                      'assets/icons/Verify-icons.svg',
-                      width: 20.w,
+                  Text(
+                    seller.role,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 10.sp,
                     ),
+                  ),
                 ],
               ),
-              SizedBox(height: 10.h),
-              Text(
-                seller.name,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14.sp,
-                ),
-              ),
-              Text(
-                seller.role,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.5),
-                  fontSize: 10.sp,
-                ),
-              ),
-            ],
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -421,15 +500,46 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildRecommendedList() {
     return Obx(
-      () => Wrap(
-        spacing: 15.w,
-        runSpacing: 15.h,
-        children: controller.recommendedListings
-            .map((item) => CustomListingCard(
-                  item: item,
-                  onTap: () => _handleListingTap(item),
-                ))
-            .toList(),
+      () => GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 15.w,
+          mainAxisSpacing: 15.h,
+          childAspectRatio: 0.75,
+        ),
+        itemCount: controller.recommendedListings.length,
+        itemBuilder: (context, index) {
+          final item = controller.recommendedListings[index];
+          return CustomListingCard(
+            item: item,
+            onTap: () => _handleListingTap(item),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildFilteredGrid() {
+    return Obx(
+      () => GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 15.w,
+          mainAxisSpacing: 15.h,
+          childAspectRatio: 0.75,
+        ),
+        itemCount: controller.filteredListings.length,
+        itemBuilder: (context, index) {
+          final item = controller.filteredListings[index];
+          return CustomListingCard(
+            item: item,
+            onTap: () => _handleListingTap(item),
+          );
+        },
       ),
     );
   }
