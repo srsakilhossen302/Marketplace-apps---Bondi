@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../Model/home_models.dart';
 import '../../../../service/api_client.dart';
 import '../../../../service/api_url.dart';
+import '../../../../helper/shared_prefe/shared_prefe.dart';
 
 class ProductDetailsController extends GetxController {
   final ListingModel product = Get.arguments;
@@ -32,7 +33,11 @@ class ProductDetailsController extends GetxController {
     
     isLoading.value = true;
     try {
-      final response = await ApiClient.get('${ApiUrl.listing}/${product.slug}', requireAuth: true);
+      final token = await SharedPrefsHelper.getToken();
+      final response = await ApiClient.get(
+        '${ApiUrl.listing}/${product.slug}',
+        requireAuth: token != null && token.isNotEmpty,
+      );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['success'] == true) {

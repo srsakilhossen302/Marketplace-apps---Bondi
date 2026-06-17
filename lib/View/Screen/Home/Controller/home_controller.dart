@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../../Model/home_models.dart';
 import '../../../../service/api_client.dart';
 import '../../../../service/api_url.dart';
+import '../../../../helper/shared_prefe/shared_prefe.dart';
 
 class HomeController extends GetxController {
   final searchController = TextEditingController();
@@ -167,7 +168,8 @@ class HomeController extends GetxController {
   Future<void> fetchPublicListings() async {
     try {
       print('Fetching public listings...');
-      final response = await ApiClient.get(ApiUrl.listing, requireAuth: false);
+      final token = await SharedPrefsHelper.getToken();
+      final response = await ApiClient.get(ApiUrl.listing, requireAuth: token != null && token.isNotEmpty);
       print('Public listings response status: ${response.statusCode}');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
