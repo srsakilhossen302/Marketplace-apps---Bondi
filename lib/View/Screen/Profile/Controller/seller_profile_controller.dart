@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import '../../../../service/api_url.dart';
 import '../../../../service/api_client.dart';
+import '../../../../Utils/StaticString/static_string.dart';
 
 class SellerProfileController extends GetxController {
   final userId = ''.obs;
@@ -51,12 +52,16 @@ class SellerProfileController extends GetxController {
             shortBio.value = bioText.isNotEmpty ? bioText : 'No bio provided';
             longBio.value = bioText.isNotEmpty ? bioText : 'No additional information available';
 
-            final city = resData['city']?.toString() ?? '';
-            final country = resData['country']?.toString() ?? '';
+            final city = resData['city']?.toString().trim() ?? '';
+            final country = resData['country']?.toString().trim() ?? '';
             if (city.isNotEmpty && country.isNotEmpty) {
               location.value = '$city, $country';
+            } else if (city.isNotEmpty) {
+              location.value = city;
+            } else if (country.isNotEmpty) {
+              location.value = country;
             } else {
-              location.value = 'New York, NY';
+              location.value = StaticString.noAddress;
             }
 
             isVerifiedSeller.value = resData['isVerifiedSeller'] ?? false;

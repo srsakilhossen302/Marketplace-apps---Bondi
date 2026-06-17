@@ -79,6 +79,8 @@ const Map<String, String> english = {
   'username': 'Username',
   'displayName': 'Display Name',
   'bio': 'Bio',
+  'country': 'Country',
+  'city': 'City',
   '108Of160': '108 / 160',
   'contactPrivacy': 'Contact & Privacy',
   'phoneNumber': 'Phone Number',
@@ -109,6 +111,8 @@ const Map<String, String> english = {
   // Seller Profile Screen
   'sellerProfile': 'Seller Profile',
   'verifiedSeller': 'Verified Seller',
+  'notVerifiedSeller': 'Not Verified Seller',
+  'noAddress': 'No address',
   'topTrader': 'Top Trader',
   'trades': 'Trades',
   'rating': 'Rating',

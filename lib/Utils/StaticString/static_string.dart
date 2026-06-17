@@ -84,6 +84,8 @@ class StaticString {
   static String get username => 'username'.tr;
   static String get displayName => 'displayName'.tr;
   static String get bio => 'bio'.tr;
+  static String get country => 'country'.tr;
+  static String get city => 'city'.tr;
   static String get oneZeroEightOfOneSixty => '108Of160'.tr;
   static String get contactPrivacy => 'contactPrivacy'.tr;
   static String get phoneNumber => 'phoneNumber'.tr;
@@ -116,6 +118,8 @@ class StaticString {
   // Seller Profile Screen
   static String get sellerProfile => 'sellerProfile'.tr;
   static String get verifiedSeller => 'verifiedSeller'.tr;
+  static String get notVerifiedSeller => 'notVerifiedSeller'.tr;
+  static String get noAddress => 'noAddress'.tr;
   static String get topTrader => 'topTrader'.tr;
   static String get trades => 'trades'.tr;
   static String get rating => 'rating'.tr;

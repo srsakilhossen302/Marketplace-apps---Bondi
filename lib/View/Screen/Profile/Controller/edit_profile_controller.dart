@@ -13,6 +13,8 @@ class EditProfileController extends GetxController {
   final displayNameController = TextEditingController();
   final bioController = TextEditingController();
   final phoneNumberController = TextEditingController();
+  final countryController = TextEditingController();
+  final cityController = TextEditingController();
   final cpfController = TextEditingController(text: '000.000.000-00');
 
   final publicVisibility = true.obs;
@@ -45,6 +47,8 @@ class EditProfileController extends GetxController {
           usernameController.text = profileData['username'] ?? '';
           bioController.text = profileData['bio'] ?? '';
           phoneNumberController.text = profileData['phone'] ?? '';
+          countryController.text = profileData['country'] ?? '';
+          cityController.text = profileData['city'] ?? '';
           
           if (profileData['isPhonePublic'] != null) {
             if (profileData['isPhonePublic'] is bool) {
@@ -93,6 +97,8 @@ class EditProfileController extends GetxController {
     displayNameController.dispose();
     bioController.dispose();
     phoneNumberController.dispose();
+    countryController.dispose();
+    cityController.dispose();
     cpfController.dispose();
     super.onClose();
   }
@@ -104,6 +110,8 @@ class EditProfileController extends GetxController {
         'displayName': displayNameController.text.trim(),
         'bio': bioController.text.trim(),
         'isPhonePublic': publicVisibility.value.toString(),
+        'country': countryController.text.trim(),
+        'city': cityController.text.trim(),
       };
 
       if (phoneNumberController.text.trim().isNotEmpty) {

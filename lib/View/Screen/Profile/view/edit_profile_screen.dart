@@ -50,6 +50,18 @@ class EditProfileScreen extends GetView<EditProfileController> {
                       ),
                       SizedBox(height: 20.h),
                       _buildBioField(),
+                      SizedBox(height: 20.h),
+                      _buildInputField(
+                        StaticString.country,
+                        controller.countryController,
+                        icon: Icons.public,
+                      ),
+                      SizedBox(height: 20.h),
+                      _buildInputField(
+                        StaticString.city,
+                        controller.cityController,
+                        icon: Icons.location_city,
+                      ),
                       SizedBox(height: 30.h),
                       _buildSectionHeader(StaticString.contactPrivacy),
                       SizedBox(height: 20.h),

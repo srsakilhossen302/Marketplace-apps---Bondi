@@ -81,6 +81,8 @@ const Map<String, String> portuguese = {
   'username': 'Nome de Usuário',
   'displayName': 'Nome de Exibição',
   'bio': 'Bio',
+  'country': 'País',
+  'city': 'Cidade',
   '108Of160': '108 / 160',
   'contactPrivacy': 'Contato e Privacidade',
   'phoneNumber': 'Número de Telefone',
@@ -114,6 +116,8 @@ const Map<String, String> portuguese = {
   // Seller Profile Screen
   'sellerProfile': 'Perfil do Vendedor',
   'verifiedSeller': 'Vendedor Verificado',
+  'notVerifiedSeller': 'Vendedor não Verificado',
+  'noAddress': 'Sem endereço',
   'topTrader': 'Top Trocador',
   'trades': 'Trocas',
   'rating': 'Avaliação',

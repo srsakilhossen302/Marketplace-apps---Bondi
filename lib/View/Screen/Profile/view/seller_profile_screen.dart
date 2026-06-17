@@ -180,11 +180,10 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (controller.isVerifiedSeller.value) ...[
-              _buildBadge(Icons.verified_user, StaticString.verifiedSeller),
-              SizedBox(width: 10.w),
-            ],
-            _buildBadge(Icons.bolt, StaticString.topTrader),
+            if (controller.isVerifiedSeller.value)
+              _buildBadge(Icons.verified_user, StaticString.verifiedSeller)
+            else
+              _buildBadge(Icons.info_outline, StaticString.notVerifiedSeller),
           ],
         ),
         SizedBox(height: 20.h),
