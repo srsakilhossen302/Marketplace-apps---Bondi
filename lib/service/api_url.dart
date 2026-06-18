@@ -17,6 +17,7 @@ class ApiUrl {
   static const String social = "$baseUrl/social";
   static const String sendMessage = "$baseUrl/message/send";
   static const String conversation = "$baseUrl/conversation";
+  static const String myGroups = "$baseUrl/conversation/my-groups";
   static const String conversations = "$baseUrl/conversations";
   static const String message = "$baseUrl/message";
   static const String messageSeen = "$baseUrl/message/seen";

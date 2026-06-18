@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/sell_controller.dart';
+import '../../Discover/view/discover_screen.dart';
+import '../../../../helper/network_img/image_helper.dart';
 
 class SellScreen extends StatelessWidget {
   final String? tag;
@@ -50,6 +52,8 @@ class SellScreen extends StatelessWidget {
                             _buildOptionsSection(),
                             SizedBox(height: 30.h),
                             _buildFulfillmentSection(),
+                            SizedBox(height: 30.h),
+                            _buildShareInGroupsSection(context),
                             SizedBox(height: 30.h),
                             _buildActionButtons(),
                             SizedBox(height: 40.h),
@@ -685,6 +689,319 @@ class SellScreen extends StatelessWidget {
           ),
         ],
       ],
+    );
+  }
+
+  Widget _buildShareInGroupsSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Share in groups",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            GestureDetector(
+              onTap: () => _showGroupSelectionBottomSheet(context),
+              child: Text(
+                "See All",
+                style: TextStyle(
+                  color: AppColors.accentColor,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 15.h),
+        Obx(() {
+          if (controller.isGroupsLoading.value) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.accentColor,
+              ),
+            );
+          }
+
+          final allGroups = controller.myGroups;
+          final selectedGroups = allGroups.where((g) => controller.selectedGroupIds.contains(g['_id'])).toList();
+
+          return SizedBox(
+            height: 100.h,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: selectedGroups.length + 1,
+              itemBuilder: (context, index) {
+                if (index == selectedGroups.length) {
+                  return GestureDetector(
+                    onTap: () => _showGroupSelectionBottomSheet(context),
+                    child: Container(
+                      margin: EdgeInsets.only(right: 15.w),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 60.w,
+                            height: 60.h,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.3),
+                                style: BorderStyle.solid,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 24.sp,
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            "Join More",
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.6),
+                              fontSize: 11.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                final group = selectedGroups[index];
+                final groupId = group['_id'] ?? '';
+                final groupName = group['groupName'] ?? 'Group';
+                final groupImg = ImageHelper.formatImageUrl(group['groupImage']?.toString());
+
+                return GestureDetector(
+                  onTap: () => controller.toggleGroupSelection(groupId),
+                  child: Container(
+                    margin: EdgeInsets.only(right: 15.w),
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(2.r),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColors.accentColor,
+                                  width: 2,
+                                ),
+                              ),
+                              child: CircleAvatar(
+                                radius: 28.r,
+                                backgroundImage: NetworkImage(groupImg),
+                              ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: Container(
+                                padding: EdgeInsets.all(2.r),
+                                decoration: const BoxDecoration(
+                                  color: AppColors.accentColor,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.black,
+                                  size: 12.sp,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8.h),
+                        SizedBox(
+                          width: 70.w,
+                          child: Text(
+                            groupName,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11.sp,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  void _showGroupSelectionBottomSheet(BuildContext context) {
+    Get.bottomSheet(
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Select Groups to Share",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => Get.back(),
+                  child: Container(
+                    padding: EdgeInsets.all(6.r),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.close, color: Colors.white, size: 18.sp),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            Flexible(
+              child: Obx(() {
+                if (controller.isGroupsLoading.value) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.accentColor,
+                    ),
+                  );
+                }
+
+                final groups = controller.myGroups;
+                if (groups.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20.h),
+                      child: Text(
+                        "No groups found.",
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.6),
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                return ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: groups.length,
+                  separatorBuilder: (context, index) => Divider(
+                    color: Colors.white.withOpacity(0.1),
+                    height: 20.h,
+                  ),
+                  itemBuilder: (context, index) {
+                    final group = groups[index];
+                    final groupId = group['_id'] ?? '';
+                    final groupName = group['groupName'] ?? 'Group';
+                    final groupImg = ImageHelper.formatImageUrl(group['groupImage']?.toString());
+
+                    return Obx(() {
+                      final isSelected = controller.selectedGroupIds.contains(groupId);
+                      return GestureDetector(
+                        onTap: () => controller.toggleGroupSelection(groupId),
+                        child: Container(
+                          color: Colors.transparent,
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 24.r,
+                                backgroundImage: NetworkImage(groupImg),
+                              ),
+                              SizedBox(width: 15.w),
+                              Expanded(
+                                child: Text(
+                                  groupName,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 24.w,
+                                height: 24.h,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isSelected ? AppColors.accentColor : Colors.transparent,
+                                  border: Border.all(
+                                    color: isSelected ? AppColors.accentColor : Colors.white.withOpacity(0.4),
+                                    width: 2,
+                                  ),
+                                ),
+                                child: isSelected
+                                    ? Icon(
+                                        Icons.check,
+                                        color: Colors.black,
+                                        size: 14.sp,
+                                      )
+                                    : null,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+                  },
+                );
+              }),
+            ),
+            SizedBox(height: 20.h),
+            SizedBox(
+              width: double.infinity,
+              height: 50.h,
+              child: ElevatedButton(
+                onPressed: () => Get.back(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.buttonColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.r),
+                  ),
+                ),
+                child: Text(
+                  "Done",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      isScrollControlled: true,
     );
   }
 }

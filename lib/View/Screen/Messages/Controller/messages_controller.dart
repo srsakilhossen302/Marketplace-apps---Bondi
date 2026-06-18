@@ -155,7 +155,10 @@ class MessagesController extends GetxController {
               if (senderObj is Map) {
                 msgSenderId = (senderObj['_id'] ?? senderObj['id'] ?? '').toString();
                 senderName = (senderObj['fullName'] ?? senderObj['displayName'] ?? senderObj['username'] ?? 'User').toString();
-                senderImage = ImageHelper.formatImageUrl(senderObj['profileImage']?.toString() ?? senderObj['picture']?.toString() ?? '');
+                final rawImage = senderObj['profileImage']?.toString() ?? senderObj['picture']?.toString() ?? '';
+                if (rawImage.isNotEmpty) {
+                  senderImage = ImageHelper.formatImageUrl(rawImage);
+                }
               } else {
                 msgSenderId = senderObj.toString();
               }
@@ -167,7 +170,9 @@ class MessagesController extends GetxController {
             // Check msg['isMe'] first, then fallback to currentUserId comparison
             final isMe = msg['isMe'] ?? (msgSenderId.isNotEmpty && msgSenderId == currentUserId);
             if (senderImage.isEmpty && !isMe) {
-              senderImage = directChatUserImage.value;
+              if (isDirectChat.value) {
+                senderImage = directChatUserImage.value;
+              }
             }
             if (senderImage.isEmpty) {
               senderImage = 'https://i.pravatar.cc/150?u=${senderName.hashCode}';
@@ -178,6 +183,7 @@ class MessagesController extends GetxController {
               'text': msg['text'] ?? msg['content'] ?? '',
               'isMe': isMe,
               'image': senderImage,
+              'senderImage': senderImage,
               'messageType': msg['messageType'] ?? 'text',
               'mediaUrls': msg['mediaUrls'] != null ? List<String>.from(msg['mediaUrls']) : <String>[],
               'time': msg['createdAt'] != null 

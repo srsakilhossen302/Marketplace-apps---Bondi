@@ -284,7 +284,13 @@ class ChatDetailScreen extends GetView<MessagesController> {
         children: [
           CircleAvatar(
             radius: 18.r,
-            backgroundImage: NetworkImage(msg['senderImage'] as String),
+            backgroundImage: NetworkImage(
+              (msg['senderImage'] != null && (msg['senderImage'] as String).isNotEmpty)
+                  ? msg['senderImage'] as String
+                  : (msg['image'] != null && (msg['image'] as String).isNotEmpty)
+                      ? msg['image'] as String
+                      : 'https://i.pravatar.cc/150?u=${(msg['sender'] ?? 'User').hashCode}',
+            ),
           ),
           SizedBox(width: 10.w),
           Expanded(

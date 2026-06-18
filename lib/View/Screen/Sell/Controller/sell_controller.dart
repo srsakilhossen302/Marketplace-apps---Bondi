@@ -35,12 +35,17 @@ class SellController extends GetxController {
   final ImagePicker _imagePicker = ImagePicker();
   final RxBool isLoading = false.obs;
 
+  final myGroups = <Map<String, dynamic>>[].obs;
+  final isGroupsLoading = false.obs;
+  final selectedGroupIds = <String>{}.obs;
+
   bool isEditMode = false;
   String listingId = '';
 
   @override
   void onInit() {
     super.onInit();
+    fetchMyGroups();
     final dynamic listing = Get.arguments;
     if (listing != null && listing is Map) {
       isEditMode = true;
@@ -132,6 +137,36 @@ class SellController extends GetxController {
     countryController.dispose();
     cityController.dispose();
     super.onClose();
+  }
+
+  Future<void> fetchMyGroups() async {
+    isGroupsLoading.value = true;
+    try {
+      final response = await ApiClient.get(
+        ApiUrl.myGroups,
+        requireAuth: true,
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          final List<dynamic> list = data['data'];
+          myGroups.assignAll(list.map((e) => Map<String, dynamic>.from(e)).toList());
+        }
+      }
+    } catch (e) {
+      print('Error fetching my groups: $e');
+    } finally {
+      isGroupsLoading.value = false;
+    }
+  }
+
+  void toggleGroupSelection(String groupId) {
+    if (selectedGroupIds.contains(groupId)) {
+      selectedGroupIds.remove(groupId);
+    } else {
+      selectedGroupIds.add(groupId);
+    }
+    selectedGroupIds.refresh();
   }
 
   void updateCategory(String? value) {
@@ -332,6 +367,10 @@ class SellController extends GetxController {
         'isAvailableForShipping': shippingAvailable.value.toString(),
         'isAvailableForPickup': availableForPickup.value.toString(),
       };
+
+      if (selectedGroupIds.isNotEmpty) {
+        fields['groupIds'] = jsonEncode(selectedGroupIds.toList());
+      }
 
       List<http.MultipartFile> files = [];
 
