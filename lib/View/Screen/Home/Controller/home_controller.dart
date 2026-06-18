@@ -6,6 +6,7 @@ import '../../../../service/api_client.dart';
 import '../../../../service/api_url.dart';
 import '../../../../helper/shared_prefe/shared_prefe.dart';
 import '../../../../helper/network_img/image_helper.dart';
+import '../../Login/view/login_screen.dart';
 
 class HomeController extends GetxController {
   final searchController = TextEditingController();
@@ -103,12 +104,41 @@ class HomeController extends GetxController {
           final List<dynamic> recommendedJson = data['recommendedListings'] ?? [];
           recommendedListings.assignAll(recommendedJson.map((j) => parseListing(j)).toList());
         } else {
+          final message = (body['message'] ?? '').toString();
+          if (message.toLowerCase().contains('jwt expired')) {
+            await _redirectToLogin('Session Expired', 'Your session has expired. Please login again.');
+            return;
+          }
           isError.value = true;
-          errorMessage.value = body['message'] ?? 'Failed to load home feed.';
+          errorMessage.value = message.isNotEmpty ? message : 'Failed to load home feed.';
         }
       } else {
-        isError.value = true;
-        errorMessage.value = 'Failed to load home feed (Status: ${response.statusCode}).';
+        // Check for 'jwt expired' in response body when statusCode is not 200
+        bool isJwtExpired = false;
+        String apiMsg = '';
+        try {
+          final body = jsonDecode(response.body);
+          if (body is Map) {
+            apiMsg = (body['message'] ?? body['error'] ?? '').toString();
+            if (apiMsg.toLowerCase().contains('jwt expired')) {
+              isJwtExpired = true;
+            }
+          }
+        } catch (_) {}
+
+        if (response.statusCode == 401 || response.statusCode == 500 || isJwtExpired) {
+          await _redirectToLogin(
+            response.statusCode == 500 ? 'Server Error' : 'Session Expired',
+            isJwtExpired || response.statusCode == 401
+                ? 'Your session has expired. Please login again.'
+                : 'Internal server error occurred. Please login again.',
+          );
+        } else {
+          isError.value = true;
+          errorMessage.value = apiMsg.isNotEmpty 
+              ? apiMsg 
+              : 'Failed to load home feed (Status: ${response.statusCode}).';
+        }
       }
     } catch (e) {
       isError.value = true;
@@ -116,6 +146,20 @@ class HomeController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> _redirectToLogin(String title, String message) async {
+    await SharedPrefsHelper.clearAll();
+    Get.offAll(() => const LoginScreen());
+    Get.snackbar(
+      title,
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.redAccent.withOpacity(0.9),
+      colorText: Colors.white,
+      margin: const EdgeInsets.all(16),
+      borderRadius: 8,
+    );
   }
 
   Future<void> fetchCategoryListings(String categoryName) async {
