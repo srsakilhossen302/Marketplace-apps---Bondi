@@ -178,18 +178,18 @@ class MessagesController extends GetxController {
               senderImage = 'https://i.pravatar.cc/150?u=${senderName.hashCode}';
             }
 
-            return {
-              'sender': senderName,
-              'text': msg['text'] ?? msg['content'] ?? '',
-              'isMe': isMe,
-              'image': senderImage,
-              'senderImage': senderImage,
-              'messageType': msg['messageType'] ?? 'text',
-              'mediaUrls': msg['mediaUrls'] != null ? List<String>.from(msg['mediaUrls']) : <String>[],
-              'time': msg['createdAt'] != null 
-                  ? DateTime.parse(msg['createdAt']).toLocal().toString().substring(11, 16) 
-                  : '',
-            };
+            final parsedMsg = Map<String, dynamic>.from(msg);
+            parsedMsg['sender'] = senderName;
+            parsedMsg['text'] = msg['text'] ?? msg['content'] ?? '';
+            parsedMsg['isMe'] = isMe;
+            parsedMsg['image'] = senderImage;
+            parsedMsg['senderImage'] = senderImage;
+            parsedMsg['messageType'] = msg['messageType'] ?? 'text';
+            parsedMsg['mediaUrls'] = msg['mediaUrls'] != null ? List<String>.from(msg['mediaUrls']) : <String>[];
+            parsedMsg['time'] = msg['createdAt'] != null 
+                ? DateTime.parse(msg['createdAt']).toLocal().toString().substring(11, 16) 
+                : '';
+            return parsedMsg;
           }).toList();
 
           // Reverse messages list to display chronologically (oldest at top, newest at bottom)

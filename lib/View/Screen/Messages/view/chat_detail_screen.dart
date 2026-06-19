@@ -68,11 +68,33 @@ class ChatDetailScreen extends GetView<MessagesController> {
                         if (msg['isSystem'] == true) {
                           return _buildSystemMessage(msg['text'] as String);
                         } else if (msg['messageType'] == 'listing_card' || (msg['isCard'] == true && msg['listingId'] != null)) {
-                          return SharedListingCard(
-                            listingId: (msg['listingId'] ?? '').toString(),
-                            sender: (msg['sender'] ?? 'User').toString(),
-                            senderImage: (msg['senderImage'] ?? msg['image'] ?? '').toString(),
-                          );
+                          final listingData = msg['listingId'];
+                          final isMe = msg['isMe'] == true;
+                          
+                          // Handle nested senderId object if present
+                          final senderMap = msg['senderId'] is Map ? msg['senderId'] as Map : null;
+                          final senderName = senderMap != null
+                              ? (senderMap['fullName'] ?? senderMap['username'] ?? 'User').toString()
+                              : (msg['sender'] ?? 'User').toString();
+                          final senderImg = senderMap != null
+                              ? (senderMap['profileImage'] ?? senderMap['picture'] ?? '').toString()
+                              : (msg['senderImage'] ?? msg['image'] ?? '').toString();
+
+                          if (listingData is Map) {
+                            return SharedListingCard(
+                              listingMap: Map<String, dynamic>.from(listingData),
+                              sender: senderName,
+                              senderImage: senderImg,
+                              isMe: isMe,
+                            );
+                          } else {
+                            return SharedListingCard(
+                              listingIdString: listingData?.toString() ?? '',
+                              sender: senderName,
+                              senderImage: senderImg,
+                              isMe: isMe,
+                            );
+                          }
                         } else if (msg['isCard'] == true) {
                           return _buildProductCard(msg);
                         } else if (msg['messageType'] == 'image') {
@@ -655,15 +677,19 @@ class ChatDetailScreen extends GetView<MessagesController> {
 }
 
 class SharedListingCard extends StatefulWidget {
-  final String listingId;
+  final String? listingIdString;
+  final Map<String, dynamic>? listingMap;
   final String sender;
   final String senderImage;
+  final bool isMe;
 
   const SharedListingCard({
     super.key,
-    required this.listingId,
+    this.listingIdString,
+    this.listingMap,
     required this.sender,
     required this.senderImage,
+    required this.isMe,
   });
 
   @override
@@ -676,13 +702,19 @@ class _SharedListingCardState extends State<SharedListingCard> {
   @override
   void initState() {
     super.initState();
-    _listingFuture = _fetchListingDetails();
+    if (widget.listingMap != null) {
+      _listingFuture = Future.value(widget.listingMap);
+    } else {
+      _listingFuture = _fetchListingDetails();
+    }
   }
 
   Future<Map<String, dynamic>?> _fetchListingDetails() async {
+    final id = widget.listingIdString;
+    if (id == null || id.isEmpty) return null;
     try {
       final response = await ApiClient.get(
-        '${ApiUrl.listing}/${widget.listingId}',
+        '${ApiUrl.listing}/$id',
         requireAuth: true,
       );
       if (response.statusCode == 200) {
@@ -707,16 +739,19 @@ class _SharedListingCardState extends State<SharedListingCard> {
       padding: EdgeInsets.only(bottom: 20.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: widget.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          CircleAvatar(
-            radius: 18.r,
-            backgroundImage: NetworkImage(
-              widget.senderImage.isNotEmpty
-                  ? widget.senderImage
-                  : 'https://i.pravatar.cc/150?u=${widget.sender.hashCode}',
+          if (!widget.isMe) ...[
+            CircleAvatar(
+              radius: 18.r,
+              backgroundImage: NetworkImage(
+                widget.senderImage.isNotEmpty
+                    ? widget.senderImage
+                    : 'https://i.pravatar.cc/150?u=${widget.sender.hashCode}',
+              ),
             ),
-          ),
-          SizedBox(width: 10.w),
+            SizedBox(width: 10.w),
+          ],
           Expanded(
             child: FutureBuilder<Map<String, dynamic>?>(
               future: _listingFuture,
@@ -917,6 +952,11 @@ class _SharedListingCardState extends State<SharedListingCard> {
               },
             ),
           ),
+          if (widget.isMe) ...[
+            SizedBox(width: 46.w),
+          ] else ...[
+            SizedBox(width: 46.w),
+          ],
         ],
       ),
     );
