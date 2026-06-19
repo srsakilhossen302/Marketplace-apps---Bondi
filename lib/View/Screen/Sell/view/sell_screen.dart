@@ -83,7 +83,14 @@ class SellScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: () => Get.back(),
+            onTap: () {
+              if (!controller.isDraftSaved) {
+                controller.clearFields();
+              } else {
+                controller.isDraftSaved = false;
+              }
+              Get.back();
+            },
             child: Container(
               padding: EdgeInsets.all(8.r),
               decoration: BoxDecoration(
@@ -668,6 +675,39 @@ class SellScreen extends StatelessWidget {
             ),
           ),
         ),
+        if (controller.isEditMode) ...[
+          SizedBox(height: 15.h),
+          SizedBox(
+            width: double.infinity,
+            height: 55.h,
+            child: OutlinedButton.icon(
+              onPressed: () => controller.confirmDelete(),
+              icon: SvgPicture.asset(
+                'assets/icons/Delete-icons.svg',
+                width: 20.w,
+                colorFilter: ColorFilter.mode(
+                  Colors.red.shade400,
+                  BlendMode.srcIn,
+                ),
+              ),
+              label: Text(
+                StaticString.deleteListing,
+                style: TextStyle(
+                  color: Colors.red.shade400,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              style: OutlinedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(28.r),
+                ),
+              ),
+            ),
+          ),
+        ],
         if (!controller.isEditMode) ...[
           SizedBox(height: 15.h),
           SizedBox(

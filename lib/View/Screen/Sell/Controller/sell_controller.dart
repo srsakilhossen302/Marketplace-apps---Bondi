@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import '../../../../service/api_url.dart';
 import '../../../../service/api_client.dart';
+import '../../../../Utils/AppColors/app_colors.dart';
 import '../../Main/Controller/main_controller.dart';
 import '../../Profile/Controller/user_profile_controller.dart';
 
@@ -41,6 +42,7 @@ class SellController extends GetxController {
 
   bool isEditMode = false;
   String listingId = '';
+  bool isDraftSaved = false;
 
   @override
   void onInit() {
@@ -275,11 +277,11 @@ class SellController extends GetxController {
     try {
       final List<XFile>? images = await _imagePicker.pickMultiImage(
         imageQuality: 80,
-        limit: 10,
+        limit: 5,
       );
       if (images != null) {
         for (var img in images) {
-          if (selectedImages.length < 10) {
+          if (selectedImages.length < 5) {
             selectedImages.add(img);
           }
         }
@@ -369,13 +371,15 @@ class SellController extends GetxController {
       };
 
       if (selectedGroupIds.isNotEmpty) {
-        fields['groupIds'] = jsonEncode(selectedGroupIds.toList());
+        fields['sharedGroupIds'] = jsonEncode(selectedGroupIds.toList());
       }
 
       List<http.MultipartFile> files = [];
 
-      // Add images
+      // Add images (enforce max limit of 5)
+      int imageUploadedCount = 0;
       for (var img in selectedImages) {
+        if (imageUploadedCount >= 5) break;
         if (img is String) {
           try {
             final response = await http.get(Uri.parse(img));
@@ -387,17 +391,20 @@ class SellController extends GetxController {
                 response.bodyBytes,
                 filename: fileName,
               ));
+              imageUploadedCount++;
             }
           } catch (e) {
             print('Error downloading image $img: $e');
           }
         } else if (img is XFile) {
           files.add(await http.MultipartFile.fromPath('images', img.path));
+          imageUploadedCount++;
         }
       }
 
-      // Add videos
-      for (var video in selectedVideos) {
+      // Add videos (enforce max limit of 1)
+      if (selectedVideos.isNotEmpty) {
+        final video = selectedVideos.first;
         if (video is String) {
           try {
             final response = await http.get(Uri.parse(video));
@@ -454,21 +461,33 @@ class SellController extends GetxController {
             );
 
       final responseData = await http.Response.fromStream(response);
+      print('Create Listing API Response: status=${response.statusCode}, body=${responseData.body}');
+      
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (Get.isRegistered<UserProfileController>()) {
           Get.find<UserProfileController>().fetchMyListings();
         }
         
-        if (!isEditMode) {
-          // Go to home screen
-          final mainController = Get.find<MainController>();
-          mainController.changeIndex(0);
+        final wasEditMode = isEditMode;
+        
+        if (isDraft) {
+          isDraftSaved = true;
+        } else {
+          clearFields();
         }
         
-        Get.back();
+        if (wasEditMode) {
+          Get.back();
+        } else {
+          if (!isDraft) {
+            final mainController = Get.find<MainController>();
+            mainController.changeIndex(0);
+          }
+        }
+        
         Get.snackbar(
           'Success',
-          isEditMode
+          wasEditMode
               ? 'Listing updated successfully!'
               : isDraft
                   ? 'Listing saved as draft!'
@@ -484,9 +503,95 @@ class SellController extends GetxController {
         );
       }
     } catch (e) {
+      print('Submit Listing Exception: $e');
       Get.snackbar(
         'Error',
         'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void clearFields() {
+    titleController.clear();
+    descriptionController.clear();
+    priceController.clear();
+    countryController.clear();
+    cityController.clear();
+    selectedImages.clear();
+    selectedVideos.clear();
+    selectedGroupIds.clear();
+    selectedCategory.value = 'Electronics';
+    selectedCondition.value = 'New';
+    selectedTransactionType.value = 'Trade or Sell';
+    allowTradeOffers.value = true;
+    shippingAvailable.value = false;
+    availableForPickup.value = true;
+    isEditMode = false;
+    listingId = '';
+    isDraftSaved = false;
+  }
+
+  void confirmDelete() {
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: AppColors.backgroundColor,
+        title: const Text('Delete Listing', style: TextStyle(color: Colors.white)),
+        content: const Text(
+          'Are you sure you want to delete this listing? This action cannot be undone.',
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+              deleteListing();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade400),
+            child: const Text('Delete', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> deleteListing() async {
+    if (listingId.isEmpty) {
+      Get.snackbar('Error', 'Listing ID is empty', snackPosition: SnackPosition.BOTTOM);
+      return;
+    }
+    isLoading.value = true;
+    try {
+      final response = await ApiClient.delete('${ApiUrl.listing}/$listingId', requireAuth: true);
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        clearFields();
+
+        if (Get.isRegistered<UserProfileController>()) {
+          Get.find<UserProfileController>().fetchMyListings();
+        }
+        Get.back();
+        Get.snackbar(
+          'Success',
+          'Listing deleted successfully',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      } else {
+        Get.snackbar(
+          'Error',
+          'Failed to delete listing',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong: $e',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {

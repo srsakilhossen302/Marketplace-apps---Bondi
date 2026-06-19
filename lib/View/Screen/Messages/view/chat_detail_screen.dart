@@ -1,8 +1,14 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
+import '../../../../Model/home_models.dart';
+import '../../../../service/api_client.dart';
+import '../../../../service/api_url.dart';
+import '../../../../helper/network_img/image_helper.dart';
+import '../../ProductDetails/view/product_details_screen.dart';
 import '../Controller/messages_controller.dart';
 
 class ChatDetailScreen extends GetView<MessagesController> {
@@ -61,6 +67,12 @@ class ChatDetailScreen extends GetView<MessagesController> {
                         final msg = controller.groupMessages[index];
                         if (msg['isSystem'] == true) {
                           return _buildSystemMessage(msg['text'] as String);
+                        } else if (msg['messageType'] == 'listing_card' || (msg['isCard'] == true && msg['listingId'] != null)) {
+                          return SharedListingCard(
+                            listingId: (msg['listingId'] ?? '').toString(),
+                            sender: (msg['sender'] ?? 'User').toString(),
+                            senderImage: (msg['senderImage'] ?? msg['image'] ?? '').toString(),
+                          );
                         } else if (msg['isCard'] == true) {
                           return _buildProductCard(msg);
                         } else if (msg['messageType'] == 'image') {
@@ -639,5 +651,307 @@ class ChatDetailScreen extends GetView<MessagesController> {
         ],
       ),
     );
+  }
+}
+
+class SharedListingCard extends StatefulWidget {
+  final String listingId;
+  final String sender;
+  final String senderImage;
+
+  const SharedListingCard({
+    super.key,
+    required this.listingId,
+    required this.sender,
+    required this.senderImage,
+  });
+
+  @override
+  State<SharedListingCard> createState() => _SharedListingCardState();
+}
+
+class _SharedListingCardState extends State<SharedListingCard> {
+  late Future<Map<String, dynamic>?> _listingFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _listingFuture = _fetchListingDetails();
+  }
+
+  Future<Map<String, dynamic>?> _fetchListingDetails() async {
+    try {
+      final response = await ApiClient.get(
+        '${ApiUrl.listing}/${widget.listingId}',
+        requireAuth: true,
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          final resData = data['data'];
+          final listingMap = resData['listing'] != null 
+              ? Map<String, dynamic>.from(resData['listing']) 
+              : Map<String, dynamic>.from(resData);
+          return listingMap;
+        }
+      }
+    } catch (e) {
+      print('Error fetching card details: $e');
+    }
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          CircleAvatar(
+            radius: 18.r,
+            backgroundImage: NetworkImage(
+              widget.senderImage.isNotEmpty
+                  ? widget.senderImage
+                  : 'https://i.pravatar.cc/150?u=${widget.sender.hashCode}',
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: FutureBuilder<Map<String, dynamic>?>(
+              future: _listingFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container(
+                    height: 180.h,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(25.r),
+                    ),
+                    child: const Center(
+                      child: CircularProgressIndicator(color: AppColors.accentColor),
+                    ),
+                  );
+                }
+                
+                final listing = snapshot.data;
+                if (listing == null) {
+                  return Container(
+                    padding: EdgeInsets.all(16.r),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(25.r),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.error_outline, color: Colors.white.withOpacity(0.4)),
+                        SizedBox(width: 10.w),
+                        Text(
+                          'Listing not available',
+                          style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 13.sp),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                // Parse fields
+                final title = listing['title']?.toString() ?? 'No Title';
+                final price = listing['price']?.toString() ?? '0';
+                final condition = listing['condition']?.toString() ?? 'new';
+                final listingType = listing['listingType']?.toString() ?? 'sale';
+
+                String thumbnail = listing['thumbnail']?.toString().replaceAll('`', '').trim() ?? '';
+                if (thumbnail.isEmpty && listing['images'] != null && (listing['images'] as List).isNotEmpty) {
+                  thumbnail = listing['images'][0].toString().replaceAll('`', '').trim();
+                }
+                final formattedImg = ImageHelper.formatImageUrl(thumbnail);
+
+                // Map condition for badge
+                String conditionDisplay = 'New';
+                if (condition.toLowerCase() == 'like_new') {
+                  conditionDisplay = 'Like New';
+                } else if (condition.toLowerCase() == 'good') {
+                  conditionDisplay = 'Used - Good';
+                }
+
+                // Map type for badge
+                String typeDisplay = 'Sell';
+                if (listingType.toLowerCase() == 'trade') {
+                  typeDisplay = 'Trade';
+                } else if (listingType.toLowerCase() == 'sale_and_trade') {
+                  typeDisplay = 'Trade or Sell';
+                }
+
+                return GestureDetector(
+                  onTap: () => _navigateToDetails(listing, formattedImg),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(25.r),
+                      border: Border.all(color: Colors.white.withOpacity(0.1)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(25.r),
+                              ),
+                              child: Image.network(
+                                formattedImg,
+                                height: 180.h,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                  height: 180.h,
+                                  color: Colors.white.withOpacity(0.05),
+                                  child: const Icon(Icons.broken_image, color: Colors.white38),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 12.h,
+                              right: 12.w,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 4.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Text(
+                                  StaticString.newListing.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 9.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(15.r),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      title,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Text(
+                                    '\$$price',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10.h),
+                              Row(
+                                children: [
+                                  _buildBadge(conditionDisplay),
+                                  SizedBox(width: 8.w),
+                                  _buildBadge(typeDisplay),
+                                ],
+                              ),
+                              SizedBox(height: 15.h),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 45.h,
+                                child: ElevatedButton(
+                                  onPressed: () => _navigateToDetails(listing, formattedImg),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.buttonColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25.r),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        StaticString.viewListing,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      Icon(
+                                        Icons.arrow_forward,
+                                        color: Colors.white,
+                                        size: 16.sp,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBadge(String text) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(15.r),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 11.sp),
+      ),
+    );
+  }
+
+  void _navigateToDetails(Map<String, dynamic> listingJson, String formattedImg) {
+    final sellerName = listingJson['sellerProfileId'] != null
+        ? (listingJson['sellerProfileId']['displayName'] ?? 'Seller').toString()
+        : 'Seller';
+
+    final listingModel = ListingModel(
+      title: listingJson['title']?.toString() ?? '',
+      price: '\$${listingJson['price']?.toString() ?? '0'}',
+      seller: sellerName,
+      image: formattedImg,
+      isNew: listingJson['condition']?.toString().toLowerCase() == 'new',
+      isTrade: listingJson['listingType']?.toString().toLowerCase() == 'trade' || 
+               listingJson['listingType']?.toString().toLowerCase() == 'sale_and_trade',
+      slug: listingJson['slug']?.toString() ?? '',
+    );
+
+    Get.to(() => const ProductDetailsScreen(), arguments: listingModel);
   }
 }
