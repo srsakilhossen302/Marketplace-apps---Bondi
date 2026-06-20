@@ -164,10 +164,35 @@ class SelectProjectScreen extends GetView<TradeController> {
   }
 
   Widget _buildProductList() {
-    return Obx(
-      () => Column(
-        children: List.generate(controller.myProducts.length, (index) {
-          final product = controller.myProducts[index];
+    return Obx(() {
+      if (controller.isLoadingListings.value) {
+        return const Center(
+          child: Padding(
+            padding: EdgeInsets.all(30.0),
+            child: CircularProgressIndicator(color: AppColors.accentColor),
+          ),
+        );
+      }
+
+      final products = controller.filteredProducts;
+      if (products.isEmpty) {
+        return Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 40.h),
+            child: Text(
+              'No active listings found.',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+        );
+      }
+
+      return Column(
+        children: List.generate(products.length, (index) {
+          final product = products[index];
           bool isSelected = controller.selectedProductIndex.value == index;
           return GestureDetector(
             onTap: () {
@@ -177,6 +202,7 @@ class SelectProjectScreen extends GetView<TradeController> {
                 price: product['price'],
                 image: product['image'],
                 seller: "Me",
+                slug: product['slug'] ?? '',
               );
             },
             child: Container(
@@ -210,14 +236,19 @@ class SelectProjectScreen extends GetView<TradeController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              product['title'],
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Text(
+                                product['title'],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
+                            SizedBox(width: 10.w),
                             Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 8.w,
@@ -245,6 +276,8 @@ class SelectProjectScreen extends GetView<TradeController> {
                             color: Colors.white.withOpacity(0.6),
                             fontSize: 12.sp,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 10.h),
                         Text(
@@ -263,8 +296,8 @@ class SelectProjectScreen extends GetView<TradeController> {
             ),
           );
         }),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildAddNewListing() {
