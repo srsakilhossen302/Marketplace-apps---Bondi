@@ -5,6 +5,10 @@ import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/notification_controller.dart';
+import '../../../../helper/network_img/image_helper.dart';
+import '../../MyTrades/view/trade_details_screen.dart';
+import '../../Profile/view/seller_profile_screen.dart';
+import '../../Messages/view/chat_detail_screen.dart';
 
 class NotificationScreen extends GetView<NotificationController> {
   const NotificationScreen({super.key});
@@ -24,17 +28,38 @@ class NotificationScreen extends GetView<NotificationController> {
               _buildAppBar(),
               Expanded(
                 child: Obx(
-                  () => ListView.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 10.h,
-                    ),
-                    itemCount: controller.notifications.length,
-                    itemBuilder: (context, index) {
-                      final notification = controller.notifications[index];
-                      return _buildNotificationCard(notification);
-                    },
-                  ),
+                  () {
+                    if (controller.isLoading.value && controller.notifications.isEmpty) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.accentColor,
+                        ),
+                      );
+                    }
+                    if (controller.notifications.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No notifications yet',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.6),
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.w,
+                        vertical: 10.h,
+                      ),
+                      itemCount: controller.notifications.length,
+                      itemBuilder: (context, index) {
+                        final rawNotification = controller.notifications[index];
+                        final notification = controller.mapApiToUi(rawNotification);
+                        return _buildNotificationCard(notification);
+                      },
+                    );
+                  },
                 ),
               ),
             ],
@@ -90,276 +115,303 @@ class NotificationScreen extends GetView<NotificationController> {
     );
   }
 
+  void _handleNotificationTap(Map<String, dynamic> data) {
+    final redirectType = data['redirectType']?.toString();
+    final redirectId = data['redirectId']?.toString();
+    if (redirectId == null || redirectId.isEmpty) return;
+
+    if (redirectType == 'trade') {
+      Get.to(() => const TradeDetailsScreen(), arguments: redirectId);
+    } else if (redirectType == 'chat') {
+      final rawActor = data['_raw']?['actorId'];
+      Get.to(
+        () => const ChatDetailScreen(),
+        arguments: {
+          'conversationId': redirectId,
+          'userId': rawActor is Map ? (rawActor['_id'] ?? '') : '',
+          'name': rawActor is Map ? (rawActor['username'] ?? data['user'] ?? 'User') : (data['user'] ?? 'User'),
+          'image': ImageHelper.formatImageUrl(rawActor is Map ? (rawActor['picture'] ?? '') : ''),
+          'conversationType': 'direct',
+        },
+      );
+    } else if (redirectType == 'profile') {
+      Get.to(() => const SellerProfileScreen(), arguments: redirectId);
+    }
+  }
+
   Widget _buildNotificationCard(Map<String, dynamic> data) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15.h),
-      padding: EdgeInsets.all(15.r),
-      decoration: BoxDecoration(
-        color: AppColors.cardColor.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(30.r),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildAvatar(data),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: RichText(
-                            text: TextSpan(
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14.sp,
+    return GestureDetector(
+      onTap: () => _handleNotificationTap(data),
+      child: Container(
+        margin: EdgeInsets.only(bottom: 15.h),
+        padding: EdgeInsets.all(15.r),
+        decoration: BoxDecoration(
+          color: AppColors.cardColor.withOpacity(0.4),
+          borderRadius: BorderRadius.circular(30.r),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildAvatar(data),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.sp,
+                                ),
+                                children: [
+                                  if (data['user'] != null)
+                                    TextSpan(
+                                      text: "${data['user']} ",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  TextSpan(text: data['action']),
+                                  if (data['item'] != null)
+                                    TextSpan(
+                                      text: "\n${data['item']}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  if (data['group'] != null)
+                                    TextSpan(
+                                      text: " ${data['group']}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                ],
                               ),
-                              children: [
-                                if (data['user'] != null)
-                                  TextSpan(
-                                    text: "${data['user']} ",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                TextSpan(text: data['action']),
-                                if (data['item'] != null)
-                                  TextSpan(
-                                    text: "\n${data['item']}",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                if (data['group'] != null)
-                                  TextSpan(
-                                    text: " ${data['group']}",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                              ],
                             ),
                           ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              data['time'],
-                              style: TextStyle(
-                                color: AppColors.accentColor.withOpacity(0.8),
-                                fontSize: 10.sp,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                data['time'],
+                                style: TextStyle(
+                                  color: AppColors.accentColor.withOpacity(0.8),
+                                  fontSize: 10.sp,
+                                ),
                               ),
-                            ),
-                            if (data['is_unread'] == true)
-                              Padding(
-                                padding: EdgeInsets.only(top: 5.h),
-                                child: Container(
-                                  width: 8.w,
-                                  height: 8.h,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 1.5,
+                              if (data['is_unread'] == true)
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5.h),
+                                  child: Container(
+                                    width: 8.w,
+                                    height: 8.h,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 1.5,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
+                        ],
+                      ),
+                      if (data['message'] != null) ...[
+                        SizedBox(height: 8.h),
+                        Text(
+                          data['message'],
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 13.sp,
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ],
-                    ),
-                    if (data['message'] != null) ...[
-                      SizedBox(height: 8.h),
-                      Text(
-                        data['message'],
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 13.sp,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ],
-                    if (data['status'] != null) ...[
-                      SizedBox(height: 10.h),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12.w,
-                          vertical: 6.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.accentColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(15.r),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.check_circle,
-                              color: AppColors.accentColor,
-                              size: 14.sp,
-                            ),
-                            SizedBox(width: 5.w),
-                            Text(
-                              data['status'],
-                              style: TextStyle(
+                      if (data['status'] != null) ...[
+                        SizedBox(height: 10.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 6.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.accentColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(15.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.check_circle,
                                 color: AppColors.accentColor,
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.bold,
+                                size: 14.sp,
                               ),
-                            ),
-                          ],
+                              SizedBox(width: 5.w),
+                              Text(
+                                data['status'],
+                                style: TextStyle(
+                                  color: AppColors.accentColor,
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                      ],
                     ],
-                  ],
+                  ),
+                ),
+              ],
+            ),
+            if (data['item_image'] != null) ...[
+              SizedBox(height: 15.h),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20.r),
+                child: Image.network(
+                  data['item_image'],
+                  height: 140.h,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
             ],
-          ),
-          if (data['item_image'] != null) ...[
-            SizedBox(height: 15.h),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20.r),
-              child: Image.network(
-                data['item_image'],
-                height: 140.h,
+            if (data['likers'] != null) ...[
+              SizedBox(height: 15.h),
+              Row(
+                children: [
+                  ...List.generate(
+                    (data['likers'] as List).length,
+                    (index) => Align(
+                      widthFactor: 0.7,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.cardColor,
+                            width: 2,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          radius: 14.r,
+                          backgroundImage: NetworkImage(data['likers'][index]),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (data['extra_likers'] != null)
+                    Align(
+                      widthFactor: 0.7,
+                      child: Container(
+                        padding: EdgeInsets.all(4.r),
+                        decoration: BoxDecoration(
+                          color: AppColors.buttonColor,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.cardColor,
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          "+${data['extra_likers']}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+            if (data['type'] == 'new_message') ...[
+              SizedBox(height: 15.h),
+              SizedBox(
                 width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ],
-          if (data['likers'] != null) ...[
-            SizedBox(height: 15.h),
-            Row(
-              children: [
-                ...List.generate(
-                  (data['likers'] as List).length,
-                  (index) => Align(
-                    widthFactor: 0.7,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColors.cardColor,
-                          width: 2,
-                        ),
-                      ),
-                      child: CircleAvatar(
-                        radius: 14.r,
-                        backgroundImage: NetworkImage(data['likers'][index]),
-                      ),
+                height: 45.h,
+                child: OutlinedButton(
+                  onPressed: () => _handleNotificationTap(data),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.r),
                     ),
                   ),
-                ),
-                if (data['extra_likers'] != null)
-                  Align(
-                    widthFactor: 0.7,
-                    child: Container(
-                      padding: EdgeInsets.all(4.r),
-                      decoration: BoxDecoration(
-                        color: AppColors.buttonColor,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColors.cardColor,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        "+${data['extra_likers']}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                  child: Text(
+                    StaticString.replyNow,
+                    style: TextStyle(
+                      color: AppColors.accentColor,
+                      fontSize: 14.sp,
                     ),
-                  ),
-              ],
-            ),
-          ],
-          if (data['type'] == 'new_message') ...[
-            SizedBox(height: 15.h),
-            SizedBox(
-              width: double.infinity,
-              height: 45.h,
-              child: OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: Colors.white.withOpacity(0.2)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.r),
-                  ),
-                ),
-                child: Text(
-                  StaticString.replyNow,
-                  style: TextStyle(
-                    color: AppColors.accentColor,
-                    fontSize: 14.sp,
                   ),
                 ),
               ),
-            ),
-          ],
-          if (data['type'] == 'group_invite') ...[
-            SizedBox(height: 15.h),
-            Row(
-              children: [
-                Expanded(
-                  child: SizedBox(
-                    height: 45.h,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.buttonColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.r),
+            ],
+            if (data['type'] == 'group_invite') ...[
+              SizedBox(height: 15.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 45.h,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.buttonColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.r),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        StaticString.joinGroup,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Color(0xffFFFFFF),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: SizedBox(
-                    height: 45.h,
-                    child: OutlinedButton(
-                      onPressed: () {},
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: Colors.white.withOpacity(0.2)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.r),
-                        ),
-                      ),
-                      child: Text(
-                        StaticString.decline,
-                        style: TextStyle(
-                          color: Color(0xffFFFFFF),
-                          fontSize: 14.sp,
+                        child: Text(
+                          StaticString.joinGroup,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Color(0xffFFFFFF),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: SizedBox(
+                      height: 45.h,
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.r),
+                          ),
+                        ),
+                        child: Text(
+                          StaticString.decline,
+                          style: TextStyle(
+                            color: Color(0xffFFFFFF),
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

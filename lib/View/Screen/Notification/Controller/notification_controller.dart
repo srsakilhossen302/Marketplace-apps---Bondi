@@ -1,58 +1,113 @@
+import 'dart:convert';
 import 'package:get/get.dart';
+import '../../../../service/api_client.dart';
+import '../../../../service/api_url.dart';
+import '../../../../helper/network_img/image_helper.dart';
 
 class NotificationController extends GetxController {
-  // Mock notification data can be added here
-  final notifications = [
-    {
-      'type': 'new_item',
-      'user': 'Alex',
-      'action': 'posted a new item:',
-      'item': 'Vintage Leather Jacket',
-      'time': '2m ago',
-      'user_image': 'https://randomuser.me/api/portraits/men/1.jpg',
-      'item_image': 'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=500&auto=format&fit=crop',
-      'is_unread': true,
-    },
-    {
-      'type': 'trade_accepted',
-      'user': 'Sarah',
-      'action': 'accepted your trade offer for the',
-      'item': 'Rolex Submariner',
-      'time': '1h ago',
-      'user_image': 'https://randomuser.me/api/portraits/women/1.jpg',
-      'status': 'Trade Finalized',
-      'is_unread': true,
-    },
-    {
-      'type': 'new_message',
-      'user': 'Julian',
-      'action': 'New message from',
-      'message': '"Is the price negotiable?"',
-      'time': '3h ago',
-      'user_image': 'https://randomuser.me/api/portraits/men/2.jpg',
-      'is_unread': false,
-    },
-    {
-      'type': 'liked',
-      'action': 'Your listing \'Air Jordan 1 Retro\' was liked by 5 people',
-      'time': '5h ago',
-      'icon': 'heart',
-      'likers': [
-        'https://randomuser.me/api/portraits/men/3.jpg',
-        'https://randomuser.me/api/portraits/women/2.jpg',
-        'https://randomuser.me/api/portraits/men/4.jpg',
-      ],
-      'extra_likers': 2,
-      'is_unread': false,
-    },
-    {
-      'type': 'group_invite',
-      'user': 'Mike',
-      'action': 'invited you to the',
-      'group': '\'Sneakerheads LA\' group',
-      'time': 'Yesterday',
-      'user_image': 'https://randomuser.me/api/portraits/men/5.jpg',
-      'is_unread': false,
-    },
-  ].obs;
+  final notifications = <Map<String, dynamic>>[].obs;
+  final isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchNotifications();
+  }
+
+  Future<void> fetchNotifications() async {
+    isLoading.value = true;
+    try {
+      final response = await ApiClient.get(ApiUrl.notification, requireAuth: true);
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        if (decoded['success'] == true && decoded['data'] != null) {
+          final List<dynamic> list = decoded['data'];
+          final mappedList = list.map((e) => Map<String, dynamic>.from(e)).toList();
+          notifications.assignAll(mappedList);
+        }
+      }
+    } catch (e) {
+      print('Error fetching notifications: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  String formatTimeAgo(String? timeStr) {
+    if (timeStr == null || timeStr.trim().isEmpty) return '';
+    try {
+      final dateTime = DateTime.parse(timeStr).toLocal();
+      final difference = DateTime.now().difference(dateTime);
+      if (difference.inDays >= 365) {
+        final years = (difference.inDays / 365).floor();
+        return '${years}y ago';
+      } else if (difference.inDays >= 30) {
+        final months = (difference.inDays / 30).floor();
+        return '${months}mo ago';
+      } else if (difference.inDays >= 7) {
+        final weeks = (difference.inDays / 7).floor();
+        return '${weeks}w ago';
+      } else if (difference.inDays >= 1) {
+        return '${difference.inDays}d ago';
+      } else if (difference.inHours >= 1) {
+        return '${difference.inHours}h ago';
+      } else if (difference.inMinutes >= 1) {
+        return '${difference.inMinutes}m ago';
+      } else {
+        return 'Just now';
+      }
+    } catch (e) {
+      return '';
+    }
+  }
+
+  Map<String, dynamic> mapApiToUi(Map<String, dynamic> apiData) {
+    final actor = apiData['actorId'] is Map ? apiData['actorId'] : null;
+    final actorName = actor != null ? (actor['username'] ?? '') : '';
+    final actorPic = actor != null ? (actor['picture'] ?? '') : '';
+    
+    String user = '';
+    String action = '';
+    String? message;
+    String? status;
+    
+    final type = apiData['type']?.toString() ?? '';
+    final body = apiData['body']?.toString() ?? '';
+    final title = apiData['title']?.toString() ?? '';
+    
+    if (type == 'new_message') {
+      user = actorName.isNotEmpty ? actorName : title;
+      action = 'sent you a message:';
+      message = body;
+    } else if (type == 'friend_request') {
+      user = actorName.isNotEmpty ? actorName : 'Someone';
+      action = 'sent you a friend request.';
+    } else if (type == 'trade_accepted') {
+      user = actorName.isNotEmpty ? actorName : 'Someone';
+      action = 'accepted your trade offer.';
+      status = 'Trade Accepted';
+    } else if (type == 'trade_completed') {
+      user = 'Trade Completed';
+      action = body;
+      status = 'Completed';
+    } else {
+      user = title;
+      action = body;
+    }
+    
+    return {
+      'id': apiData['_id'],
+      'type': type,
+      'user': user.isNotEmpty ? user : null,
+      'action': action,
+      'message': message,
+      'status': status,
+      'time': formatTimeAgo(apiData['createdAt']),
+      'user_image': actorPic.isNotEmpty ? ImageHelper.formatImageUrl(actorPic) : null,
+      'is_unread': apiData['isRead'] == false,
+      'redirectType': apiData['redirectType'],
+      'redirectId': apiData['redirectId'],
+      '_raw': apiData,
+    };
+  }
 }

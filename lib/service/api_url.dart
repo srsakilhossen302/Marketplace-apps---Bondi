@@ -34,4 +34,5 @@ class ApiUrl {
   static const String tradeReject = "$baseUrl/trade/reject";
   static const String tradeCounter = "$baseUrl/trade/counter";
   static const String tradeComplete = "$baseUrl/trade/complete";
+  static const String notification = "$baseUrl/notification";
 }
