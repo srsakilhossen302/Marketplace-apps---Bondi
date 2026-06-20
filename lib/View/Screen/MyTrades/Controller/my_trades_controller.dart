@@ -30,7 +30,15 @@ class MyTradesController extends GetxController {
         final decoded = jsonDecode(response.body);
         if (decoded['success'] == true && decoded['data'] != null) {
           final List<dynamic> list = decoded['data'];
-          receivedTradeOffers.assignAll(list.map((e) => Map<String, dynamic>.from(e)).toList());
+          final mappedList = list.map((e) => Map<String, dynamic>.from(e)).toList();
+          mappedList.sort((a, b) {
+            final aPending = (a['status']?.toString().toLowerCase() ?? '') == 'pending';
+            final bPending = (b['status']?.toString().toLowerCase() ?? '') == 'pending';
+            if (aPending && !bPending) return -1;
+            if (!aPending && bPending) return 1;
+            return 0;
+          });
+          receivedTradeOffers.assignAll(mappedList);
         }
       }
     } catch (e) {
@@ -48,7 +56,15 @@ class MyTradesController extends GetxController {
         final decoded = jsonDecode(response.body);
         if (decoded['success'] == true && decoded['data'] != null) {
           final List<dynamic> list = decoded['data'];
-          sentTradeOffers.assignAll(list.map((e) => Map<String, dynamic>.from(e)).toList());
+          final mappedList = list.map((e) => Map<String, dynamic>.from(e)).toList();
+          mappedList.sort((a, b) {
+            final aPending = (a['status']?.toString().toLowerCase() ?? '') == 'pending';
+            final bPending = (b['status']?.toString().toLowerCase() ?? '') == 'pending';
+            if (aPending && !bPending) return -1;
+            if (!aPending && bPending) return 1;
+            return 0;
+          });
+          sentTradeOffers.assignAll(mappedList);
         }
       }
     } catch (e) {
