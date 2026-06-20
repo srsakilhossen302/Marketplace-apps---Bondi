@@ -291,6 +291,7 @@ class ApiClient {
   }
 
   static void _handleSessionExpired() async {
+    Get.deleteAll(force: true);
     await SharedPrefsHelper.clearAll();
     Get.offAll(() => const LoginScreen());
     Get.snackbar(

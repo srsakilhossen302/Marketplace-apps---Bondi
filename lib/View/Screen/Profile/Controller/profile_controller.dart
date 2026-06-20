@@ -62,20 +62,31 @@ class ProfileController extends GetxController {
   Future<void> signOut() async {
     try {
       final token = await SharedPrefsHelper.getToken();
-
-      if (token != null) {
-        await http.post(
-          Uri.parse(ApiUrl.logout),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-        );
+      if (token != null && token.isNotEmpty) {
+        await ApiClient.post(ApiUrl.logout, {}, requireAuth: true);
       }
     } catch (e) {
-      // Proceed to local logout even if network call fails
+      print('Error during network sign out: $e');
     } finally {
+      // Reset reactive variables to clear state from memory
+      userName.value = '';
+      displayName.value = '';
+      bondId.value = '';
+      referralCode.value = '';
+      creditsEarned.value = 'R\$ 0,00';
+      userImage.value = 'https://i.pravatar.cc/150?u=default';
+      bio.value = '';
+      country.value = '';
+      city.value = '';
+      email.value = '';
+
+      // Clear all GetX controllers from memory to prevent old data leaks
+      Get.deleteAll(force: true);
+
+      // Clear all local preferences (tokens, user IDs, etc.)
       await SharedPrefsHelper.clearAll();
+      
+      // Reset navigation and route to Login Screen
       Get.offAll(() => const LoginScreen());
     }
   }
