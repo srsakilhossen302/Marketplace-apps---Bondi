@@ -225,6 +225,15 @@ class FriendsScreen extends GetView<FriendsController> {
 
   Widget _buildFriendsList() {
     return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(
+          child: Padding(
+            padding: EdgeInsets.all(30.0),
+            child: CircularProgressIndicator(color: AppColors.accentColor),
+          ),
+        );
+      }
+
       List<Map<String, String>> currentList;
       switch (controller.selectedTab.value) {
         case 0:
@@ -243,12 +252,27 @@ class FriendsScreen extends GetView<FriendsController> {
           currentList = controller.friends;
       }
 
+      if (currentList.isEmpty) {
+        return Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 40.h),
+            child: Text(
+              'No users found.',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+        );
+      }
+
       return Column(
         children: currentList.map((item) {
           if (controller.selectedTab.value == 2) {
-            // Requests view (based on Image 1)
+            // Requests view
             return GestureDetector(
-              onTap: () => Get.to(() => const SellerProfileScreen()),
+              onTap: () => Get.to(() => const SellerProfileScreen(), arguments: item['id']),
               child: Container(
                 margin: EdgeInsets.only(bottom: 15.h),
                 padding: EdgeInsets.all(15.r),
@@ -297,7 +321,7 @@ class FriendsScreen extends GetView<FriendsController> {
                           child: SizedBox(
                             height: 40.h,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () => controller.acceptFriendRequest(item['relationshipId']!),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.buttonColor,
                                 shape: RoundedRectangleBorder(
@@ -319,7 +343,7 @@ class FriendsScreen extends GetView<FriendsController> {
                           child: SizedBox(
                             height: 40.h,
                             child: OutlinedButton(
-                              onPressed: () {},
+                              onPressed: () => controller.declineFriendRequest(item['relationshipId']!),
                               style: OutlinedButton.styleFrom(
                                 side: BorderSide(
                                   color: Colors.white.withOpacity(0.3),
@@ -348,7 +372,7 @@ class FriendsScreen extends GetView<FriendsController> {
 
           // Other views (Friends, Following, Suggested)
           return GestureDetector(
-            onTap: () => Get.to(() => const SellerProfileScreen()),
+            onTap: () => Get.to(() => const SellerProfileScreen(), arguments: item['id']),
             child: Container(
               margin: EdgeInsets.only(bottom: 15.h),
               padding: EdgeInsets.all(15.r),
@@ -386,7 +410,7 @@ class FriendsScreen extends GetView<FriendsController> {
                       ],
                     ),
                   ),
-                  _buildActionWidget(),
+                  _buildActionWidget(item),
                 ],
               ),
             ),
@@ -396,30 +420,36 @@ class FriendsScreen extends GetView<FriendsController> {
     });
   }
 
-  Widget _buildActionWidget() {
+  Widget _buildActionWidget(Map<String, String> item) {
     switch (controller.selectedTab.value) {
       case 1: // Following
-        return Text(
-          StaticString.unfollow,
-          style: TextStyle(
-            color: AppColors.accentColor,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.bold,
+        return GestureDetector(
+          onTap: () => controller.cancelFriendRequest(item['relationshipId']!),
+          child: Text(
+            StaticString.unfollow,
+            style: TextStyle(
+              color: AppColors.accentColor,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         );
       case 3: // Suggested
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-          decoration: BoxDecoration(
-            color: AppColors.buttonColor,
-            borderRadius: BorderRadius.circular(15.r),
-          ),
-          child: Text(
-            StaticString.addFriend,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.bold,
+        return GestureDetector(
+          onTap: () => controller.sendFriendRequest(item['id']!),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              color: AppColors.buttonColor,
+              borderRadius: BorderRadius.circular(15.r),
+            ),
+            child: Text(
+              StaticString.addFriend,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         );
@@ -460,88 +490,113 @@ class FriendsScreen extends GetView<FriendsController> {
   }
 
   Widget _buildRecommendedList() {
-    return Row(
-      children: controller.recommended.map((item) {
-        return Expanded(
-          child: GestureDetector(
-            onTap: () => Get.to(() => const SellerProfileScreen()),
-            child: Container(
-              margin: EdgeInsets.only(right: 15.w),
-              padding: EdgeInsets.all(15.r),
-              decoration: BoxDecoration(
-                color: AppColors.cardColor.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(25.r),
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
-              ),
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 35.r,
-                        backgroundImage: NetworkImage(item['image']!),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          padding: EdgeInsets.all(4.r),
-                          decoration: const BoxDecoration(
-                            color: AppColors.accentColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.bolt,
-                            color: Colors.white,
-                            size: 10.sp,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    item['name']!,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    item['mutual']!,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
-                      fontSize: 11.sp,
-                    ),
-                  ),
-                  SizedBox(height: 15.h),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 35.h,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.buttonColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.r),
-                        ),
-                      ),
-                      child: Text(
-                        StaticString.addFriend,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Color(0xffFFFFFF),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const SizedBox.shrink();
+      }
+
+      if (controller.recommended.isEmpty) {
+        return Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 20.h),
+            child: Text(
+              'No recommendations.',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 14.sp,
               ),
             ),
           ),
         );
-      }).toList(),
-    );
+      }
+
+      return Row(
+        children: controller.recommended.map((item) {
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => Get.to(() => const SellerProfileScreen(), arguments: item['id']),
+              child: Container(
+                margin: EdgeInsets.only(right: 15.w),
+                padding: EdgeInsets.all(15.r),
+                decoration: BoxDecoration(
+                  color: AppColors.cardColor.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(25.r),
+                  border: Border.all(color: Colors.white.withOpacity(0.1)),
+                ),
+                child: Column(
+                  children: [
+                    Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 35.r,
+                          backgroundImage: NetworkImage(item['image']!),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: EdgeInsets.all(4.r),
+                            decoration: const BoxDecoration(
+                              color: AppColors.accentColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.bolt,
+                              color: Colors.white,
+                              size: 10.sp,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+                    Text(
+                      item['name']!,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      item['mutual']!,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.5),
+                        fontSize: 11.sp,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 15.h),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 35.h,
+                      child: ElevatedButton(
+                        onPressed: () => controller.sendFriendRequest(item['id']!),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.buttonColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.r),
+                          ),
+                        ),
+                        child: Text(
+                          StaticString.addFriend,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: Color(0xffFFFFFF),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      );
+    });
   }
 }
