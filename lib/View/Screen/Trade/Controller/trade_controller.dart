@@ -8,7 +8,7 @@ import '../../../../service/api_client.dart';
 import '../../../../service/api_url.dart';
 import '../../../../helper/network_img/image_helper.dart';
 import '../../Messages/view/chat_detail_screen.dart';
-import '../../MyOrders/view/my_orders_screen.dart';
+import '../../MyTrades/view/my_trades_screen.dart';
 
 class TradeController extends GetxController {
   late final ListingModel product;
@@ -245,7 +245,7 @@ class TradeController extends GetxController {
                           // Close dialog and the trade offer screen
                           Get.close(2);
                           // Route to the My Orders Screen
-                          Get.to(() => const MyOrdersScreen());
+                          Get.to(() => const MyTradesScreen());
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.buttonColor,
@@ -254,7 +254,7 @@ class TradeController extends GetxController {
                           ),
                         ),
                         child: Text(
-                          'Go to My Orders',
+                          'Go to My Trades',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16.sp,

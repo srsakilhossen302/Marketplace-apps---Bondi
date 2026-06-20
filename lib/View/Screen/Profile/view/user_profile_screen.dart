@@ -8,6 +8,7 @@ import '../../Sell/view/sell_screen.dart';
 import 'edit_profile_screen.dart';
 import 'friends_screen.dart';
 import '../../MyOrders/view/my_orders_screen.dart';
+import '../../MyTrades/view/my_trades_screen.dart';
 
 class UserProfileScreen extends GetView<UserProfileController> {
   const UserProfileScreen({super.key});
@@ -314,7 +315,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
       width: double.infinity,
       height: 52.h,
       child: ElevatedButton(
-        onPressed: () => Get.to(() => const MyOrdersScreen()),
+        onPressed: () => Get.to(() => const MyTradesScreen()),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.buttonColor,
           shape: RoundedRectangleBorder(
@@ -323,7 +324,7 @@ class UserProfileScreen extends GetView<UserProfileController> {
           elevation: 0,
         ),
         child: Text(
-          StaticString.myOrders,
+          'MY TRADES',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.sp,

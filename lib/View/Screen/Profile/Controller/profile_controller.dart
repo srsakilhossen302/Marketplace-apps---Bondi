@@ -8,12 +8,12 @@ import '../../../../service/api_client.dart';
 import '../../Login/view/login_screen.dart';
 
 class ProfileController extends GetxController {
-  final userName = 'Alex Rivera'.obs;
-  final displayName = 'Alex Rivera'.obs;
-  final bondId = '8829'.obs;
-  final referralCode = 'BOND-ALEX-8829'.obs;
+  final userName = ''.obs;
+  final displayName = ''.obs;
+  final bondId = ''.obs;
+  final referralCode = ''.obs;
   final creditsEarned = 'R\$ 0,00'.obs;
-  final userImage = 'https://randomuser.me/api/portraits/men/1.jpg'.obs;
+  final userImage = 'https://i.pravatar.cc/150?u=default'.obs;
   final bio = ''.obs;
   final country = ''.obs;
   final city = ''.obs;
@@ -37,11 +37,14 @@ class ProfileController extends GetxController {
 
         if (profileData != null) {
           displayName.value = profileData['displayName'] ?? 'User';
-          userName.value = profileData['username'] ?? 'User';
+          userName.value = profileData['username'] ?? 'user';
           email.value = profileData['email'] ?? '';
           bio.value = profileData['bio'] ?? '';
           country.value = profileData['country'] ?? '';
           city.value = profileData['city'] ?? '';
+          bondId.value = (profileData['bondId'] ?? profileData['_id']?.toString().substring(0, 4) ?? '').toString();
+          referralCode.value = (profileData['referralCode'] ?? '').toString();
+          creditsEarned.value = (profileData['creditsEarned'] ?? 'R\$ 0,00').toString();
 
           if (profileData['profileImage'] != null &&
               profileData['profileImage'].toString().isNotEmpty) {

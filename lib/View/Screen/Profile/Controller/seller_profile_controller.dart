@@ -14,11 +14,11 @@ class SellerProfileController extends GetxController {
   final isLoading = false.obs;
   final isConnectionActionLoading = false.obs;
 
-  final sellerName = 'Jane Doe'.obs;
+  final sellerName = ''.obs;
   final sellerImage = ''.obs;
   final shortBio = ''.obs;
   final longBio = ''.obs;
-  final location = 'New York, NY'.obs;
+  final location = ''.obs;
   final isVerifiedSeller = false.obs;
 
   final tradesCount = '0'.obs;
@@ -202,22 +202,7 @@ class SellerProfileController extends GetxController {
             'slug': json['slug']?.toString() ?? '',
           });
         }
-        if (loadedListings.isNotEmpty) {
-          activeListings.assignAll(loadedListings);
-        } else {
-          activeListings.assignAll([
-            {
-              'title': 'Air Max Crimson Limited',
-              'price': '\$420',
-              'image': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=500&auto=format&fit=crop',
-            },
-            {
-              'title': 'Custom KB-88 Stealth',
-              'price': '\$285',
-              'image': 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?q=80&w=500&auto=format&fit=crop',
-            },
-          ]);
-        }
+        activeListings.assignAll(loadedListings);
       }
     } catch (e) {
       print('Error fetching seller listings: $e');

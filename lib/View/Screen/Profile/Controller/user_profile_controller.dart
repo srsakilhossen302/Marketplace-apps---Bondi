@@ -5,17 +5,15 @@ import '../../../../service/api_client.dart';
 import '../../../../helper/network_img/image_helper.dart';
 
 class UserProfileController extends GetxController {
-  final userName = 'Alex Rivers'.obs;
-  final displayName = 'Alex Rivers'.obs;
-  final userImage = 'https://randomuser.me/api/portraits/men/1.jpg'.obs;
-  final bio =
-      'Sneaker collector and vintage tech enthusiast. Let\'s trade! Always looking for rare 90s hardware and limited releases.'
-          .obs;
+  final userName = ''.obs;
+  final displayName = ''.obs;
+  final userImage = 'https://i.pravatar.cc/150?u=default'.obs;
+  final bio = ''.obs;
 
-  final friendsCount = '1.2k'.obs;
-  final groupsCount = '24'.obs;
-  final tradesCount = '158'.obs;
-  final rating = '4.9'.obs;
+  final friendsCount = '0'.obs;
+  final groupsCount = '0'.obs;
+  final tradesCount = '0'.obs;
+  final rating = '0.0'.obs;
 
   final myListings = <Map<String, dynamic>>[].obs;
 
