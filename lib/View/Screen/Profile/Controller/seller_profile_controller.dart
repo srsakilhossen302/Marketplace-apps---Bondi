@@ -33,6 +33,7 @@ class SellerProfileController extends GetxController {
   // Connection states
   final relationshipStatus = 'none'.obs; // 'none', 'pending', 'accepted'
   final isFriendRequestSentByMe = false.obs;
+  final relationshipId = ''.obs;
 
   @override
   void onInit() {
@@ -91,6 +92,7 @@ class SellerProfileController extends GetxController {
             // Parse relationship status
             String status = 'none';
             String senderId = '';
+            relationshipId.value = '';
             
             if (resData['relationshipStatus'] != null) {
               status = resData['relationshipStatus'].toString().toLowerCase();
@@ -101,6 +103,12 @@ class SellerProfileController extends GetxController {
             
             if (resData['relationshipSenderId'] != null) {
               senderId = resData['relationshipSenderId'].toString();
+            }
+
+            if (resData['relationshipId'] != null) {
+              relationshipId.value = resData['relationshipId'].toString();
+            } else if (resData['relationship'] != null && resData['relationship'] is Map) {
+              relationshipId.value = (resData['relationship']['_id'] ?? '').toString();
             }
             
             // Normalize status to: 'none', 'pending_sent', 'pending_received', 'friend', 'blocked'
@@ -227,13 +235,21 @@ class SellerProfileController extends GetxController {
     isConnectionActionLoading.value = true;
     try {
       final response = await ApiClient.post(
-        '${ApiUrl.social}/request/${userId.value}',
-        {},
+        '${ApiUrl.social}/friend-request',
+        {'recipientId': userId.value},
         requireAuth: true,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         relationshipStatus.value = 'pending_sent';
         isFriendRequestSentByMe.value = true;
+
+        try {
+          final resData = jsonDecode(response.body);
+          if (resData['data'] != null && resData['data']['_id'] != null) {
+            relationshipId.value = resData['data']['_id'].toString();
+          }
+        } catch (_) {}
+
         Get.snackbar(
           'Success',
           'Friend request sent successfully.',
@@ -273,13 +289,16 @@ class SellerProfileController extends GetxController {
 
     isConnectionActionLoading.value = true;
     try {
-      final response = await ApiClient.delete(
-        '${ApiUrl.social}/cancel/${userId.value}',
+      final idToUse = relationshipId.value.isNotEmpty ? relationshipId.value : userId.value;
+      final response = await ApiClient.post(
+        '${ApiUrl.social}/cancel-request/$idToUse',
+        {},
         requireAuth: true,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         relationshipStatus.value = 'none';
         isFriendRequestSentByMe.value = false;
+        relationshipId.value = '';
         Get.snackbar(
           'Success',
           'Friend request cancelled successfully.',
@@ -319,14 +338,16 @@ class SellerProfileController extends GetxController {
 
     isConnectionActionLoading.value = true;
     try {
+      final idToUse = relationshipId.value.isNotEmpty ? relationshipId.value : userId.value;
       final response = await ApiClient.post(
-        '${ApiUrl.social}/accept/${userId.value}',
+        '${ApiUrl.social}/accept-request/$idToUse',
         {},
         requireAuth: true,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         relationshipStatus.value = 'friend';
         isFriendRequestSentByMe.value = false;
+        relationshipId.value = '';
         Get.snackbar(
           'Success',
           'Friend request accepted successfully.',
@@ -366,13 +387,15 @@ class SellerProfileController extends GetxController {
 
     isConnectionActionLoading.value = true;
     try {
+      final idToUse = relationshipId.value.isNotEmpty ? relationshipId.value : userId.value;
       final response = await ApiClient.post(
-        '${ApiUrl.social}/reject/${userId.value}',
+        '${ApiUrl.social}/reject-request/$idToUse',
         {},
         requireAuth: true,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         relationshipStatus.value = 'none';
+        relationshipId.value = '';
         Get.snackbar(
           'Success',
           'Friend request declined.',
@@ -413,12 +436,13 @@ class SellerProfileController extends GetxController {
     isConnectionActionLoading.value = true;
     try {
       final response = await ApiClient.delete(
-        '${ApiUrl.social}/remove/${userId.value}',
+        '${ApiUrl.social}/remove-friend/${userId.value}',
         requireAuth: true,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         relationshipStatus.value = 'none';
         isFriendRequestSentByMe.value = false;
+        relationshipId.value = '';
         Get.snackbar(
           'Success',
           'Friend removed successfully.',
