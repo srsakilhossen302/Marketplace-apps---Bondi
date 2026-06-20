@@ -8,6 +8,7 @@ import 'edit_profile_screen.dart';
 import 'friends_screen.dart';
 import 'subscription_screen.dart';
 import 'user_profile_screen.dart';
+import '../../Notification/view/notification_screen.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
   const ProfileScreen({super.key});
@@ -75,6 +76,7 @@ class ProfileScreen extends GetView<ProfileController> {
                           Icons.notifications_none,
                           StaticString.notifications,
                           badge: "3",
+                          onTap: () => Get.to(() => const NotificationScreen()),
                         ),
                       ]),
                       SizedBox(height: 25.h),
