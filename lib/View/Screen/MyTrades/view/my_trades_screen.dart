@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../helper/network_img/image_helper.dart';
 import '../Controller/my_trades_controller.dart';
+import 'trade_details_screen.dart';
 
 class MyTradesScreen extends GetView<MyTradesController> {
   const MyTradesScreen({super.key});
@@ -76,7 +77,10 @@ class MyTradesScreen extends GetView<MyTradesController> {
                     itemCount: list.length,
                     itemBuilder: (context, index) {
                       final offer = list[index];
-                      return _buildTradeOfferCard(offer, isReceived);
+                      return GestureDetector(
+                        onTap: () => Get.to(() => const TradeDetailsScreen(), arguments: offer['_id']),
+                        child: _buildTradeOfferCard(offer, isReceived),
+                      );
                     },
                   );
                 }),

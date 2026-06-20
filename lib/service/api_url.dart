@@ -29,4 +29,9 @@ class ApiUrl {
   static const String tradeOffer = "$baseUrl/trade/offer";
   static const String tradeSent = "$baseUrl/trade/sent";
   static const String tradeReceived = "$baseUrl/trade/received";
+  static const String tradeDetails = "$baseUrl/trade";
+  static const String tradeAccept = "$baseUrl/trade/accept";
+  static const String tradeReject = "$baseUrl/trade/reject";
+  static const String tradeCounter = "$baseUrl/trade/counter";
+  static const String tradeComplete = "$baseUrl/trade/complete";
 }
