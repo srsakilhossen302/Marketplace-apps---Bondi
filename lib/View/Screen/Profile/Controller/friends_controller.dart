@@ -6,7 +6,6 @@ import '../../../../helper/network_img/image_helper.dart';
 
 class FriendsController extends GetxController {
   final friends = <Map<String, String>>[].obs;
-  final following = <Map<String, String>>[].obs;
   final requests = <Map<String, String>>[].obs;
   final suggested = <Map<String, String>>[].obs;
   final recommended = <Map<String, String>>[].obs;
@@ -25,7 +24,6 @@ class FriendsController extends GetxController {
     try {
       await Future.wait([
         fetchFriends(),
-        fetchFollowing(),
         fetchRequests(),
         fetchSuggested(),
       ]);
@@ -100,21 +98,6 @@ class FriendsController extends GetxController {
       }
     } catch (e) {
       print('Error fetching friends: $e');
-    }
-  }
-
-  Future<void> fetchFollowing() async {
-    try {
-      final response = await ApiClient.get('${ApiUrl.social}/sent-requests', requireAuth: true);
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        if (decoded['success'] == true && decoded['data'] != null) {
-          final List<dynamic> data = decoded['data'];
-          following.assignAll(data.map((e) => _parseUser(Map<String, dynamic>.from(e))).toList());
-        }
-      }
-    } catch (e) {
-      print('Error fetching sent requests: $e');
     }
   }
 

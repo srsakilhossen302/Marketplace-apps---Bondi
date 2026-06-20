@@ -162,7 +162,6 @@ class FriendsScreen extends GetView<FriendsController> {
   Widget _buildTabs() {
     final tabs = [
       StaticString.friends,
-      StaticString.following,
       StaticString.requests,
       StaticString.suggested,
     ];
@@ -193,7 +192,7 @@ class FriendsScreen extends GetView<FriendsController> {
                                 : FontWeight.normal,
                           ),
                         ),
-                        if (idx == 2) ...[
+                        if (idx == 1) ...[
                           SizedBox(width: 5.w),
                           Container(
                             width: 8.w,
@@ -240,12 +239,9 @@ class FriendsScreen extends GetView<FriendsController> {
           currentList = controller.friends;
           break;
         case 1:
-          currentList = controller.following;
-          break;
-        case 2:
           currentList = controller.requests;
           break;
-        case 3:
+        case 2:
           currentList = controller.suggested;
           break;
         default:
@@ -269,7 +265,7 @@ class FriendsScreen extends GetView<FriendsController> {
 
       return Column(
         children: currentList.map((item) {
-          if (controller.selectedTab.value == 2) {
+          if (controller.selectedTab.value == 1) {
             // Requests view
             return GestureDetector(
               onTap: () => Get.to(() => const SellerProfileScreen(), arguments: item['id']),
@@ -370,7 +366,7 @@ class FriendsScreen extends GetView<FriendsController> {
             );
           }
 
-          // Other views (Friends, Following, Suggested)
+          // Other views (Friends, Suggested)
           return GestureDetector(
             onTap: () => Get.to(() => const SellerProfileScreen(), arguments: item['id']),
             child: Container(
@@ -422,19 +418,7 @@ class FriendsScreen extends GetView<FriendsController> {
 
   Widget _buildActionWidget(Map<String, String> item) {
     switch (controller.selectedTab.value) {
-      case 1: // Following
-        return GestureDetector(
-          onTap: () => controller.cancelFriendRequest(item['relationshipId']!),
-          child: Text(
-            StaticString.unfollow,
-            style: TextStyle(
-              color: AppColors.accentColor,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        );
-      case 3: // Suggested
+      case 2: // Suggested
         return GestureDetector(
           onTap: () => controller.sendFriendRequest(item['id']!),
           child: Container(
@@ -454,18 +438,7 @@ class FriendsScreen extends GetView<FriendsController> {
           ),
         );
       default: // Friends
-        return Container(
-          padding: EdgeInsets.all(8.r),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          child: Icon(
-            Icons.chat_bubble_outline,
-            color: AppColors.accentColor,
-            size: 18.sp,
-          ),
-        );
+        return const SizedBox.shrink();
     }
   }
 
