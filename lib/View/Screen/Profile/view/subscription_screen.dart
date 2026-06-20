@@ -13,49 +13,68 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
     Get.put(SubscriptionController());
 
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: AppColors.backgroundColor,
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 30.h),
-                      Text(
-                        StaticString.upgradeYourExperience,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
+      body: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: AppColors.backgroundColor,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  _buildAppBar(),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 30.h),
+                          Text(
+                            StaticString.upgradeYourExperience,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 28.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 15.h),
+                          Text(
+                            StaticString.choosePerfectPlanToBoostTradingGame,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.7),
+                              fontSize: 14.sp,
+                              height: 1.5,
+                            ),
+                          ),
+                          SizedBox(height: 40.h),
+                          Obx(() => Column(
+                            children: controller.plans.map((plan) => _buildPlanCard(plan)).toList(),
+                          )),
+                          SizedBox(height: 40.h),
+                        ],
                       ),
-                      SizedBox(height: 15.h),
-                      Text(
-                        StaticString.choosePerfectPlanToBoostTradingGame,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 14.sp,
-                          height: 1.5,
-                        ),
-                      ),
-                      SizedBox(height: 40.h),
-                      ...controller.plans.map((plan) => _buildPlanCard(plan)),
-                      SizedBox(height: 40.h),
-                    ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Obx(() {
+            if (controller.isLoading.value) {
+              return Container(
+                color: Colors.black.withOpacity(0.55),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.accentColor,
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
+              );
+            }
+            return const SizedBox.shrink();
+          }),
+        ],
       ),
     );
   }
@@ -127,27 +146,28 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 10.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 4.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardColor.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Text(
-                    plan['tag'],
-                    style: TextStyle(
-                      color: AppColors.accentColor,
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.bold,
+                if (plan['tag'] != null)
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 4.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardColor.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Text(
+                      plan['tag'],
+                      style: TextStyle(
+                        color: AppColors.accentColor,
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
                 SizedBox(height: 20.h),
                 Text(
-                  plan['price'],
+                  plan['price'] ?? 'Free',
                   style: TextStyle(
                     color: AppColors.accentColor,
                     fontSize: 32.sp,
@@ -171,39 +191,40 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                     ),
                   ),
                 SizedBox(height: 25.h),
-                ...(plan['features'] as List<String>).map(
-                  (feature) => Padding(
-                    padding: EdgeInsets.only(bottom: 15.h),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.check_circle_outline,
-                          color: AppColors.accentColor,
-                          size: 18.sp,
-                        ),
-                        SizedBox(width: 12.w),
-                        Expanded(
-                          child: Text(
-                            feature,
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.8),
-                              fontSize: 13.sp,
-                              height: 1.4,
+                if (plan['features'] != null)
+                  ...(plan['features'] as List).map(
+                    (feature) => Padding(
+                      padding: EdgeInsets.only(bottom: 15.h),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.check_circle_outline,
+                            color: AppColors.accentColor,
+                            size: 18.sp,
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: Text(
+                              feature.toString(),
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.8),
+                                fontSize: 13.sp,
+                                height: 1.4,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                if (!isCurrent) ...[
+                if (!isCurrent && plan['_id'] != 'free_plan') ...[
                   SizedBox(height: 10.h),
                   SizedBox(
                     width: double.infinity,
                     height: 50.h,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => controller.subscribeToPlan(plan['_id'] ?? ''),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: plan['name'] == 'Silver Plan'
                             ? AppColors.buttonColor
@@ -250,7 +271,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 borderRadius: BorderRadius.circular(15.r),
               ),
               child: Text(
-                isCurrent ? StaticString.currentPlan : StaticString.popular,
+                isCurrent ? StaticString.currentPlan : (plan['tag'] ?? 'Popular'),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12.sp,

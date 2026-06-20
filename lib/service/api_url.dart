@@ -35,4 +35,8 @@ class ApiUrl {
   static const String tradeCounter = "$baseUrl/trade/counter";
   static const String tradeComplete = "$baseUrl/trade/complete";
   static const String notification = "$baseUrl/notification";
+  static const String subscriptionPlans = "$baseUrl/subscription/plans";
+  static const String mySubscription = "$baseUrl/subscription/my-subscription";
+  static const String createIntent = "$baseUrl/subscription/create-intent";
+  static const String verifySubscription = "$baseUrl/subscription/verify";
 }

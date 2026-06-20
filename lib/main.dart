@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'Language/translator.dart';
 import 'View/Screen/Login/view/login_screen.dart';
@@ -8,6 +9,11 @@ import 'helper/shared_prefe/shared_prefe.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Stripe publishable key
+  Stripe.publishableKey = "pk_test_51PMl7aA8YgpuhNcIUjpXyNGiSUtjWHVMnPiPDiPYsSsy2cUH4O9hKRWvD8nHLw26nsSEfH6vr4r4UoLOdpCTwIow00pDm3FDpn"; 
+  await Stripe.instance.applySettings();
+
   final token = await SharedPrefsHelper.getToken();
   final Widget initialScreen = (token != null && token.isNotEmpty)
       ? const MainScreen()
