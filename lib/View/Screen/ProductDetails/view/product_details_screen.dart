@@ -592,7 +592,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             child: OutlinedButton(
               onPressed: () => Get.to(
                 () => const TradeScreen(),
-                arguments: controller.product,
+                arguments: {
+                  'product': controller.product,
+                  'receiverId': controller.listingData['sellerId']?.toString() ?? '',
+                  'receiverListingId': controller.listingData['_id']?.toString() ?? '',
+                },
               ),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppColors.buttonColor),

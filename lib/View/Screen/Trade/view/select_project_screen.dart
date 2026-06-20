@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import '../../../../Model/home_models.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../../Profile/view/add_listing_screen.dart';
@@ -193,17 +192,10 @@ class SelectProjectScreen extends GetView<TradeController> {
       return Column(
         children: List.generate(products.length, (index) {
           final product = products[index];
-          bool isSelected = controller.selectedProductIndex.value == index;
+          bool isSelected = controller.requesterListingId.value == product['id'];
           return GestureDetector(
             onTap: () {
-              controller.selectedProductIndex.value = index;
-              controller.selectedProduct.value = ListingModel(
-                title: product['title'],
-                price: product['price'],
-                image: product['image'],
-                seller: "Me",
-                slug: product['slug'] ?? '',
-              );
+              controller.selectMyProduct(index, product);
             },
             child: Container(
               margin: EdgeInsets.only(bottom: 15.h),

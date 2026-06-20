@@ -26,4 +26,5 @@ class ApiUrl {
   static const String discoveryFeed = "$baseUrl/discovery/feed";
   static const String discoveryCategories = "$baseUrl/discovery/categories";
   static const String discoveryCategory = "$baseUrl/discovery/category";
+  static const String tradeOffer = "$baseUrl/trade/offer";
 }
