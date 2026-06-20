@@ -10,6 +10,7 @@ import '../../Community/view/community_screen.dart';
 import '../../Discover/view/discover_screen.dart';
 import '../../Home/view/home_screen.dart';
 import '../../Profile/view/profile_screen.dart';
+import '../../Profile/Controller/profile_controller.dart';
 import '../../Sell/view/sell_screen.dart';
 import '../Controller/main_controller.dart';
 
@@ -19,6 +20,7 @@ class MainScreen extends GetView<MainController> {
   @override
   Widget build(BuildContext context) {
     Get.put(MainController());
+    Get.put(ProfileController(), permanent: true);
 
     final List<Widget> screens = [
       const HomeScreen(),

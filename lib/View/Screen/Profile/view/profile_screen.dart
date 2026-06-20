@@ -19,7 +19,9 @@ class ProfileScreen extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ProfileController());
+    if (!Get.isRegistered<ProfileController>()) {
+      Get.put(ProfileController(), permanent: true);
+    }
 
     return Scaffold(
       body: Container(
@@ -234,11 +236,13 @@ class ProfileScreen extends GetView<ProfileController> {
                     ),
                   ),
                 ),
-                Text(
-                  "Bond ID: ${controller.bondId.value}",
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 13.sp,
+                Obx(
+                  () => Text(
+                    "Bond ID: ${controller.bondId.value}",
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.6),
+                      fontSize: 13.sp,
+                    ),
                   ),
                 ),
               ],
@@ -419,13 +423,15 @@ class ProfileScreen extends GetView<ProfileController> {
                       ),
                     ),
                     SizedBox(height: 6.h),
-                    Text(
-                      controller.referralCode.value,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
+                    Obx(
+                      () => Text(
+                        controller.referralCode.value,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ),
                   ],
@@ -490,12 +496,14 @@ class ProfileScreen extends GetView<ProfileController> {
                     fontSize: 15.sp,
                   ),
                 ),
-                Text(
-                  controller.creditsEarned.value,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
+                Obx(
+                  () => Text(
+                    controller.creditsEarned.value,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
