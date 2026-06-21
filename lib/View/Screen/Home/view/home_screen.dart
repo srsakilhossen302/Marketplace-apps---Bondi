@@ -165,7 +165,7 @@ class HomeScreen extends GetView<HomeController> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SvgPicture.asset(
-            'assets/icons/horizontal logo light bg 1.svg',
+            'assets/icons/horizontal_logo_light_bg_1.svg',
             width: 120.w,
           ),
           Row(

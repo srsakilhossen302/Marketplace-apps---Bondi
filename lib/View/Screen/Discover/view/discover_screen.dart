@@ -152,7 +152,7 @@ class DiscoverScreen extends GetView<DiscoverController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SvgPicture.asset('assets/icons/horizontal logo light bg 1.svg', width: 120.w),
+          SvgPicture.asset('assets/icons/horizontal_logo_light_bg_1.svg', width: 120.w),
           GestureDetector(
             onTap: () => Get.to(() => const NotificationScreen()),
             child: SvgPicture.asset(

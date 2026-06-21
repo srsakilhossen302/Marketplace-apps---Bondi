@@ -267,19 +267,20 @@ class FriendsScreen extends GetView<FriendsController> {
         children: currentList.map((item) {
           if (controller.selectedTab.value == 1) {
             // Requests view
-            return GestureDetector(
-              onTap: () => Get.to(() => const SellerProfileScreen(), arguments: item['id']),
-              child: Container(
-                margin: EdgeInsets.only(bottom: 15.h),
-                padding: EdgeInsets.all(15.r),
-                decoration: BoxDecoration(
-                  color: AppColors.cardColor.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(25.r),
-                  border: Border.all(color: Colors.white.withOpacity(0.1)),
-                ),
-                child: Column(
-                  children: [
-                    Row(
+            return Container(
+              margin: EdgeInsets.only(bottom: 15.h),
+              padding: EdgeInsets.all(15.r),
+              decoration: BoxDecoration(
+                color: AppColors.cardColor.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(25.r),
+                border: Border.all(color: Colors.white.withOpacity(0.1)),
+              ),
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () => Get.to(() => const SellerProfileScreen(), arguments: item['id']),
+                    behavior: HitTestBehavior.opaque,
+                    child: Row(
                       children: [
                         CircleAvatar(
                           radius: 25.r,
@@ -310,36 +311,59 @@ class FriendsScreen extends GetView<FriendsController> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: 40.h,
-                            child: ElevatedButton(
-                              onPressed: () => controller.acceptFriendRequest(item['relationshipId']!),
+                  ),
+                  SizedBox(height: 15.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 40.h,
+                          child: Obx(() {
+                            final isAccepting = controller.acceptingRequests.contains(item['relationshipId']);
+                            final isAnyLoading = controller.acceptingRequests.contains(item['relationshipId']) ||
+                                controller.decliningRequests.contains(item['relationshipId']);
+                            return ElevatedButton(
+                              onPressed: isAnyLoading
+                                  ? null
+                                  : () => controller.acceptFriendRequest(item['relationshipId']!),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.buttonColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20.r),
                                 ),
                               ),
-                              child: Text(
-                                StaticString.accept,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Color(0xffFFFFFF),
-                                ),
-                              ),
-                            ),
-                          ),
+                              child: isAccepting
+                                  ? SizedBox(
+                                      width: 18.w,
+                                      height: 18.w,
+                                      child: const CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : Text(
+                                      StaticString.accept,
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: const Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                            );
+                          }),
                         ),
-                        SizedBox(width: 10.w),
-                        Expanded(
-                          child: SizedBox(
-                            height: 40.h,
-                            child: OutlinedButton(
-                              onPressed: () => controller.declineFriendRequest(item['relationshipId']!),
+                      ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: SizedBox(
+                          height: 40.h,
+                          child: Obx(() {
+                            final isDeclining = controller.decliningRequests.contains(item['relationshipId']);
+                            final isAnyLoading = controller.acceptingRequests.contains(item['relationshipId']) ||
+                                controller.decliningRequests.contains(item['relationshipId']);
+                            return OutlinedButton(
+                              onPressed: isAnyLoading
+                                  ? null
+                                  : () => controller.declineFriendRequest(item['relationshipId']!),
                               style: OutlinedButton.styleFrom(
                                 side: BorderSide(
                                   color: Colors.white.withOpacity(0.3),
@@ -348,67 +372,83 @@ class FriendsScreen extends GetView<FriendsController> {
                                   borderRadius: BorderRadius.circular(20.r),
                                 ),
                               ),
-                              child: Text(
-                                StaticString.decline,
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-                            ),
-                          ),
+                              child: isDeclining
+                                  ? SizedBox(
+                                      width: 18.w,
+                                      height: 18.w,
+                                      child: const CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : Text(
+                                      StaticString.decline,
+                                      style: TextStyle(
+                                        color: Colors.white.withOpacity(0.8),
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+                            );
+                          }),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             );
           }
 
           // Other views (Friends, Suggested)
-          return GestureDetector(
-            onTap: () => Get.to(() => const SellerProfileScreen(), arguments: item['id']),
-            child: Container(
-              margin: EdgeInsets.only(bottom: 15.h),
-              padding: EdgeInsets.all(15.r),
-              decoration: BoxDecoration(
-                color: AppColors.cardColor.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(25.r),
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 25.r,
-                    backgroundImage: NetworkImage(item['image']!),
-                  ),
-                  SizedBox(width: 15.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          return Container(
+            margin: EdgeInsets.only(bottom: 15.h),
+            padding: EdgeInsets.all(15.r),
+            decoration: BoxDecoration(
+              color: AppColors.cardColor.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(25.r),
+              border: Border.all(color: Colors.white.withOpacity(0.1)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => Get.to(() => const SellerProfileScreen(), arguments: item['id']),
+                    behavior: HitTestBehavior.opaque,
+                    child: Row(
                       children: [
-                        Text(
-                          item['name']!,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        CircleAvatar(
+                          radius: 25.r,
+                          backgroundImage: NetworkImage(item['image']!),
                         ),
-                        Text(
-                          item['mutual']!,
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.5),
-                            fontSize: 12.sp,
+                        SizedBox(width: 15.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item['name']!,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                item['mutual']!,
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 12.sp,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  _buildActionWidget(item),
-                ],
-              ),
+                ),
+                _buildActionWidget(item),
+              ],
             ),
           );
         }).toList(),
@@ -419,24 +459,36 @@ class FriendsScreen extends GetView<FriendsController> {
   Widget _buildActionWidget(Map<String, String> item) {
     switch (controller.selectedTab.value) {
       case 2: // Suggested
-        return GestureDetector(
-          onTap: () => controller.sendFriendRequest(item['id']!),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: AppColors.buttonColor,
-              borderRadius: BorderRadius.circular(15.r),
-            ),
-            child: Text(
-              StaticString.addFriend,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.bold,
+        return Obx(() {
+          final isSending = controller.sendingRequests.contains(item['id']);
+          return GestureDetector(
+            onTap: isSending ? null : () => controller.sendFriendRequest(item['id']!),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: isSending ? AppColors.buttonColor.withOpacity(0.5) : AppColors.buttonColor,
+                borderRadius: BorderRadius.circular(15.r),
               ),
+              child: isSending
+                  ? SizedBox(
+                      width: 14.w,
+                      height: 14.w,
+                      child: const CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 1.5,
+                      ),
+                    )
+                  : Text(
+                      StaticString.addFriend,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
             ),
-          ),
-        );
+          );
+        });
       default: // Friends
         return const SizedBox.shrink();
     }

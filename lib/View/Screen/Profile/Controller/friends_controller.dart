@@ -13,6 +13,11 @@ class FriendsController extends GetxController {
   final selectedTab = 0.obs;
   final isLoading = false.obs;
 
+  // Track loading state for individual items
+  final acceptingRequests = <String>{}.obs;
+  final decliningRequests = <String>{}.obs;
+  final sendingRequests = <String>{}.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -35,21 +40,58 @@ class FriendsController extends GetxController {
   }
 
   Map<String, String> _parseUser(Map<String, dynamic> item) {
-    String id = (item['_id'] ?? item['id'] ?? '').toString();
+    print('Parsing user request item: $item');
+    
+    String userId = '';
+    String relId = '';
+    
+    // Check if there is a nested sender or recipient (Scenario A)
+    if (item['sender'] != null && item['sender'] is Map) {
+      final sender = item['sender'] as Map<String, dynamic>;
+      userId = (sender['_id'] ?? sender['id'] ?? '').toString();
+      
+      // The relationship ID is on the top-level item
+      relId = (item['_id'] ?? item['id'] ?? item['relationshipId'] ?? item['requestId'] ?? '').toString();
+      if (relId.isEmpty && item['relationship'] != null && item['relationship'] is Map) {
+        relId = (item['relationship']['_id'] ?? item['relationship']['id'] ?? '').toString();
+      }
+    } else if (item['recipient'] != null && item['recipient'] is Map) {
+      final recipient = item['recipient'] as Map<String, dynamic>;
+      userId = (recipient['_id'] ?? recipient['id'] ?? '').toString();
+      
+      // The relationship ID is on the top-level item
+      relId = (item['_id'] ?? item['id'] ?? item['relationshipId'] ?? item['requestId'] ?? '').toString();
+      if (relId.isEmpty && item['relationship'] != null && item['relationship'] is Map) {
+        relId = (item['relationship']['_id'] ?? item['relationship']['id'] ?? '').toString();
+      }
+    } else {
+      // Flat structure (Scenario B or Suggested User)
+      userId = (item['_id'] ?? item['id'] ?? '').toString();
+      
+      // Look for relationship request ID in various possible fields
+      if (item['relationshipId'] != null) {
+        relId = item['relationshipId'].toString();
+      } else if (item['requestId'] != null) {
+        relId = item['requestId'].toString();
+      } else if (item['relationship'] != null && item['relationship'] is Map) {
+        relId = (item['relationship']['_id'] ?? item['relationship']['id'] ?? '').toString();
+      }
+    }
+    
+    // Fall back to userId if no relationship ID was parsed
+    if (relId.isEmpty) {
+      relId = userId;
+    }
+
     String name = '';
     String image = '';
-    String relationshipId = '';
 
     if (item['sender'] != null && item['sender'] is Map) {
       final sender = item['sender'] as Map<String, dynamic>;
-      relationshipId = id;
-      id = (sender['_id'] ?? sender['id'] ?? '').toString();
       name = (sender['fullName'] ?? sender['username'] ?? '').toString();
       image = (sender['profileImage'] ?? sender['picture'] ?? '').toString();
     } else if (item['recipient'] != null && item['recipient'] is Map) {
       final recipient = item['recipient'] as Map<String, dynamic>;
-      relationshipId = id;
-      id = (recipient['_id'] ?? recipient['id'] ?? '').toString();
       name = (recipient['fullName'] ?? recipient['username'] ?? '').toString();
       image = (recipient['profileImage'] ?? recipient['picture'] ?? '').toString();
     } else {
@@ -78,8 +120,8 @@ class FriendsController extends GetxController {
     }
 
     return {
-      'id': id,
-      'relationshipId': relationshipId.isNotEmpty ? relationshipId : id,
+      'id': userId,
+      'relationshipId': relId,
       'name': name,
       'mutual': mutualCount > 0 ? '$mutualCount mutual friends' : 'No mutual friends',
       'image': image,
@@ -135,6 +177,7 @@ class FriendsController extends GetxController {
 
   Future<void> acceptFriendRequest(String relationshipId) async {
     try {
+      acceptingRequests.add(relationshipId);
       final response = await ApiClient.post(
         '${ApiUrl.social}/accept-request/$relationshipId',
         {},
@@ -149,11 +192,14 @@ class FriendsController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'Something went wrong: $e');
+    } finally {
+      acceptingRequests.remove(relationshipId);
     }
   }
 
   Future<void> declineFriendRequest(String relationshipId) async {
     try {
+      decliningRequests.add(relationshipId);
       final response = await ApiClient.post(
         '${ApiUrl.social}/reject-request/$relationshipId',
         {},
@@ -168,11 +214,14 @@ class FriendsController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'Something went wrong: $e');
+    } finally {
+      decliningRequests.remove(relationshipId);
     }
   }
 
   Future<void> sendFriendRequest(String userId) async {
     try {
+      sendingRequests.add(userId);
       final response = await ApiClient.post(
         '${ApiUrl.social}/friend-request',
         {'recipientId': userId},
@@ -187,6 +236,8 @@ class FriendsController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'Something went wrong: $e');
+    } finally {
+      sendingRequests.remove(userId);
     }
   }
 
