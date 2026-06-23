@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -403,7 +404,12 @@ class SellScreen extends StatelessWidget {
   Widget _buildPriceField() {
     return TextField(
       controller: controller.priceController,
-      keyboardType: TextInputType.number,
+      focusNode: controller.priceFocusNode,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+        DecimalTextInputFormatter(decimalRange: 2),
+      ],
       style: TextStyle(color: Colors.white, fontSize: 16.sp),
       decoration: InputDecoration(
         hintText: StaticString.priceHint,
@@ -415,7 +421,7 @@ class SellScreen extends StatelessWidget {
           color: AppColors.accentColor,
           size: 20.sp,
         ),
-        suffixText: "USD",
+        suffixText: "BRL",
         suffixStyle: TextStyle(
           color: AppColors.accentColor,
           fontWeight: FontWeight.bold,
@@ -1043,5 +1049,38 @@ class SellScreen extends StatelessWidget {
       ),
       isScrollControlled: true,
     );
+  }
+}
+
+class DecimalTextInputFormatter extends TextInputFormatter {
+  final int decimalRange;
+
+  DecimalTextInputFormatter({this.decimalRange = 2});
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    String text = newValue.text;
+
+    if (text.isEmpty) {
+      return newValue;
+    }
+
+    // Split text by decimal point
+    List<String> parts = text.split('.');
+
+    // Allow at most one decimal point
+    if (parts.length > 2) {
+      return oldValue;
+    }
+
+    // Check if there are decimal places and they exceed the range
+    if (parts.length == 2 && parts[1].length > decimalRange) {
+      return oldValue;
+    }
+
+    return newValue;
   }
 }

@@ -15,6 +15,7 @@ class SellController extends GetxController {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
+  final priceFocusNode = FocusNode();
   final countryController = TextEditingController();
   final cityController = TextEditingController();
 
@@ -47,6 +48,11 @@ class SellController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    priceFocusNode.addListener(() {
+      if (!priceFocusNode.hasFocus) {
+        formatPrice();
+      }
+    });
     fetchMyGroups();
     final dynamic listing = Get.arguments;
     if (listing != null && listing is Map) {
@@ -55,7 +61,13 @@ class SellController extends GetxController {
 
       titleController.text = (listing['title'] ?? '').toString();
       descriptionController.text = (listing['description'] ?? '').toString();
-      priceController.text = (listing['price'] ?? '').toString();
+      final priceVal = (listing['price'] ?? '').toString();
+      if (priceVal.isNotEmpty) {
+        final doubleValue = double.tryParse(priceVal);
+        priceController.text = doubleValue != null ? doubleValue.toStringAsFixed(2) : priceVal;
+      } else {
+        priceController.text = '';
+      }
       countryController.text = (listing['country'] ?? '').toString();
       cityController.text = (listing['city'] ?? '').toString();
 
@@ -136,6 +148,7 @@ class SellController extends GetxController {
     titleController.dispose();
     descriptionController.dispose();
     priceController.dispose();
+    priceFocusNode.dispose();
     countryController.dispose();
     cityController.dispose();
     super.onClose();
@@ -339,7 +352,18 @@ class SellController extends GetxController {
     return 'good';
   }
 
+  void formatPrice() {
+    final text = priceController.text.trim();
+    if (text.isNotEmpty) {
+      final doubleValue = double.tryParse(text);
+      if (doubleValue != null) {
+        priceController.text = doubleValue.toStringAsFixed(2);
+      }
+    }
+  }
+
   Future<void> submitListing({bool isDraft = false}) async {
+    formatPrice();
     if (titleController.text.trim().isEmpty ||
         descriptionController.text.trim().isEmpty ||
         selectedCategory.value.isEmpty) {
