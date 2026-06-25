@@ -258,8 +258,21 @@ class HomeController extends GetxController {
       name = json['userId']['displayName'] ?? json['userId']['username'] ?? 'Seller';
     }
     if (name.isEmpty) name = 'Seller';
+
+    String sellerId = '';
+    if (json['userId'] != null) {
+      if (json['userId'] is Map) {
+        sellerId = (json['userId']['_id'] ?? json['userId']['id'] ?? '').toString();
+      } else {
+        sellerId = json['userId'].toString();
+      }
+    }
+    if (sellerId.isEmpty) {
+      sellerId = (json['_id'] ?? json['id'] ?? '').toString();
+    }
     
     return SellerModel(
+      id: sellerId,
       name: name,
       role: json['role']?.toString() ?? 'Seller',
       image: ImageHelper.formatImageUrl(profileImg),

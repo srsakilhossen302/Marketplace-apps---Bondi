@@ -139,37 +139,6 @@ class UserProfileScreen extends GetView<UserProfileController> {
             ),
           ),
         ),
-        SizedBox(height: 8.h),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-          decoration: BoxDecoration(
-            color: const Color(0xFF0C1B3A),
-            borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(
-              color: const Color(0xFF1E5EF3).withOpacity(0.3),
-              width: 1.w,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.location_on_outlined,
-                color: const Color(0xFF1E5EF3),
-                size: 11.sp,
-              ),
-              SizedBox(width: 4.w),
-              Text(
-                StaticString.topTraderLabel,
-                style: TextStyle(
-                  color: const Color(0xFF1E5EF3),
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
         SizedBox(height: 15.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),

@@ -397,7 +397,6 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _buildStat(controller.tradesCount.value, StaticString.trades),
-          _buildStat(controller.rating.value, StaticString.rating),
           _buildStat(controller.followersCount.value, StaticString.followers),
         ],
       ),

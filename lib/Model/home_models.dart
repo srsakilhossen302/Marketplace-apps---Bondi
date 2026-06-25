@@ -31,12 +31,14 @@ class ListingModel {
 }
 
 class SellerModel {
+  final String id;
   final String name;
   final String role;
   final String image;
   final bool isVerified;
 
   SellerModel({
+    required this.id,
     required this.name,
     required this.role,
     required this.image,
@@ -44,7 +46,20 @@ class SellerModel {
   });
 
   factory SellerModel.fromJson(Map<String, dynamic> json) {
+    String sellerId = '';
+    if (json['userId'] != null) {
+      if (json['userId'] is Map) {
+        sellerId = (json['userId']['_id'] ?? json['userId']['id'] ?? '').toString();
+      } else {
+        sellerId = json['userId'].toString();
+      }
+    }
+    if (sellerId.isEmpty) {
+      sellerId = (json['_id'] ?? json['id'] ?? '').toString();
+    }
+
     return SellerModel(
+      id: sellerId,
       name: json['name'] ?? '',
       role: json['role'] ?? '',
       image: json['image'] ?? '',

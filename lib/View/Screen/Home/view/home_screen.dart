@@ -16,6 +16,7 @@ import '../../Login/view/login_screen.dart';
 import '../../ProductDetails/view/product_details_screen.dart';
 import '../../../../Model/home_models.dart';
 import 'all_listings_screen.dart';
+import '../../Profile/view/seller_profile_screen.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
@@ -382,51 +383,61 @@ class HomeScreen extends GetView<HomeController> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: controller.suggestedSellers.map((seller) {
-            return Padding(
-              padding: EdgeInsets.only(right: 20.w),
-              child: Column(
-                children: [
-                  Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(2.r),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColors.accentColor,
-                            width: 2.w,
+            return GestureDetector(
+              onTap: () {
+                if (seller.id.isNotEmpty) {
+                  Get.to(
+                    () => const SellerProfileScreen(),
+                    arguments: seller.id,
+                  );
+                }
+              },
+              child: Padding(
+                padding: EdgeInsets.only(right: 20.w),
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(2.r),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.accentColor,
+                              width: 2.w,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            radius: 35.r,
+                            backgroundImage: NetworkImage(seller.image),
                           ),
                         ),
-                        child: CircleAvatar(
-                          radius: 35.r,
-                          backgroundImage: NetworkImage(seller.image),
-                        ),
+                        if (seller.isVerified)
+                          SvgPicture.asset(
+                            'assets/icons/Verify-icons.svg',
+                            width: 20.w,
+                          ),
+                      ],
+                    ),
+                    SizedBox(height: 10.h),
+                    Text(
+                      seller.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.sp,
                       ),
-                      if (seller.isVerified)
-                        SvgPicture.asset(
-                          'assets/icons/Verify-icons.svg',
-                          width: 20.w,
-                        ),
-                    ],
-                  ),
-                  SizedBox(height: 10.h),
-                  Text(
-                    seller.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.sp,
                     ),
-                  ),
-                  Text(
-                    seller.role,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
-                      fontSize: 10.sp,
+                    Text(
+                      seller.role,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.5),
+                        fontSize: 10.sp,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }).toList(),
