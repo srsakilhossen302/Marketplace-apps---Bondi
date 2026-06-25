@@ -9,6 +9,7 @@ import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../service/api_url.dart';
 import '../../../../service/api_client.dart';
 import 'user_profile_controller.dart';
+import '../view/subscription_screen.dart';
 
 class EditListingController extends GetxController {
   late final String listingId;
@@ -282,11 +283,15 @@ class EditListingController extends GetxController {
         );
       } else {
         final errorData = json.decode(responseData.body);
+        final errorMessage = errorData['message'] ?? 'Failed to update listing';
         Get.snackbar(
           'Error',
-          errorData['message'] ?? 'Failed to update listing',
+          errorMessage,
           snackPosition: SnackPosition.BOTTOM,
         );
+        if (errorMessage.toLowerCase().contains('subscription') || errorMessage.toLowerCase().contains('upgrade')) {
+          Get.to(() => const SubscriptionScreen());
+        }
       }
     } catch (e) {
       Get.snackbar(

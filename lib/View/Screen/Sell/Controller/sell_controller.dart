@@ -10,6 +10,7 @@ import '../../../../service/api_client.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../Main/Controller/main_controller.dart';
 import '../../Profile/Controller/user_profile_controller.dart';
+import '../../Profile/view/subscription_screen.dart';
 
 class SellController extends GetxController {
   final titleController = TextEditingController();
@@ -520,11 +521,15 @@ class SellController extends GetxController {
         );
       } else {
         final errorData = json.decode(responseData.body);
+        final errorMessage = errorData['message'] ?? 'Failed to process listing';
         Get.snackbar(
           'Error',
-          errorData['message'] ?? 'Failed to process listing',
+          errorMessage,
           snackPosition: SnackPosition.BOTTOM,
         );
+        if (errorMessage.toLowerCase().contains('subscription') || errorMessage.toLowerCase().contains('upgrade')) {
+          Get.to(() => const SubscriptionScreen());
+        }
       }
     } catch (e) {
       print('Submit Listing Exception: $e');
