@@ -452,6 +452,8 @@ class HomeScreen extends GetView<HomeController> {
                     'image': group.icon,
                   },
                 );
+              } else if (group.hasRequestedToJoin) {
+                controller.cancelJoinRequest(group);
               } else {
                 controller.joinGroup(group);
               }
@@ -528,13 +530,23 @@ class HomeScreen extends GetView<HomeController> {
                             'image': group.icon,
                           },
                         );
+                      } else if (group.hasRequestedToJoin) {
+                        controller.cancelJoinRequest(group);
                       } else {
                         controller.joinGroup(group);
                       }
                     },
                     child: Icon(
-                      group.isJoined ? Icons.chat_bubble_outline : Icons.add_circle_outline,
-                      color: group.isJoined ? AppColors.accentColor : Colors.white.withOpacity(0.3),
+                      group.isJoined
+                          ? Icons.chat_bubble_outline
+                          : (group.hasRequestedToJoin
+                              ? Icons.remove_circle_outline
+                              : Icons.add_circle_outline),
+                      color: group.isJoined
+                          ? AppColors.accentColor
+                          : (group.hasRequestedToJoin
+                              ? Colors.redAccent
+                              : Colors.white.withOpacity(0.3)),
                       size: 24.sp,
                     ),
                   ),

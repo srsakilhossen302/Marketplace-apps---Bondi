@@ -61,6 +61,7 @@ class GroupModel {
   final String icon;
   final bool isJoined;
   final String description;
+  final bool hasRequestedToJoin;
 
   GroupModel({
     this.id = '',
@@ -70,6 +71,7 @@ class GroupModel {
     required this.icon,
     this.isJoined = false,
     this.description = '',
+    this.hasRequestedToJoin = false,
   });
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
@@ -83,6 +85,7 @@ class GroupModel {
       icon: json['groupImage'] ?? json['icon'] ?? '',
       isJoined: json['isJoined'] ?? false,
       description: json['description'] ?? '',
+      hasRequestedToJoin: json['hasRequestedToJoin'] ?? false,
     );
   }
 }

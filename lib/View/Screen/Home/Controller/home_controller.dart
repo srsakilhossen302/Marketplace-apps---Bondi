@@ -295,6 +295,7 @@ class HomeController extends GetxController {
       icon: groupImage.isNotEmpty ? groupImage : 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=500&auto=format&fit=crop',
       isJoined: isJoined,
       description: json['description']?.toString() ?? '',
+      hasRequestedToJoin: json['hasRequestedToJoin'] ?? false,
     );
   }
 
@@ -302,7 +303,7 @@ class HomeController extends GetxController {
     isLoading.value = true;
     try {
       final response = await ApiClient.post(
-        '${ApiUrl.baseUrl}/conversations/join/${group.id}',
+        '${ApiUrl.baseUrl}/conversation/join/${group.id}',
         {},
         requireAuth: true,
       );
@@ -320,6 +321,46 @@ class HomeController extends GetxController {
         Get.snackbar(
           'Error',
           errorData['message'] ?? 'Failed to join group.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.9),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> cancelJoinRequest(GroupModel group) async {
+    isLoading.value = true;
+    try {
+      final response = await ApiClient.post(
+        '${ApiUrl.baseUrl}/conversation/cancel-join/${group.id}',
+        {},
+        requireAuth: true,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar(
+          'Success',
+          'Cancelled join request for ${group.name} successfully!',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+        await refreshData();
+      } else {
+        final errorData = jsonDecode(response.body);
+        Get.snackbar(
+          'Error',
+          errorData['message'] ?? 'Failed to cancel join request.',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.redAccent.withOpacity(0.9),
           colorText: Colors.white,

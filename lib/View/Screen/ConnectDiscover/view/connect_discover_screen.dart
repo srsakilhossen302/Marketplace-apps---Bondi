@@ -358,17 +358,31 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
             width: double.infinity,
             height: 36.h,
             child: OutlinedButton(
-              onPressed: () {},
+              onPressed: () {
+                if (hub['hasRequestedToJoin'] == true) {
+                  controller.cancelJoinRequest(hub['_id'] ?? '', hub['name'] ?? '');
+                } else {
+                  controller.joinGroup(hub['_id'] ?? '', hub['name'] ?? '');
+                }
+              },
               style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                side: BorderSide(
+                  color: hub['hasRequestedToJoin'] == true
+                      ? Colors.redAccent
+                      : AppColors.accentColor,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.r),
                 ),
               ),
               child: Text(
-                'Join Community',
+                hub['hasRequestedToJoin'] == true
+                    ? 'Cancel join Requested'
+                    : 'Join Community',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: hub['hasRequestedToJoin'] == true
+                      ? Colors.redAccent
+                      : AppColors.accentColor,
                   fontSize: 13.sp,
                 ),
               ),

@@ -481,14 +481,31 @@ class CommunityScreen extends GetView<CommunityController> {
                         width: double.infinity,
                         height: 45.h,
                         child: OutlinedButton(
-                          onPressed: () => controller.joinGroup(item['_id'] ?? '', item['title'] ?? ''),
+                          onPressed: () {
+                            if (item['hasRequestedToJoin'] == true) {
+                              controller.cancelJoinRequest(item['_id'] ?? '', item['title'] ?? '');
+                            } else {
+                              controller.joinGroup(item['_id'] ?? '', item['title'] ?? '');
+                            }
+                          },
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.accentColor),
+                            side: BorderSide(
+                              color: item['hasRequestedToJoin'] == true
+                                  ? Colors.redAccent
+                                  : AppColors.accentColor,
+                            ),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
                           ),
                           child: Text(
-                            StaticString.joinCommunity,
-                            style: TextStyle(color: AppColors.accentColor, fontSize: 14.sp),
+                            item['hasRequestedToJoin'] == true
+                                ? 'Cancel join Requested'
+                                : StaticString.joinCommunity,
+                            style: TextStyle(
+                              color: item['hasRequestedToJoin'] == true
+                                  ? Colors.redAccent
+                                  : AppColors.accentColor,
+                              fontSize: 14.sp,
+                            ),
                           ),
                         ),
                       ),
