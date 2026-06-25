@@ -55,8 +55,11 @@ class GroupMembersController extends GetxController {
     isLoading.value = true;
     try {
       final response = await ApiClient.post(
-        '${ApiUrl.conversation}/accept-request/$conversationId',
-        {'userId': userId},
+        '${ApiUrl.baseUrl}/conversation/approve-join',
+        {
+          'groupId': conversationId,
+          'userId': userId,
+        },
         requireAuth: true,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -95,8 +98,11 @@ class GroupMembersController extends GetxController {
     isLoading.value = true;
     try {
       final response = await ApiClient.post(
-        '${ApiUrl.conversation}/decline-request/$conversationId',
-        {'userId': userId},
+        '${ApiUrl.baseUrl}/conversation/reject-join',
+        {
+          'groupId': conversationId,
+          'userId': userId,
+        },
         requireAuth: true,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
