@@ -18,14 +18,21 @@ class MessagesController extends GetxController {
   final isMessagesLoading = false.obs;
   final directChatUserOnline = false.obs;
   final groupParticipantsCount = 0.obs;
+  final RxString currentUserId = ''.obs;
+  final RxList<String> groupAdminIds = <String>[].obs;
 
   @override
   void onInit() {
     super.onInit();
+    _loadCurrentUserId();
     final args = Get.arguments;
     if (args != null && args is Map && (args.containsKey('userId') || args.containsKey('conversationId'))) {
       loadChatDetails(args);
     }
+  }
+
+  Future<void> _loadCurrentUserId() async {
+    currentUserId.value = await SharedPrefsHelper.getUserId() ?? '';
   }
 
   void loadChatDetails(Map<dynamic, dynamic> args) {
@@ -132,6 +139,8 @@ class MessagesController extends GetxController {
                 directChatUserName.value = grpInfo['groupName'] ?? directChatUserName.value;
                 directChatUserImage.value = ImageHelper.formatImageUrl(grpInfo['groupImage']);
                 groupParticipantsCount.value = grpInfo['participantsCount'] ?? 0;
+                final List<dynamic> admins = grpInfo['adminIds'] ?? [];
+                groupAdminIds.assignAll(admins.map((e) => e.toString()).toList());
               }
             }
           }

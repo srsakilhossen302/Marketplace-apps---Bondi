@@ -10,6 +10,7 @@ import '../../../../service/api_url.dart';
 import '../../../../helper/network_img/image_helper.dart';
 import '../../ProductDetails/view/product_details_screen.dart';
 import '../Controller/messages_controller.dart';
+import 'group_members_screen.dart';
 
 class ChatDetailScreen extends GetView<MessagesController> {
   const ChatDetailScreen({super.key});
@@ -186,6 +187,26 @@ class ChatDetailScreen extends GetView<MessagesController> {
                 ],
               ),
             ),
+             Obx(() {
+              final isDirect = controller.isDirectChat.value;
+              final isAdmin = !isDirect && controller.groupAdminIds.contains(controller.currentUserId.value);
+              if (!isAdmin) return const SizedBox.shrink();
+              return Padding(
+                padding: EdgeInsets.only(right: 15.w),
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(
+                      () => const GroupMembersScreen(),
+                      arguments: {
+                        'conversationId': controller.directConversationId.value,
+                        'groupName': title,
+                      },
+                    );
+                  },
+                  child: Icon(Icons.people_outline, color: Colors.white, size: 24.sp),
+                ),
+              );
+            }),
             Icon(Icons.search, color: Colors.white, size: 24.sp),
             SizedBox(width: 15.w),
             Icon(Icons.more_vert, color: Colors.white, size: 24.sp),
