@@ -80,9 +80,6 @@ class ProfileController extends GetxController {
       city.value = '';
       email.value = '';
 
-      // Clear all GetX controllers from memory to prevent old data leaks
-      Get.deleteAll(force: true);
-
       // Clear all local preferences (tokens, user IDs, etc.)
       await SharedPrefsHelper.clearAll();
       
