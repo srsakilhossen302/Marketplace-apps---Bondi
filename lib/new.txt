@@ -1,0 +1,112 @@
+Flutter Contact Sync API Integration Prompt
+
+You are a senior Flutter developer.
+
+Implement a production-ready Contact Sync feature in Flutter for both Android and iOS.
+
+Objective
+
+When the user opens the Contact Sync page, the application should request contact permission. After permission is granted, read all phone contacts from the device, extract only phone numbers, clean and normalize them, remove duplicates, and send the complete list to the backend using a single API request.
+
+Contact Permission
+Request contact permission.
+If permission is denied, show a user-friendly message.
+If permission is permanently denied, open the app settings.
+If permission is granted, continue automatically.
+Read Contacts
+
+Read all contacts from the user's device.
+
+For each contact:
+
+Extract all phone numbers.
+Ignore empty phone numbers.
+Remove spaces.
+Remove dashes.
+Remove unnecessary characters.
+Normalize phone numbers into a consistent format.
+Remove duplicate phone numbers.
+API Request
+
+Send all phone numbers in one API request only.
+
+Endpoint
+
+POST /social/sync-contacts
+
+Request Body
+
+{
+  "contacts": [
+    "+8801700000000",
+    "01800000000"
+  ]
+}
+
+The request should contain only the cleaned phone number list.
+
+Do not send one request per contact.
+
+Example:
+
+✅ Correct
+
+Read all contacts.
+Prepare the phone number list.
+Send a single POST request.
+
+❌ Incorrect
+
+One API request for every contact.
+Loading
+Show a loading indicator while reading contacts.
+Continue showing loading while uploading contacts.
+Hide loading after the API request completes.
+Error Handling
+
+Handle:
+
+Permission denied
+Permission permanently denied
+No contacts found
+No internet connection
+Request timeout
+API error
+Unexpected exception
+
+Show user-friendly error messages.
+
+Performance
+Read contacts efficiently.
+Remove duplicate numbers before sending.
+Send only one API request regardless of the number of contacts.
+Keep the code optimized and production-ready.
+Architecture
+
+Use Clean Architecture.
+
+Separate:
+
+Data Source
+Repository
+Controller
+API Service
+
+Do not put business logic inside the UI.
+
+Networking
+
+Use Dio for API requests.
+
+Use proper exception handling and clean code.
+
+Final Flow
+Request contact permission.
+Read all contacts.
+Extract all phone numbers.
+Normalize phone numbers.
+Remove duplicates.
+Send the complete phone number list to /social/sync-contacts using a single POST request.
+Show loading while processing.
+Handle all possible errors gracefully.
+Write clean, reusable, production-ready Flutter code following best practices.

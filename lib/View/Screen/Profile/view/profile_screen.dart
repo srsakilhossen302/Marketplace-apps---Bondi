@@ -9,6 +9,7 @@ import 'friends_screen.dart';
 import 'subscription_screen.dart';
 import 'user_profile_screen.dart';
 import '../../Notification/view/notification_screen.dart';
+import '../../ContactSync/view/contact_sync_screen.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
   const ProfileScreen({super.key});
@@ -51,6 +52,7 @@ class ProfileScreen extends GetView<ProfileController> {
                         _buildSettingsTile(
                           Icons.sync,
                           StaticString.contactSync,
+                          onTap: () => Get.to(() => const ContactSyncScreen()),
                         ),
                         _buildSettingsTile(
                           Icons.language,

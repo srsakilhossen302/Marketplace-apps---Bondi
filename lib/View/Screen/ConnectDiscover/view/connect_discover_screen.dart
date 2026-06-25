@@ -108,23 +108,32 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
                       SizedBox(
                         width: double.infinity,
                         height: 50.h,
-                        child: ElevatedButton(
-                          onPressed: () => controller.syncContacts(),
+                        child: Obx(() => ElevatedButton(
+                          onPressed: controller.isSyncing.value ? null : () => controller.syncContacts(),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.buttonColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25.r),
                             ),
                           ),
-                          child: Text(
-                            'Sync Contacts',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.sp,
-                            ),
-                          ),
-                        ),
+                          child: controller.isSyncing.value
+                              ? SizedBox(
+                                  width: 20.r,
+                                  height: 20.r,
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text(
+                                  'Sync Contacts',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.sp,
+                                  ),
+                                ),
+                        )),
                       ),
 
                       SizedBox(height: 30.h),
@@ -141,9 +150,22 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
                       // Friends Section
                       _buildSectionHeader("FRIENDS ON BOND"),
                       SizedBox(height: 15.h),
-                      ...controller.friends
-                          .map((friend) => _buildFriendCard(friend))
-                          .toList(),
+                      Obx(() => controller.friends.isEmpty
+                          ? Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10.h),
+                              child: Text(
+                                "No friends found.",
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            )
+                          : Column(
+                              children: controller.friends
+                                  .map((friend) => _buildFriendCard(friend))
+                                  .toList(),
+                            )),
 
                       SizedBox(height: 30.h),
 
@@ -154,9 +176,22 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
                         onAction: () {},
                       ),
                       SizedBox(height: 15.h),
-                      ...controller.contacts
-                          .map((contact) => _buildContactCard(contact))
-                          .toList(),
+                      Obx(() => controller.contacts.isEmpty
+                          ? Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10.h),
+                              child: Text(
+                                "No contacts to invite.",
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            )
+                          : Column(
+                              children: controller.contacts
+                                  .map((contact) => _buildContactCard(contact))
+                                  .toList(),
+                            )),
 
                       SizedBox(height: 40.h),
 
