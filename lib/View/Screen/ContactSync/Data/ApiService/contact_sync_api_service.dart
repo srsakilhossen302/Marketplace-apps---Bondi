@@ -3,7 +3,7 @@ import '../../../../../helper/shared_prefe/shared_prefe.dart';
 import '../../../../../service/api_url.dart';
 
 abstract class ContactSyncApiService {
-  Future<Map<String, dynamic>> uploadContacts(List<String> contacts);
+  Future<Map<String, dynamic>> uploadContacts(List<Map<String, String>> contacts);
 }
 
 class ContactSyncApiServiceImpl implements ContactSyncApiService {
@@ -16,7 +16,7 @@ class ContactSyncApiServiceImpl implements ContactSyncApiService {
   }
 
   @override
-  Future<Map<String, dynamic>> uploadContacts(List<String> contacts) async {
+  Future<Map<String, dynamic>> uploadContacts(List<Map<String, String>> contacts) async {
     final token = await SharedPrefsHelper.getToken();
     final response = await _dio.post(
       '/social/sync-contacts',

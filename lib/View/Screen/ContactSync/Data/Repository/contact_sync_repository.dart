@@ -33,27 +33,32 @@ class ContactSyncRepositoryImpl implements ContactSyncRepository {
   @override
   Future<ContactSyncResult> syncContacts() async {
     // 1. Fetch raw contacts
-    final rawNumbers = await _dataSource.getDeviceContacts();
+    final rawContacts = await _dataSource.getDeviceContacts();
     
-    // 2. Clean and normalize
-    final List<String> cleanedNumbers = [];
-    for (var raw in rawNumbers) {
+    // 2. Clean, normalize and remove duplicates by phone number
+    final Map<String, Map<String, String>> uniqueContactsMap = {};
+    for (var raw in rawContacts) {
+      final String rawPhone = raw['phone'] ?? '';
+      final String name = raw['name'] ?? '';
+      
       // Remove spaces, dashes, parentheses, brackets, and any non-digit/non-plus character
-      final cleaned = raw.replaceAll(RegExp(r'[^\d+]'), '');
-      if (cleaned.isNotEmpty) {
-        cleanedNumbers.add(cleaned);
+      final cleanedPhone = rawPhone.replaceAll(RegExp(r'[^\d+]'), '');
+      if (cleanedPhone.isNotEmpty && !uniqueContactsMap.containsKey(cleanedPhone)) {
+        uniqueContactsMap[cleanedPhone] = {
+          'name': name.isNotEmpty ? name : cleanedPhone,
+          'phone': cleanedPhone,
+        };
       }
     }
     
-    // 3. Remove duplicates
-    final uniqueNumbers = cleanedNumbers.toSet().toList();
+    final List<Map<String, String>> cleanedContacts = uniqueContactsMap.values.toList();
     
-    if (uniqueNumbers.isEmpty) {
+    if (cleanedContacts.isEmpty) {
       throw NoContactsFoundException();
     }
     
-    // 4. Send using api service
-    final data = await _apiService.uploadContacts(uniqueNumbers);
+    // 3. Send using api service
+    final data = await _apiService.uploadContacts(cleanedContacts);
     
     return ContactSyncResult(
       friendsOnBondi: data['friendsOnBondi'] as List<dynamic>? ?? [],

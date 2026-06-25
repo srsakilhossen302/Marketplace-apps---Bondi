@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../Community/view/community_screen.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../Controller/connect_discover_controller.dart';
 
@@ -139,11 +140,39 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
                       SizedBox(height: 30.h),
 
                       // Discover Hubs Section
-                      _buildSectionHeader("DISCOVER HUBS", onAction: () {}),
+                      _buildSectionHeader(
+                        "DISCOVER HUBS",
+                        onAction: () => Get.to(() => const CommunityScreen()),
+                      ),
                       SizedBox(height: 15.h),
-                      ...controller.hubs
-                          .map((hub) => _buildHubCard(hub))
-                          .toList(),
+                      Obx(() {
+                        if (controller.isHubsLoading.value) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: CircularProgressIndicator(color: AppColors.accentColor),
+                            ),
+                          );
+                        }
+                        if (controller.hubs.isEmpty) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.h),
+                            child: Text(
+                              "No hubs found.",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.5),
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                          );
+                        }
+                        return Column(
+                          children: controller.hubs
+                              .take(2)
+                              .map((hub) => _buildHubCard(hub))
+                              .toList(),
+                        );
+                      }),
 
                       SizedBox(height: 30.h),
 
@@ -170,28 +199,36 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
                       SizedBox(height: 30.h),
 
                       // Invite Section
-                      _buildSectionHeader(
-                        "INVITE FROM CONTACTS",
-                        actionLabel: "View All",
-                        onAction: () {},
-                      ),
+                      Obx(() => _buildSectionHeader(
+                            "INVITE FROM CONTACTS",
+                            actionLabel: controller.showAllContacts.value ? "Show Less" : "View All",
+                            onAction: () => controller.showAllContacts.value = !controller.showAllContacts.value,
+                          )),
                       SizedBox(height: 15.h),
-                      Obx(() => controller.contacts.isEmpty
-                          ? Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10.h),
-                              child: Text(
-                                "No contacts to invite.",
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.5),
-                                  fontSize: 14.sp,
-                                ),
+                      Obx(() {
+                        if (controller.contacts.isEmpty) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.h),
+                            child: Text(
+                              "No contacts to invite.",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.5),
+                                fontSize: 14.sp,
                               ),
-                            )
-                          : Column(
-                              children: controller.contacts
-                                  .map((contact) => _buildContactCard(contact))
-                                  .toList(),
-                            )),
+                            ),
+                          );
+                        }
+                        
+                        final displayList = controller.showAllContacts.value
+                            ? controller.contacts
+                            : controller.contacts.take(10).toList();
+                            
+                        return Column(
+                          children: displayList
+                              .map((contact) => _buildContactCard(contact))
+                              .toList(),
+                        );
+                      }),
 
                       SizedBox(height: 40.h),
 
@@ -264,6 +301,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
   }
 
   Widget _buildHubCard(Map<String, dynamic> hub) {
+    final hasImage = hub['image'] != null && (hub['image'] as String).isNotEmpty;
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(15.r),
@@ -275,18 +313,23 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
         children: [
           Row(
             children: [
-              Container(
-                padding: EdgeInsets.all(10.r),
-                decoration: const BoxDecoration(
-                  color: Color(0xFF003366),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  hub['icon'] as IconData,
-                  color: AppColors.accentColor,
-                  size: 20.sp,
-                ),
-              ),
+              hasImage
+                  ? CircleAvatar(
+                      radius: 20.r,
+                      backgroundImage: NetworkImage(hub['image'] as String),
+                    )
+                  : Container(
+                      padding: EdgeInsets.all(10.r),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF003366),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.shopping_basket_outlined,
+                        color: AppColors.accentColor,
+                        size: 20.sp,
+                      ),
+                    ),
               SizedBox(width: 15.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

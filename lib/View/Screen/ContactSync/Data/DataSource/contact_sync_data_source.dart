@@ -1,23 +1,27 @@
 import 'package:flutter_contacts/flutter_contacts.dart';
 
 abstract class ContactSyncDataSource {
-  Future<List<String>> getDeviceContacts();
+  Future<List<Map<String, String>>> getDeviceContacts();
 }
 
 class ContactSyncDataSourceImpl implements ContactSyncDataSource {
   @override
-  Future<List<String>> getDeviceContacts() async {
+  Future<List<Map<String, String>>> getDeviceContacts() async {
     // Fetches contacts with properties, meaning phone numbers are retrieved
     final List<Contact> contacts = await FlutterContacts.getContacts(withProperties: true);
-    final List<String> rawPhoneNumbers = [];
+    final List<Map<String, String>> rawContacts = [];
     
     for (var contact in contacts) {
+      final String name = contact.displayName.trim();
       for (var phone in contact.phones) {
         if (phone.number.isNotEmpty) {
-          rawPhoneNumbers.add(phone.number);
+          rawContacts.add({
+            'name': name.isNotEmpty ? name : phone.number,
+            'phone': phone.number,
+          });
         }
       }
     }
-    return rawPhoneNumbers;
+    return rawContacts;
   }
 }

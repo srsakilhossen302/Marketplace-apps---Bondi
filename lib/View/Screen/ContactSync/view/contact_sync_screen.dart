@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
+import '../../ConnectDiscover/view/connect_discover_screen.dart';
 import '../Controller/contact_sync_controller.dart';
 import '../Data/DataSource/contact_sync_data_source.dart';
 import '../Data/ApiService/contact_sync_api_service.dart';
@@ -198,7 +199,14 @@ class ContactSyncScreen extends StatelessWidget {
             height: 55.h,
             child: ElevatedButton(
               onPressed: () {
-                Get.back();
+                final result = controller.syncResult;
+                Get.off(
+                  () => const ConnectDiscoverScreen(),
+                  arguments: {
+                    'friends': result?.friendsOnBondi,
+                    'contacts': result?.inviteFromContacts,
+                  },
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.buttonColor,

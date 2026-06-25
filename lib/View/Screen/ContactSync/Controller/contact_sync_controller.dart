@@ -22,6 +22,7 @@ class ContactSyncController extends GetxController {
   final Rx<ContactSyncState> syncState = ContactSyncState.idle.obs;
   final RxInt syncedCount = 0.obs;
   final RxString errorMessage = ''.obs;
+  ContactSyncResult? syncResult;
 
   @override
   void onInit() {
@@ -76,6 +77,7 @@ class ContactSyncController extends GetxController {
       syncState.value = ContactSyncState.uploading;
       
       final result = await _repository.syncContacts();
+      syncResult = result;
       final count = result.friendsOnBondi.length + result.inviteFromContacts.length;
       syncedCount.value = count;
       

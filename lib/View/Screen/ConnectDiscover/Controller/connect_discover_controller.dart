@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -7,24 +8,18 @@ import '../../ContactSync/Data/DataSource/contact_sync_data_source.dart';
 import '../../ContactSync/Data/ApiService/contact_sync_api_service.dart';
 import '../../ContactSync/Data/Repository/contact_sync_repository.dart';
 import '../../ContactSync/Data/Repository/contact_sync_exceptions.dart';
+import '../../../../helper/network_img/image_helper.dart';
+import '../../../../service/api_client.dart';
+import '../../../../service/api_url.dart';
 
 class ConnectDiscoverController extends GetxController {
   final searchController = TextEditingController();
   final RxBool isSyncing = false.obs;
+  final RxBool isHubsLoading = false.obs;
+  final RxBool showAllContacts = false.obs;
 
-  // Mock data for UI
-  final hubs = [
-    {
-      'name': 'Sneaker Traders',
-      'members': '2.4k Members',
-      'icon': Icons.shopping_basket_outlined,
-    },
-    {
-      'name': 'Gaming Hub',
-      'members': '1.8k Members',
-      'icon': Icons.videogame_asset_outlined,
-    },
-  ].obs;
+  // List of public groups fetched from exploreGroups API
+  final RxList<Map<String, dynamic>> hubs = <Map<String, dynamic>>[].obs;
 
   final RxList<Map<String, dynamic>> friends = <Map<String, dynamic>>[
     {
@@ -209,6 +204,99 @@ class ConnectDiscoverController extends GetxController {
         await openAppSettings();
       },
     );
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchHubs();
+    _handlePassedArguments();
+    
+    // Auto-sync contacts on page load if not pre-populated via arguments
+    if (Get.arguments == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        syncContacts();
+      });
+    }
+  }
+
+  void _handlePassedArguments() {
+    if (Get.arguments != null && Get.arguments is Map) {
+      final args = Get.arguments as Map;
+      final List<dynamic>? passedFriends = args['friends'];
+      final List<dynamic>? passedContacts = args['contacts'];
+
+      if (passedFriends != null) {
+        final List<Map<String, dynamic>> parsedFriends = [];
+        for (var f in passedFriends) {
+          final Map<String, dynamic> friendMap = f as Map<String, dynamic>;
+          final String name = friendMap['name'] ?? friendMap['username'] ?? friendMap['phone'] ?? 'Bondi User';
+          final String rawUsername = friendMap['username'] ?? '';
+          final String username = rawUsername.isNotEmpty ? (rawUsername.startsWith('@') ? rawUsername : '@$rawUsername') : '';
+          final String image = friendMap['image'] ?? friendMap['avatar'] ?? friendMap['profileImage'] ?? 'https://i.pravatar.cc/150?u=$name';
+
+          parsedFriends.add({
+            'name': name,
+            'username': username,
+            'image': image,
+          });
+        }
+        friends.value = parsedFriends;
+      }
+
+      if (passedContacts != null) {
+        final List<Map<String, dynamic>> parsedContacts = [];
+        for (var c in passedContacts) {
+          final Map<String, dynamic> contactMap = c as Map<String, dynamic>;
+          final String name = contactMap['name'] ?? contactMap['phone'] ?? 'Contact';
+          final String phone = contactMap['phone'] ?? '';
+
+          parsedContacts.add({
+            'name': name,
+            'phone': phone,
+            'initials': _getInitials(name),
+          });
+        }
+        contacts.value = parsedContacts;
+      }
+    }
+  }
+
+  Future<void> fetchHubs() async {
+    isHubsLoading.value = true;
+    try {
+      final url = '${ApiUrl.exploreGroups}?page=1&limit=10&search=';
+      final response = await ApiClient.get(url, requireAuth: true);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          final List<dynamic> list = data['data'];
+          final List<Map<String, dynamic>> parsedGroups = [];
+          for (var group in list) {
+            if (group is! Map) continue;
+            final participants = group['participants'] as List? ?? [];
+            final groupId = group['_id'] ?? '';
+            final code = groupId.length >= 6 
+                ? 'GP-${groupId.substring(groupId.length - 6).toUpperCase()}'
+                : 'GP-${groupId.toUpperCase()}';
+
+            parsedGroups.add({
+              '_id': groupId,
+              'name': group['groupName'] ?? 'No Name',
+              'image': ImageHelper.formatImageUrl(group['groupImage']),
+              'code': code,
+              'members': '${participants.length} Member${participants.length != 1 ? "s" : ""}',
+              'description': group['description'] ?? '',
+            });
+          }
+          hubs.assignAll(parsedGroups);
+        }
+      }
+    } catch (e) {
+      print('Error fetching hubs: $e');
+    } finally {
+      isHubsLoading.value = false;
+    }
   }
 
   void continueToFeed() {
