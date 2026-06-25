@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:dio/dio.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../Main/view/main_screen.dart';
 import '../../ContactSync/Data/DataSource/contact_sync_data_source.dart';
 import '../../ContactSync/Data/ApiService/contact_sync_api_service.dart';
@@ -17,27 +18,14 @@ class ConnectDiscoverController extends GetxController {
   final RxBool isSyncing = false.obs;
   final RxBool isHubsLoading = false.obs;
   final RxBool showAllContacts = false.obs;
+  final RxString inviteMessageTemplate = ''.obs;
 
   // List of public groups fetched from exploreGroups API
   final RxList<Map<String, dynamic>> hubs = <Map<String, dynamic>>[].obs;
 
-  final RxList<Map<String, dynamic>> friends = <Map<String, dynamic>>[
-    {
-      'name': 'Elena Rodriguez',
-      'username': '@elena_design',
-      'image': 'https://i.pravatar.cc/150?u=elena',
-    },
-    {
-      'name': 'Julian Vane',
-      'username': '@julian_v',
-      'image': 'https://i.pravatar.cc/150?u=julian',
-    },
-  ].obs;
+  final RxList<Map<String, dynamic>> friends = <Map<String, dynamic>>[].obs;
 
-  final RxList<Map<String, dynamic>> contacts = <Map<String, dynamic>>[
-    {'name': 'Alex Kim', 'phone': '+1 (555) 012-3456', 'initials': 'AK'},
-    {'name': 'Maya Lin', 'phone': '+1 (555) 987-6543', 'initials': 'ML'},
-  ].obs;
+  final RxList<Map<String, dynamic>> contacts = <Map<String, dynamic>>[].obs;
 
   Future<void> syncContacts() async {
     if (isSyncing.value) return;
@@ -96,6 +84,7 @@ class ConnectDiscoverController extends GetxController {
       );
 
       final result = await repository.syncContacts();
+      inviteMessageTemplate.value = result.inviteMessageTemplate;
       
       // Parse friendsOnBondi
       final List<Map<String, dynamic>> parsedFriends = [];
@@ -225,6 +214,11 @@ class ConnectDiscoverController extends GetxController {
       final args = Get.arguments as Map;
       final List<dynamic>? passedFriends = args['friends'];
       final List<dynamic>? passedContacts = args['contacts'];
+      final String? passedInviteMessage = args['inviteMessage'] as String?;
+
+      if (passedInviteMessage != null) {
+        inviteMessageTemplate.value = passedInviteMessage;
+      }
 
       if (passedFriends != null) {
         final List<Map<String, dynamic>> parsedFriends = [];
@@ -296,6 +290,38 @@ class ConnectDiscoverController extends GetxController {
       print('Error fetching hubs: $e');
     } finally {
       isHubsLoading.value = false;
+    }
+  }
+
+  Future<void> inviteContact(String phone) async {
+    final message = inviteMessageTemplate.value;
+    if (message.isEmpty) {
+      Get.snackbar(
+        'Info',
+        'Sync contacts first to retrieve invitation template.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orangeAccent.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    final Uri smsUri = Uri.parse('sms:$phone?body=${Uri.encodeComponent(message)}');
+
+    try {
+      if (await canLaunchUrl(smsUri)) {
+        await launchUrl(smsUri);
+      } else {
+        await launchUrl(smsUri);
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Could not launch messaging app: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.8),
+        colorText: Colors.white,
+      );
     }
   }
 

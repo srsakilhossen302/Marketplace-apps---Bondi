@@ -205,6 +205,7 @@ class ContactSyncScreen extends StatelessWidget {
                   arguments: {
                     'friends': result?.friendsOnBondi,
                     'contacts': result?.inviteFromContacts,
+                    'inviteMessage': result?.inviteMessageTemplate,
                   },
                 );
               },

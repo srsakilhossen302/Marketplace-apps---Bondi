@@ -486,7 +486,7 @@ class ConnectDiscoverScreen extends GetView<ConnectDiscoverController> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => controller.inviteContact(contact['phone'] as String),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.accentColor,
               minimumSize: Size(70.w, 32.h),
