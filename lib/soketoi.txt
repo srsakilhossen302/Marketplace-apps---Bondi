@@ -1,0 +1,54 @@
+I have a Flutter application where I need to implement a full Chat/Messaging feature. The backend is already built with a hybrid architecture: it uses REST APIs for data fetching/sending and Socket.IO exclusively for real-time events (like typing indicators and instant delivery).
+ 
+Please act as an expert Flutter developer and help me integrate this. Below is the complete API and Socket documentation you need to understand the backend structure.
+ 
+---
+ 
+### 1. REST API Endpoints (Base URL: `https://bondi-dev.nasimmondal.dev/`)
+All endpoints require a JWT token in the headers: `Authorization: Bearer <TOKEN>`.
+ 
+**Conversations:**
+- `GET /conversation` : Fetches a list of all conversations for the logged-in user.
+- `GET /conversation/:id` : Fetches details of a specific conversation.
+ 
+**Messages:**
+- `GET /message/:conversationId` : Fetches the chat history/messages for a specific conversation.
+- `POST /message/send` : Sends a new message. (Payload usually includes `conversationId` and `text`/`media`).
+- `POST /message/seen/:conversationId` : Marks all messages in a conversation as seen by the current user.
+ 
+### 2. Socket.IO Configuration (Real-Time Events)
+The Socket server runs on the same base URL. 
+- **Connection & Auth:** The socket expects the JWT token during connection via the auth payload: `{'token': 'Bearer <TOKEN>'}`.
+- **Transports:** Must use `['websocket']` only.
+- **Auto-Join:** Upon successful connection, the backend automatically joins the user to their own private room (using their `userId`) and broadcasts a `user_online` / `user_offline` event to others.
+ 
+**Chat Room Socket Events:**
+- `join_conversation` (Emit payload: `{ conversationId: string }`): Tells the backend that the user has opened a specific chat screen.
+- `leave_conversation` (Emit payload: `{ conversationId: string }`): Tells the backend the user has closed the chat screen.
+- `typing_start` (Emit payload: `{ conversationId: string }`): Emits when the user starts typing.
+- `typing_stop` (Emit payload: `{ conversationId: string }`): Emits when the user stops typing.
+- *(Assume the backend emits incoming messages through a socket event like `new_message` when a user calls the POST send API).*
+ 
+---
+ 
+### 3. What I Need You To Build:
+ 
+**Step 1: Socket Service (Singleton)**
+Create a `SocketService` class using the `socket_io_client` package. Include methods to connect, disconnect, emit the events mentioned above, and listen to incoming events (like typing indicators and new messages).
+ 
+**Step 2: API Integration (Repository/Service)**
+Create a basic API service or repository class using `http` or `dio` to handle the REST API calls (`GET /conversation`, `GET /message/:id`, `POST /message/send`).
+ 
+**Step 3: Chat Screen Implementation (Hybrid Logic)**
+Create a `ChatScreen` widget that combines both REST APIs and WebSockets flawlessly:
+- **On `initState`:** 
+  1. Call the REST API `GET /message/:conversationId` to load previous chat history.
+  2. Call `SocketService.join_conversation` to enter the real-time room.
+  3. Listen to `typing_start` and `typing_stop` socket events to update the UI.
+- **On Message Send:** 
+  Call the REST API `POST /message/send`. (Do not send messages via socket emit, use the REST API).
+- **On `dispose`:** 
+  Call `SocketService.leave_conversation`.
+- Implement a `TextField` with an `onChanged` listener that emits `typing_start` and `typing_stop` appropriately.
+ 
+Please provide the Dart code for the `SocketService`, the API call logic, and the complete `ChatScreen` UI with state management.

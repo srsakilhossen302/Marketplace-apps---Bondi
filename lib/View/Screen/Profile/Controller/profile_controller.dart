@@ -6,6 +6,7 @@ import '../../../../helper/shared_prefe/shared_prefe.dart';
 import '../../../../service/api_url.dart';
 import '../../../../service/api_client.dart';
 import '../../Login/view/login_screen.dart';
+import '../../../../service/socket_service.dart';
 
 class ProfileController extends GetxController {
   final userName = ''.obs;
@@ -68,6 +69,9 @@ class ProfileController extends GetxController {
     } catch (e) {
       print('Error during network sign out: $e');
     } finally {
+      // Disconnect socket connection
+      SocketService().disconnect();
+
       // Reset reactive variables to clear state from memory
       userName.value = '';
       displayName.value = '';

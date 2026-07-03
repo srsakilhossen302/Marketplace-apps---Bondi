@@ -12,22 +12,42 @@ import '../../ProductDetails/view/product_details_screen.dart';
 import '../Controller/messages_controller.dart';
 import 'group_members_screen.dart';
 
-class ChatDetailScreen extends GetView<MessagesController> {
+class ChatDetailScreen extends StatefulWidget {
   const ChatDetailScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<ChatDetailScreen> createState() => _ChatDetailScreenState();
+}
+
+class _ChatDetailScreenState extends State<ChatDetailScreen> {
+  late MessagesController controller;
+
+  @override
+  void initState() {
+    super.initState();
     if (!Get.isRegistered<MessagesController>()) {
       Get.put(MessagesController());
     }
-    final messagesController = Get.find<MessagesController>();
+    controller = Get.find<MessagesController>();
     final args = Get.arguments;
     if (args != null && args is Map && (args.containsKey('userId') || args.containsKey('conversationId'))) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        messagesController.loadChatDetails(args);
+        controller.loadChatDetails(args);
       });
     }
+  }
 
+  @override
+  void dispose() {
+    final convId = controller.directConversationId.value;
+    if (convId.isNotEmpty) {
+      controller.leaveChatRoom(convId);
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -108,6 +128,25 @@ class ChatDetailScreen extends GetView<MessagesController> {
                   },
                 ),
               ),
+              Obx(() {
+                if (controller.isOtherUserTyping.value) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '${controller.directChatUserName.value} is typing...',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.6),
+                          fontSize: 12.sp,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              }),
               _buildInputArea(),
             ],
           ),
@@ -522,6 +561,9 @@ class ChatDetailScreen extends GetView<MessagesController> {
                   Expanded(
                     child: Obx(() => TextField(
                       controller: controller.messageTextController,
+                      onChanged: (val) {
+                        controller.handleTypingState(val);
+                      },
                       style: TextStyle(color: Colors.black, fontSize: 14.sp),
                       decoration: InputDecoration(
                         hintText: controller.isDirectChat.value ? "Message..." : StaticString.messageGroup,

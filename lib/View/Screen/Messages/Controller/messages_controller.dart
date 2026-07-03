@@ -7,6 +7,7 @@ import '../../../../service/api_client.dart';
 import '../../../../service/api_url.dart';
 import '../../../../helper/shared_prefe/shared_prefe.dart';
 import '../../../../helper/network_img/image_helper.dart';
+import '../../../../service/socket_service.dart';
 
 class MessagesController extends GetxController {
   final isDirectChat = false.obs;
@@ -21,10 +22,15 @@ class MessagesController extends GetxController {
   final RxString currentUserId = ''.obs;
   final RxList<String> groupAdminIds = <String>[].obs;
 
+  final isOtherUserTyping = false.obs;
+  bool _isCurrentlyTyping = false;
+  DateTime? _lastTypingTime;
+
   @override
   void onInit() {
     super.onInit();
     _loadCurrentUserId();
+    _initSocketConnection();
     final args = Get.arguments;
     if (args != null && args is Map && (args.containsKey('userId') || args.containsKey('conversationId'))) {
       loadChatDetails(args);
@@ -35,6 +41,13 @@ class MessagesController extends GetxController {
     currentUserId.value = await SharedPrefsHelper.getUserId() ?? '';
   }
 
+  Future<void> _initSocketConnection() async {
+    final token = await SharedPrefsHelper.getToken();
+    if (token != null && token.isNotEmpty) {
+      SocketService().connect(token);
+    }
+  }
+
   void loadChatDetails(Map<dynamic, dynamic> args) {
     print('loadChatDetails arguments received: $args');
     isDirectChat.value = args['conversationType'] != 'group' && args['isGroup'] != true;
@@ -43,6 +56,10 @@ class MessagesController extends GetxController {
     directChatUserImage.value = args['image'] ?? '';
     final newConvId = args['conversationId'] ?? '';
 
+    if (directConversationId.value.isNotEmpty && directConversationId.value != newConvId) {
+      leaveChatRoom(directConversationId.value);
+    }
+
     directConversationId.value = newConvId;
     groupMessages.clear();
 
@@ -50,14 +67,146 @@ class MessagesController extends GetxController {
       print('loadChatDetails loading conversation messages with ID: $newConvId');
       fetchMessages(newConvId);
       markMessagesAsSeen(newConvId);
+      joinChatRoom(newConvId);
+    }
+  }
+
+  void joinChatRoom(String conversationId) {
+    print('Joining chat room: $conversationId');
+    SocketService().joinConversation(conversationId);
+    isOtherUserTyping.value = false;
+
+    // Register socket listeners
+    SocketService().off('new_message');
+    SocketService().on('new_message', (data) {
+      print('Socket new_message received: $data');
+      if (data != null && data is Map) {
+        handleIncomingMessage(Map<String, dynamic>.from(data));
+      }
+    });
+
+    SocketService().off('typing_start');
+    SocketService().on('typing_start', (data) {
+      print('Socket typing_start received: $data');
+      if (data != null && data is Map) {
+        final convId = data['conversationId'] ?? '';
+        if (convId == directConversationId.value) {
+          isOtherUserTyping.value = true;
+        }
+      }
+    });
+
+    SocketService().off('typing_stop');
+    SocketService().on('typing_stop', (data) {
+      print('Socket typing_stop received: $data');
+      if (data != null && data is Map) {
+        final convId = data['conversationId'] ?? '';
+        if (convId == directConversationId.value) {
+          isOtherUserTyping.value = false;
+        }
+      }
+    });
+  }
+
+  void leaveChatRoom(String conversationId) {
+    print('Leaving chat room: $conversationId');
+    SocketService().leaveConversation(conversationId);
+    SocketService().off('new_message');
+    SocketService().off('typing_start');
+    SocketService().off('typing_stop');
+    isOtherUserTyping.value = false;
+  }
+
+  void handleIncomingMessage(Map<String, dynamic> msg) async {
+    final currentUserId = await SharedPrefsHelper.getUserId() ?? '';
+    final senderObj = msg['senderId'] ?? msg['sender'];
+    String msgSenderId = '';
+    String senderName = 'User';
+    String senderImage = '';
+    
+    if (senderObj != null) {
+      if (senderObj is Map) {
+        msgSenderId = (senderObj['_id'] ?? senderObj['id'] ?? '').toString();
+        senderName = (senderObj['fullName'] ?? senderObj['displayName'] ?? senderObj['username'] ?? 'User').toString();
+        final rawImage = senderObj['profileImage']?.toString() ?? senderObj['picture']?.toString() ?? '';
+        if (rawImage.isNotEmpty) {
+          senderImage = ImageHelper.formatImageUrl(rawImage);
+        }
+      } else {
+        msgSenderId = senderObj.toString();
+      }
+    }
+    if (msgSenderId.isEmpty && msg['senderId'] != null && msg['senderId'] is! Map) {
+      msgSenderId = msg['senderId'].toString();
+    }
+    
+    final isMe = msgSenderId == currentUserId;
+    if (senderImage.isEmpty && !isMe) {
+      if (isDirectChat.value) {
+        senderImage = directChatUserImage.value;
+      }
+    }
+    if (senderImage.isEmpty) {
+      senderImage = 'https://i.pravatar.cc/150?u=${senderName.hashCode}';
+    }
+
+    final parsedMsg = Map<String, dynamic>.from(msg);
+    parsedMsg['sender'] = senderName;
+    parsedMsg['text'] = msg['text'] ?? msg['content'] ?? '';
+    parsedMsg['isMe'] = isMe;
+    parsedMsg['image'] = senderImage;
+    parsedMsg['senderImage'] = senderImage;
+    parsedMsg['messageType'] = msg['messageType'] ?? 'text';
+    parsedMsg['mediaUrls'] = msg['mediaUrls'] != null ? List<String>.from(msg['mediaUrls']) : <String>[];
+    parsedMsg['time'] = msg['createdAt'] != null 
+        ? DateTime.parse(msg['createdAt']).toLocal().toString().substring(11, 16) 
+        : '';
+
+    // Check for duplicate messages
+    final bool exists = groupMessages.any((m) => m['_id'] == parsedMsg['_id']);
+    if (!exists) {
+      groupMessages.add(parsedMsg);
+      if (directConversationId.value.isNotEmpty) {
+        markMessagesAsSeen(directConversationId.value);
+      }
+    }
+  }
+
+  void handleTypingState(String value) {
+    if (directConversationId.value.isEmpty) return;
+
+    if (value.isNotEmpty) {
+      if (!_isCurrentlyTyping) {
+        _isCurrentlyTyping = true;
+        SocketService().startTyping(directConversationId.value);
+      }
+      _lastTypingTime = DateTime.now();
+      Future.delayed(const Duration(seconds: 2), () {
+        if (_lastTypingTime != null &&
+            DateTime.now().difference(_lastTypingTime!) >= const Duration(seconds: 2)) {
+          if (_isCurrentlyTyping) {
+            _isCurrentlyTyping = false;
+            SocketService().stopTyping(directConversationId.value);
+          }
+        }
+      });
+    } else {
+      if (_isCurrentlyTyping) {
+        _isCurrentlyTyping = false;
+        SocketService().stopTyping(directConversationId.value);
+      }
     }
   }
 
   @override
   void onClose() {
+    if (directConversationId.value.isNotEmpty) {
+      leaveChatRoom(directConversationId.value);
+    }
     messageTextController.dispose();
     super.onClose();
   }
+
 
   final recentChats = <Map<String, dynamic>>[].obs;
 
