@@ -4,12 +4,11 @@ import 'package:get/get.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/profile_controller.dart';
-import 'edit_profile_screen.dart';
-import 'friends_screen.dart';
 import 'subscription_screen.dart';
 import 'user_profile_screen.dart';
 import '../../Notification/view/notification_screen.dart';
 import '../../ContactSync/view/contact_sync_screen.dart';
+import 'blocked_users_screen.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
   const ProfileScreen({super.key});
@@ -71,6 +70,7 @@ class ProfileScreen extends GetView<ProfileController> {
                         _buildSettingsTile(
                           Icons.block_outlined,
                           StaticString.blockedUsers,
+                          onTap: () => Get.to(() => const BlockedUsersScreen()),
                         ),
                       ]),
                       SizedBox(height: 25.h),

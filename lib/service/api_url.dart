@@ -15,6 +15,7 @@ class ApiUrl {
   static const String sellerListings = "$baseUrl/listing/seller";
   static const String myListings = "$baseUrl/listing/me";
   static const String social = "$baseUrl/social";
+  static const String blockedUsers = "$baseUrl/social/blocked-users";
   static const String sendMessage = "$baseUrl/message/send";
   static const String conversation = "$baseUrl/conversation";
   static const String myGroups = "$baseUrl/conversation/my-groups";
