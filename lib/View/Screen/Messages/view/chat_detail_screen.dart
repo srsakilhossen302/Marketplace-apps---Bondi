@@ -79,6 +79,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                       );
                     }
                     return ListView.builder(
+                      controller: controller.scrollController,
                       padding: EdgeInsets.symmetric(
                         horizontal: 20.w,
                         vertical: 10.h,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,6 +26,46 @@ class MessagesController extends GetxController {
   final isOtherUserTyping = false.obs;
   bool _isCurrentlyTyping = false;
   DateTime? _lastTypingTime;
+  Timer? _pollingTimer;
+  final scrollController = ScrollController();
+
+  void scrollToBottom() {
+    _performScroll();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _performScroll());
+    Future.delayed(const Duration(milliseconds: 100), _performScroll);
+    Future.delayed(const Duration(milliseconds: 300), _performScroll);
+    Future.delayed(const Duration(milliseconds: 600), _performScroll);
+  }
+
+  void _performScroll() {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  void startPollingMessages(String conversationId) {
+    _pollingTimer?.cancel();
+    debugPrint('⏳ [MessagesController] Starting background polling for conversation: $conversationId');
+    _pollingTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (directConversationId.value == conversationId) {
+        fetchMessages(conversationId, isBackground: true);
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  void stopPollingMessages() {
+    if (_pollingTimer != null) {
+      debugPrint('⏳ [MessagesController] Stopping background polling for conversation');
+      _pollingTimer!.cancel();
+      _pollingTimer = null;
+    }
+  }
 
   @override
   void onInit() {
@@ -42,14 +83,24 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _initSocketConnection() async {
+    debugPrint('🚀 [MessagesController] _initSocketConnection started');
     final token = await SharedPrefsHelper.getToken();
+    debugPrint('🚀 [MessagesController] Loaded token: ${token != null ? "Token found (length: ${token.length})" : "NULL"}');
     if (token != null && token.isNotEmpty) {
       SocketService().connect(token);
+      
+      // Check status after 2 seconds
+      Future.delayed(const Duration(seconds: 2), () {
+        final isConnected = SocketService().socket?.connected ?? false;
+        debugPrint('⏳ [MessagesController] Connection check (after 2s): Connected = $isConnected, SocketID = ${SocketService().socket?.id}');
+      });
+    } else {
+      debugPrint('⚠️ [MessagesController] Cannot connect socket: Token is empty or null');
     }
   }
 
   void loadChatDetails(Map<dynamic, dynamic> args) {
-    print('loadChatDetails arguments received: $args');
+    debugPrint('loadChatDetails arguments received: $args');
     isDirectChat.value = args['conversationType'] != 'group' && args['isGroup'] != true;
     directChatUserId.value = args['userId'] ?? '';
     directChatUserName.value = args['name'] ?? 'Seller';
@@ -64,7 +115,7 @@ class MessagesController extends GetxController {
     groupMessages.clear();
 
     if (newConvId.isNotEmpty) {
-      print('loadChatDetails loading conversation messages with ID: $newConvId');
+      debugPrint('loadChatDetails loading conversation messages with ID: $newConvId');
       fetchMessages(newConvId);
       markMessagesAsSeen(newConvId);
       joinChatRoom(newConvId);
@@ -72,14 +123,14 @@ class MessagesController extends GetxController {
   }
 
   void joinChatRoom(String conversationId) {
-    print('Joining chat room: $conversationId');
+    debugPrint('Joining chat room: $conversationId');
     SocketService().joinConversation(conversationId);
     isOtherUserTyping.value = false;
 
     // Register socket listeners
     SocketService().off('new_message');
     SocketService().on('new_message', (data) {
-      print('Socket new_message received: $data');
+      debugPrint('Socket new_message received: $data');
       if (data != null && data is Map) {
         handleIncomingMessage(Map<String, dynamic>.from(data));
       }
@@ -87,7 +138,7 @@ class MessagesController extends GetxController {
 
     SocketService().off('typing_start');
     SocketService().on('typing_start', (data) {
-      print('Socket typing_start received: $data');
+      debugPrint('Socket typing_start received: $data');
       if (data != null && data is Map) {
         final convId = data['conversationId'] ?? '';
         if (convId == directConversationId.value) {
@@ -98,7 +149,7 @@ class MessagesController extends GetxController {
 
     SocketService().off('typing_stop');
     SocketService().on('typing_stop', (data) {
-      print('Socket typing_stop received: $data');
+      debugPrint('Socket typing_stop received: $data');
       if (data != null && data is Map) {
         final convId = data['conversationId'] ?? '';
         if (convId == directConversationId.value) {
@@ -106,15 +157,21 @@ class MessagesController extends GetxController {
         }
       }
     });
+
+    // Start background polling
+    startPollingMessages(conversationId);
   }
 
   void leaveChatRoom(String conversationId) {
-    print('Leaving chat room: $conversationId');
+    debugPrint('Leaving chat room: $conversationId');
     SocketService().leaveConversation(conversationId);
     SocketService().off('new_message');
     SocketService().off('typing_start');
     SocketService().off('typing_stop');
     isOtherUserTyping.value = false;
+
+    // Stop background polling
+    stopPollingMessages();
   }
 
   void handleIncomingMessage(Map<String, dynamic> msg) async {
@@ -169,6 +226,7 @@ class MessagesController extends GetxController {
       if (directConversationId.value.isNotEmpty) {
         markMessagesAsSeen(directConversationId.value);
       }
+      scrollToBottom();
     }
   }
 
@@ -204,6 +262,7 @@ class MessagesController extends GetxController {
       leaveChatRoom(directConversationId.value);
     }
     messageTextController.dispose();
+    scrollController.dispose();
     super.onClose();
   }
 
@@ -228,6 +287,7 @@ class MessagesController extends GetxController {
           'isMe': true,
           'time': 'Just now',
         });
+        scrollToBottom();
 
         final fields = {
           'conversationId': directConversationId.value,
@@ -257,11 +317,14 @@ class MessagesController extends GetxController {
         'isMe': true,
         'time': 'Just now',
       });
+      scrollToBottom();
     }
   }
 
-  Future<void> fetchMessages(String conversationId) async {
-    isMessagesLoading.value = true;
+  Future<void> fetchMessages(String conversationId, {bool isBackground = false}) async {
+    if (!isBackground) {
+      isMessagesLoading.value = true;
+    }
     try {
       final response = await ApiClient.get(
         '${ApiUrl.message}/$conversationId',
@@ -355,9 +418,12 @@ class MessagesController extends GetxController {
         }
       }
     } catch (e) {
-      print('Error fetching messages: $e');
+      debugPrint('Error fetching messages: $e');
     } finally {
-      isMessagesLoading.value = false;
+      if (!isBackground) {
+        isMessagesLoading.value = false;
+      }
+      scrollToBottom();
     }
   }
 
@@ -408,6 +474,7 @@ class MessagesController extends GetxController {
         'isMe': true,
         'time': 'Just now',
       });
+      scrollToBottom();
 
       final fields = {
         'conversationId': directConversationId.value,
