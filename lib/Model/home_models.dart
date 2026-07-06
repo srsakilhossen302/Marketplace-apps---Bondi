@@ -1,3 +1,5 @@
+import '../helper/network_img/image_helper.dart';
+
 class ListingModel {
   final String title;
   final String price;
@@ -46,6 +48,16 @@ class SellerModel {
   });
 
   factory SellerModel.fromJson(Map<String, dynamic> json) {
+    String profileImg = json['profileImage']?.toString() ?? json['image']?.toString() ?? '';
+    if (profileImg.isEmpty && json['userId'] != null && json['userId'] is Map) {
+      profileImg = json['userId']['profileImage']?.toString() ?? '';
+    }
+    String name = json['displayName'] ?? json['username'] ?? json['name'] ?? '';
+    if (name.isEmpty && json['userId'] != null && json['userId'] is Map) {
+      name = json['userId']['displayName'] ?? json['userId']['username'] ?? 'Seller';
+    }
+    if (name.isEmpty) name = 'Seller';
+
     String sellerId = '';
     if (json['userId'] != null) {
       if (json['userId'] is Map) {
@@ -60,10 +72,10 @@ class SellerModel {
 
     return SellerModel(
       id: sellerId,
-      name: json['name'] ?? '',
-      role: json['role'] ?? '',
-      image: json['image'] ?? '',
-      isVerified: json['isVerified'] ?? false,
+      name: name,
+      role: json['role']?.toString() ?? 'Seller',
+      image: ImageHelper.formatImageUrl(profileImg),
+      isVerified: json['isVerified'] ?? json['isVerifiedSeller'] ?? false,
     );
   }
 }

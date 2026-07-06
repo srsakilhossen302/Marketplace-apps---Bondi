@@ -78,6 +78,8 @@ class CommunityController extends GetxController {
   final currentPage = 1.obs;
   final totalPage = 1.obs;
   final exploreLimit = 10;
+  final searchQuery = ''.obs;
+  final isGridView = false.obs;
 
   Future<void> fetchExploreGroups({bool loadMore = false}) async {
     if (loadMore) {
@@ -90,7 +92,7 @@ class CommunityController extends GetxController {
 
     isExploreLoading.value = true;
     try {
-      final url = '${ApiUrl.exploreGroups}?page=${currentPage.value}&limit=$exploreLimit&search=';
+      final url = '${ApiUrl.exploreGroups}?page=${currentPage.value}&limit=$exploreLimit&search=${Uri.encodeComponent(searchQuery.value)}';
       final response = await ApiClient.get(url, requireAuth: true);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

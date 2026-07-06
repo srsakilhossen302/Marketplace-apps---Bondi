@@ -8,6 +8,7 @@ import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../Controller/sell_controller.dart';
 import '../../Discover/view/discover_screen.dart';
+import '../../Main/Controller/main_controller.dart';
 import '../../../../helper/network_img/image_helper.dart';
 
 class SellScreen extends StatelessWidget {
@@ -90,7 +91,7 @@ class SellScreen extends StatelessWidget {
               } else {
                 controller.isDraftSaved = false;
               }
-              Get.back();
+              Get.find<MainController>().changeIndex(0);
             },
             child: Container(
               padding: EdgeInsets.all(8.r),

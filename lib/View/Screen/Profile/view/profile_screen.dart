@@ -9,6 +9,7 @@ import 'user_profile_screen.dart';
 import '../../Notification/view/notification_screen.dart';
 import '../../ContactSync/view/contact_sync_screen.dart';
 import 'blocked_users_screen.dart';
+import '../../Main/Controller/main_controller.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
   const ProfileScreen({super.key});
@@ -176,7 +177,7 @@ class ProfileScreen extends GetView<ProfileController> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
-                  onTap: () => Get.back(),
+                  onTap: () => Get.find<MainController>().changeIndex(0),
                   child: Container(
                     padding: EdgeInsets.all(8.r),
                     decoration: BoxDecoration(

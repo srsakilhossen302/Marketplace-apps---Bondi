@@ -12,6 +12,7 @@ import '../../Notification/view/notification_screen.dart';
 import '../../Login/view/login_screen.dart';
 import '../../ProductDetails/view/product_details_screen.dart';
 import '../../../../helper/shared_prefe/shared_prefe.dart';
+import '../../Search/view/search_screen.dart';
 
 class DiscoverScreen extends GetView<DiscoverController> {
   const DiscoverScreen({super.key});
@@ -170,37 +171,39 @@ class DiscoverScreen extends GetView<DiscoverController> {
   }
 
   Widget _buildSearchBar() {
-    return Container(
-      height: 50.h,
-      decoration: BoxDecoration(
-        color: AppColors.cardColor.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(25.r),
-      ),
-      child: TextField(
-        controller: controller.searchController,
-        style: TextStyle(color: Colors.white, fontSize: 15.sp),
-        decoration: InputDecoration(
-          hintText: StaticString.searchTradeMore,
-          hintStyle: TextStyle(
-            color: Colors.white.withOpacity(0.5),
-            fontSize: 15.sp,
-          ),
-          prefixIcon: Padding(
-            padding: EdgeInsets.all(14.r),
-            child: SvgPicture.asset(
+    return GestureDetector(
+      onTap: () => Get.to(() => const SearchScreen()),
+      child: Container(
+        height: 50.h,
+        decoration: BoxDecoration(
+          color: AppColors.cardColor.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(25.r),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        ),
+        child: Row(
+          children: [
+            SizedBox(width: 14.w),
+            SvgPicture.asset(
               'assets/icons/Search-icons.svg',
               width: 18.w,
             ),
-          ),
-          suffixIcon: Padding(
-            padding: EdgeInsets.all(14.r),
-            child: SvgPicture.asset(
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Text(
+                StaticString.searchTradeMore,
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.5),
+                  fontSize: 15.sp,
+                ),
+              ),
+            ),
+            SvgPicture.asset(
               'assets/icons/Filtering-icons.svg',
               width: 18.w,
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
             ),
-          ),
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(vertical: 12.h),
+            SizedBox(width: 14.w),
+          ],
         ),
       ),
     );
